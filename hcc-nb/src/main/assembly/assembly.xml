@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>distributable</id>
+    <!-- Generates a zip package containing the needed files -->
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <dependencySets>
+        <!-- Adds dependencies to zip package under lib directory -->
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+            <excludes>
+                <!--exclude natives of uncommon platforms-->
+                <exclude>*:*:*:natives-android-armv6:*</exclude>
+                <exclude>*:*:*:natives-linux-armv6:*</exclude>
+                <exclude>*:*:*:natives-linux-armv6hf:*</exclude>
+                <exclude>*:*:*:natives-solaris*:*</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <!-- adds module jar artifact to the root directory of zip package -->
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <!--NOTE: the following tag indicates to use the root, DO NOT REMOVE-->
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
