@@ -8,7 +8,7 @@ Within this project a series of data models and protocols have been designed to 
 
 **hcc** deals with catalogue browsing of earth observation product and offers a visual graphic interface for issuing catalogue queries.
 
-![hcc screenshot](hcc-0.8.png)
+![hcc screenshot](hcc-0.9.png) **TODO screenshot**
 
 --------
 
