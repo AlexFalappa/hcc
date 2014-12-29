@@ -16,7 +16,6 @@
 package gui;
 
 import ca.odell.glazedlists.BasicEventList;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
@@ -40,7 +39,7 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
     private final MainWindow mw;
     private final CatalogueStub stub;
     private final boolean isResults;
-    private BasicEventList<Metadata> results;
+    private final BasicEventList<Metadata> results;
 
     public GetRecordsWorker(MainWindow mw, CatalogueStub stub, boolean isResults, BasicEventList<Metadata> resultList) {
         this.mw = mw;
@@ -55,9 +54,9 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
         GetRecordsDocument req = mw.buildReq(isResults);
         App.dumpReq(req, isResults);
         publish("Sending request...");
-        int recs;
         final GetRecordsResponseDocument resp = stub.getRecords(req);
         App.dumpResp(resp, isResults);
+        int recs;
         if (isResults) {
             publish("Processing response...");
             recs = processResults(resp);
@@ -109,26 +108,18 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
     int processResults(GetRecordsResponseDocument resp) {
         // extract registry packages via XPath
         XmlObject[] res = resp.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:RegistryPackage");
-        ArrayList<String> prodIds = new ArrayList<>(res.length);
-        HmaRegPackParser regPackParser = new HmaRegPackParser();
+        // lock and clear the result list
         results.getReadWriteLock().writeLock().lock();
         results.clear();
+        // process the registry packages trough a parser
+        HmaRegPackParser regPackParser = new HmaRegPackParser();
         for (XmlObject xo : res) {
             Metadata m = regPackParser.parseXmlObj(xo);
             if (m != null) {
                 results.add(m);
             }
-            // get the collection layer or create one and add id to the wwindPane
-//            SurfShapesLayer ssl = layerMap.get(collection);
-//            if (ssl == null) {
-//                ssl = new SurfShapesLayer(collection);
-//                ssl.setColor(LAYER_COLORS[layerMap.size() % LAYER_COLORS.length]);
-//                wwindPane.addSurfShapeLayer(ssl);
-//                layerMap.put(collection, ssl);
-//            }
-            // add a polygon to the layer
-//            ssl.addSurfPoly(geopoints, pid);
         }
+        // release the lock for update
         results.getReadWriteLock().writeLock().unlock();
         return results.size();
     }
