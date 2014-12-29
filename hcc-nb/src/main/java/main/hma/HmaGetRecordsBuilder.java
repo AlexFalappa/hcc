@@ -15,13 +15,13 @@
  */
 package main.hma;
 
-import main.data.MetadataNames;
-import main.data.Slots;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import main.data.MetadataNames;
+import main.data.Slots;
 import net.opengis.www.cat.csw._2_0_2.GetRecordsDocument;
 import net.opengis.www.cat.csw._2_0_2.QueryType;
 import net.opengis.www.cat.csw._2_0_2.ResultType;
@@ -57,10 +57,6 @@ public class HmaGetRecordsBuilder {
     private QueryType query;
 
     public HmaGetRecordsBuilder() {
-        internalInit();
-    }
-
-    public void reset() {
         internalInit();
     }
 

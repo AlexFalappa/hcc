@@ -15,15 +15,20 @@
  */
 package gui;
 
+import ca.odell.glazedlists.BasicEventList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 import main.App;
+import main.data.Metadata;
+import main.hma.HmaRegPackParser;
 import net.opengis.www.cat.csw._2_0_2.GetRecordsDocument;
 import net.opengis.www.cat.csw._2_0_2.GetRecordsResponseDocument;
 import net.opengis.www.cat.wrs._1_0.CatalogueStub;
 import net.opengis.www.cat.wrs._1_0.ServiceExceptionReportFault;
 import net.opengis.www.ows.ExceptionType;
+import org.apache.xmlbeans.XmlObject;
 
 /**
  * SwingWorker to make the GetRecords request.
@@ -35,11 +40,13 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
     private final MainWindow mw;
     private final CatalogueStub stub;
     private final boolean isResults;
+    private BasicEventList<Metadata> results;
 
-    public GetRecordsWorker(MainWindow mw, CatalogueStub stub, boolean isResults) {
+    public GetRecordsWorker(MainWindow mw, CatalogueStub stub, boolean isResults, BasicEventList<Metadata> resultList) {
         this.mw = mw;
         this.stub = stub;
         this.isResults = isResults;
+        this.results = resultList;
     }
 
     @Override
@@ -48,14 +55,14 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
         GetRecordsDocument req = mw.buildReq(isResults);
         App.dumpReq(req, isResults);
         publish("Sending request...");
-        int recs = 0;
+        int recs;
         final GetRecordsResponseDocument resp = stub.getRecords(req);
         App.dumpResp(resp, isResults);
         if (isResults) {
             publish("Processing response...");
-            recs = mw.processResults(resp);
+            recs = processResults(resp);
         } else {
-            recs = mw.processHits(resp);
+            recs = processHits(resp);
         }
         publish("Done");
         return recs;
@@ -68,7 +75,6 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
 
     @Override
     protected void done() {
-        mw.enableSearchButtons(true);
         try {
             final Integer records = this.get();
             if (isResults) {
@@ -76,8 +82,6 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
             } else {
                 mw.showInfoDialog("Hits", String.format("Query will give %d records", records));
             }
-        } catch (InterruptedException iex) {
-            //ignored currently not supported
         } catch (ExecutionException ex) {
             final Throwable cause = ex.getCause();
             if (cause instanceof ServiceExceptionReportFault) {
@@ -90,7 +94,43 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
                 mw.showErrorDialog("Unexpected error", "Could not perform request!", ex);
             }
             mw.lMexs.setText("No record retrieved");
+        } catch (InterruptedException iex) {
+            //ignored currently not supported
+        } finally {
+            mw.enableSearchButtons(true);
+            mw.updGridWindow();
         }
+    }
+
+    int processHits(GetRecordsResponseDocument resp) {
+        return resp.getGetRecordsResponse().getSearchResults().getNumberOfRecordsMatched().intValue();
+    }
+
+    int processResults(GetRecordsResponseDocument resp) {
+        // extract registry packages via XPath
+        XmlObject[] res = resp.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:RegistryPackage");
+        ArrayList<String> prodIds = new ArrayList<>(res.length);
+        HmaRegPackParser regPackParser = new HmaRegPackParser();
+        results.getReadWriteLock().writeLock().lock();
+        results.clear();
+        for (XmlObject xo : res) {
+            Metadata m = regPackParser.parseXmlObj(xo);
+            if (m != null) {
+                results.add(m);
+            }
+            // get the collection layer or create one and add id to the wwindPane
+//            SurfShapesLayer ssl = layerMap.get(collection);
+//            if (ssl == null) {
+//                ssl = new SurfShapesLayer(collection);
+//                ssl.setColor(LAYER_COLORS[layerMap.size() % LAYER_COLORS.length]);
+//                wwindPane.addSurfShapeLayer(ssl);
+//                layerMap.put(collection, ssl);
+//            }
+            // add a polygon to the layer
+//            ssl.addSurfPoly(geopoints, pid);
+        }
+        results.getReadWriteLock().writeLock().unlock();
+        return results.size();
     }
 
 }

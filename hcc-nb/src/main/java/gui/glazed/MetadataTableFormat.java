@@ -17,6 +17,7 @@ package gui.glazed;
 
 import ca.odell.glazedlists.gui.TableFormat;
 import main.data.Metadata;
+import main.data.MetadataNames;
 
 /**
  * Glazed lists {@link TableFormat} for {@link Metadata} objects.
@@ -25,19 +26,29 @@ import main.data.Metadata;
  */
 public class MetadataTableFormat implements TableFormat<Metadata> {
 
+    private final int columns;
+    private final String[] columnNames;
+    private final MetadataNames[] columnKeys;
+
+    MetadataTableFormat(int columns, String[] columnNames, MetadataNames[] columnKeys) {
+        this.columns = columns;
+        this.columnNames = columnNames;
+        this.columnKeys = columnKeys;
+    }
+
     @Override
     public int getColumnCount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return columns;
     }
 
     @Override
     public String getColumnName(int column) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return columnNames[column];
     }
 
     @Override
     public Object getColumnValue(Metadata baseObject, int column) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return baseObject.get(columnKeys[column]);
     }
 
 }

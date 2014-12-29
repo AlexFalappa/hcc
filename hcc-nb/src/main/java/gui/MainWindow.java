@@ -15,6 +15,7 @@
  */
 package gui;
 
+import ca.odell.glazedlists.BasicEventList;
 import gov.nasa.worldwind.geom.LatLon;
 import gui.dialogs.AboutDialog;
 import gui.dialogs.CatDefinitionDialog;
@@ -30,6 +31,7 @@ import javax.swing.JOptionPane;
 import javax.xml.namespace.QName;
 import main.App;
 import main.data.CatalogueDefinition;
+import main.data.Metadata;
 import main.hma.HmaGetRecordsBuilder;
 import net.falappa.wwind.layers.SurfShapesLayer;
 import net.falappa.wwind.utils.WWindUtils;
@@ -52,8 +54,9 @@ import org.apache.xmlbeans.XmlOptions;
 public class MainWindow extends javax.swing.JFrame {
 
     private final DefaultComboBoxModel<CatalogueDefinition> dcmCatalogues = new DefaultComboBoxModel<>();
-    private final HmaGetRecordsBuilder builder = new HmaGetRecordsBuilder();
     private CatalogueStub stub = null;
+    private BasicEventList<Metadata> results = new BasicEventList<>();
+    private MetadataWindow gridWindow;
     private final static Color[] LAYER_COLORS = new Color[]{
         Color.ORANGE,
         Color.MAGENTA,
@@ -96,7 +99,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     public String getReqText() {
         if (checkCanSubmit()) {
-            builder.reset();
             GetRecordsDocument req = buildReq(true);
             return req.xmlText(new XmlOptions().setSavePrettyPrint());
         }
@@ -394,7 +396,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     GetRecordsDocument buildReq(boolean isResults) {
-        builder.reset();
+        HmaGetRecordsBuilder builder = new HmaGetRecordsBuilder();
         switch (pSearchButons.getDetail()) {
             case 0:
                 //brief
@@ -525,17 +527,12 @@ public class MainWindow extends javax.swing.JFrame {
         return res.length;
     }
 
-    int processHits(GetRecordsResponseDocument resp) {
-        return resp.getGetRecordsResponse().getSearchResults().getNumberOfRecordsMatched().intValue();
-    }
-
     void enableSearchButtons(boolean enabled) {
         pSearchButons.enableButtons(enabled);
     }
 
     private void startWorker(boolean isResults) {
-        builder.reset();
-        GetRecordsWorker grw = new GetRecordsWorker(this, stub, isResults);
+        GetRecordsWorker grw = new GetRecordsWorker(this, stub, isResults, results);
         grw.execute();
     }
 
@@ -598,6 +595,16 @@ public class MainWindow extends javax.swing.JFrame {
             }
         } catch (BackingStoreException ex) {
             // no prefs, do nothing
+        }
+    }
+
+    void updGridWindow() {
+        if (gridWindow == null) {
+            gridWindow = new MetadataWindow();
+            gridWindow.setDataList(results);
+        }
+        if (!gridWindow.isVisible()) {
+            gridWindow.setVisible(true);
         }
     }
 }
