@@ -16,7 +16,7 @@
 package gui.glazed;
 
 import ca.odell.glazedlists.gui.TableFormat;
-import main.hma.Metadata;
+import main.data.Metadata;
 
 /**
  * Glazed lists {@link TableFormat} for {@link Metadata} objects.

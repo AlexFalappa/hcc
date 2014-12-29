@@ -21,7 +21,7 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.AdvancedListSelectionModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import gui.glazed.MetadataTableFormat;
-import main.hma.Metadata;
+import main.data.Metadata;
 
 /**
  * Window displaying a tabular view of queryed metadata.

@@ -15,6 +15,8 @@
  */
 package main.hma;
 
+import main.data.MetadataNames;
+import main.data.Slots;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
