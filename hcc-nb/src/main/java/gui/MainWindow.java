@@ -19,6 +19,7 @@ import ca.odell.glazedlists.BasicEventList;
 import gov.nasa.worldwind.geom.LatLon;
 import gui.dialogs.AboutDialog;
 import gui.dialogs.CatDefinitionDialog;
+import gui.dialogs.MetadataDialog;
 import gui.dialogs.SettingsDialog;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class MainWindow extends javax.swing.JFrame {
     private final DefaultComboBoxModel<CatalogueDefinition> dcmCatalogues = new DefaultComboBoxModel<>();
     private CatalogueStub stub = null;
     private BasicEventList<Metadata> results = new BasicEventList<>();
-    private MetadataWindow gridWindow;
+    private MetadataDialog gridWindow;
     private final static Color[] LAYER_COLORS = new Color[]{
         Color.ORANGE,
         Color.MAGENTA,
@@ -600,7 +601,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     void updGridWindow() {
         if (gridWindow == null) {
-            gridWindow = new MetadataWindow();
+            gridWindow = new MetadataDialog(this);
             gridWindow.setDataList(results);
         }
         if (!gridWindow.isVisible()) {
