@@ -97,7 +97,7 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
             //ignored currently not supported
         } finally {
             mw.enableSearchButtons(true);
-            mw.updGridWindow();
+            mw.updGridDialog();
         }
     }
 

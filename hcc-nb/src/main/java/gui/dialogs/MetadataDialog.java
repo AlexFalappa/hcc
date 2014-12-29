@@ -16,13 +16,15 @@
 package gui.dialogs;
 
 import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.AdvancedListSelectionModel;
+import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import gui.glazed.MetadataTableFormat;
 import gui.glazed.MetadataTableFormatFactory;
+import javax.swing.event.ListSelectionListener;
 import main.data.Metadata;
+import net.falappa.swing.table.TableColumnAdjuster;
 
 /**
  * Modeless dialog displaying a tabular view of queryed metadata.
@@ -32,23 +34,46 @@ import main.data.Metadata;
 public class MetadataDialog extends javax.swing.JDialog {
 
     private BasicEventList<Metadata> dataList;
-    private FilterList<Metadata> filterList;
+//    private FilterList<Metadata> filterList;
     private SortedList<Metadata> sortedList;
     private AdvancedListSelectionModel<Metadata> selModel;
+    private final TableColumnAdjuster adjuster;
+    private AdvancedTableModel<Metadata> tblModel;
 
     public MetadataDialog(java.awt.Frame parent) {
         super(parent, false);
         initComponents();
+        adjuster = new TableColumnAdjuster(tblMetadata);
     }
 
     public void setDataList(BasicEventList<Metadata> list) {
+        if (list.isEmpty()) {
+            return;
+        }
         dataList = list;
         sortedList = new SortedList<>(dataList);
-        final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(list.get(0));
-        tblMetadata.setModel(GlazedListsSwing.eventTableModelWithThreadProxyList(sortedList, mtf));
-        selModel = GlazedListsSwing.eventSelectionModel(sortedList);
         //TODO filtering trough a search textfield
         // filterList=new FilterList<>(sortedList, null);
+        selModel = GlazedListsSwing.eventSelectionModel(sortedList);
+        //TODO higlight selected item on map
+        tblMetadata.setSelectionModel(selModel);
+        final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
+        tblModel = GlazedListsSwing.eventTableModelWithThreadProxyList(sortedList, mtf);
+        tblMetadata.setModel(tblModel);
+    }
+
+    public void addListSelectionListener(ListSelectionListener x) {
+        selModel.addListSelectionListener(x);
+    }
+
+    public void removeListSelectionListener(ListSelectionListener x) {
+        selModel.removeListSelectionListener(x);
+    }
+
+    public void updateFinished() {
+        final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
+        tblModel.setTableFormat(mtf);
+        adjuster.adjustColumns();
     }
 
     /**
@@ -66,6 +91,8 @@ public class MetadataDialog extends javax.swing.JDialog {
         setTitle("Metadata");
         setPreferredSize(new java.awt.Dimension(800, 200));
 
+        tblMetadata.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tblMetadata.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scroller.setViewportView(tblMetadata);
 
         getContentPane().add(scroller, java.awt.BorderLayout.CENTER);

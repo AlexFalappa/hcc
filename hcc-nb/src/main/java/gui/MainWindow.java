@@ -59,7 +59,7 @@ public class MainWindow extends javax.swing.JFrame {
     private final DefaultComboBoxModel<CatalogueDefinition> dcmCatalogues = new DefaultComboBoxModel<>();
     private CatalogueStub stub = null;
     private BasicEventList<Metadata> results = new BasicEventList<>();
-    private MetadataDialog gridWindow;
+    private MetadataDialog gridDialog;
     private final static Color[] LAYER_COLORS = new Color[]{
         Color.ORANGE,
         Color.MAGENTA,
@@ -601,18 +601,23 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
-    void updGridWindow() {
-        if (gridWindow == null) {
-            gridWindow = new MetadataDialog(this);
-            Point pt = this.getLocation();
+    void updGridDialog() {
+        // create the grid dialog if needed
+        if (gridDialog == null) {
+            gridDialog = new MetadataDialog(this);
+            gridDialog.setDataList(results);
+            // initial position in the bottom right part of the main window
             final Dimension dims = this.getSize();
-            final Dimension gwDims = gridWindow.getSize();
+            final Dimension gwDims = gridDialog.getSize();
+            Point pt = this.getLocation();
             pt.translate(dims.width - gwDims.width, dims.height - gwDims.height);
-            gridWindow.setLocation(pt);
-            gridWindow.setDataList(results);
+            gridDialog.setLocation(pt);
         }
-        if (!gridWindow.isVisible()) {
-            gridWindow.setVisible(true);
+        // show the dialog if hidden
+        if (!gridDialog.isVisible()) {
+            gridDialog.setVisible(true);
         }
+        // trigger the grid update
+        gridDialog.updateFinished();
     }
 }
