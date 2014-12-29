@@ -22,6 +22,8 @@ import gui.dialogs.CatDefinitionDialog;
 import gui.dialogs.MetadataDialog;
 import gui.dialogs.SettingsDialog;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -602,6 +604,11 @@ public class MainWindow extends javax.swing.JFrame {
     void updGridWindow() {
         if (gridWindow == null) {
             gridWindow = new MetadataDialog(this);
+            Point pt = this.getLocation();
+            final Dimension dims = this.getSize();
+            final Dimension gwDims = gridWindow.getSize();
+            pt.translate(dims.width - gwDims.width, dims.height - gwDims.height);
+            gridWindow.setLocation(pt);
             gridWindow.setDataList(results);
         }
         if (!gridWindow.isVisible()) {

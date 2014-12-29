@@ -63,6 +63,8 @@ public class MetadataDialog extends javax.swing.JDialog {
         tblMetadata = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Metadata");
+        setPreferredSize(new java.awt.Dimension(800, 200));
 
         scroller.setViewportView(tblMetadata);
 
