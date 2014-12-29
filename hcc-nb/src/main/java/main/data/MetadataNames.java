@@ -24,29 +24,23 @@ package main.data;
  */
 public enum MetadataNames {
 
+    // NOTE: most frequent attributes should come first!
     PRODUCT_IDENTIFIER("prodIdentifier"),
     PARENT_IDENTIFIER("parentIdentifier"),
-    PRODUCT_TYPE("productType"),
     FOOTPRINT("footprint"),
     START_SENSING("startSensingTime"),
     STOP_SENSING("stopSensingTime"),
+    PRODUCT_TYPE("productType"),
     ORBIT_NUMBER("orbitNumber"),
-    ORBIT_DIRECTION("orbitDirection"),
-    POLARISN_CHANNELS("polarisationChannels"),
-    POLARISN_MODE("polarisationMode"),
-    LOOK_SIDE("antennaLookDirection"),
-    INCID_ANGLE("incidenceAngle"),
-    MIN_INCID_ANGLE("minimumIncidenceAngle"),
-    MAX_INCID_ANGLE("maximumIncidenceAngle"),
-    DOPPLER_FREQ("dopplerFrequency"),
-    INCID_ANGLE_VAR("incindenceAngleVariation"),
-    STATUS("productStatus"),
-    SCENE_CENTER("sceneCenter"),
     ACQ_STATION("acquisitionStation"),
     ACQ_DATE("acquisitionDate"),
-    ASC_NODE_LON("ascendingNodeLongitude"),
-    WRS_LON("wrsLongitudeGrid"),
-    WRS_LAT("wrsLatitudeGrid"),
+    ARCHIVE_PATH("archivePath"),
+    ARCH_CENTER("archivingCenter"),
+    ARCH_DATE("archivingDate"),
+    STATUS("productStatus"),
+    ORBIT_DIRECTION("orbitDirection"),
+    START_DOWNLINK("startDownlinkTime"),
+    STOP_DOWNLINK("stopDownlinkTime"),
     MISSION_NAME("missionName"),
     SAT_NAME("platformShortName"),
     INST_NAME("instrumentShortName"),
@@ -54,36 +48,50 @@ public enum MetadataNames {
     SENS_TYPE("sensorType"),
     SENS_OP_MODE("sensorOperationalMode"),
     SENS_RESOLUTION("sensorResolution"),
-    SENS_SWATH("sensorSwathIdentifier"),
-    ARCH_CENTER("archivingCenter"),
+    SCENE_CENTER("sceneCenter"),
     ARCH_ID("archivingIdentifier"),
-    ARCH_DATE("archivingDate"),
     PROC_LEVEL("processingLevel"),
-    START_DOWNLINK("startDownlinkTime"),
-    STOP_DOWNLINK("stopDownlinkTime"),
-    ARCHIVE_PATH("archivePath");
+    SENS_SWATH("sensorSwathIdentifier"),
+    ASC_NODE_LON("ascendingNodeLongitude"),
+    WRS_LON("wrsLongitudeGrid"),
+    WRS_LAT("wrsLatitudeGrid"),
+    POLARISN_CHANNELS("polarisationChannels"),
+    POLARISN_MODE("polarisationMode"),
+    LOOK_SIDE("antennaLookDirection"),
+    INCID_ANGLE("incidenceAngle"),
+    MIN_INCID_ANGLE("minimumIncidenceAngle"),
+    MAX_INCID_ANGLE("maximumIncidenceAngle"),
+    INCID_ANGLE_VAR("incindenceAngleVariation"),
+    DOPPLER_FREQ("dopplerFrequency");
 
-    private final String name;
+    private final String attribute;
 
     private MetadataNames(final String n) {
-        name = n;
+        attribute = n;
     }
 
     @Override
     public String toString() {
-        return name;
+        return attribute;
     }
 
-    public static MetadataNames forValue(String value) {
-        if (value == null) {
+    /**
+     * Returns the enum for the given HMA attribute name.
+     * <p>
+     * Throws {@code IllegalArgumentException} if attribute name is null or invalid.
+     *
+     * @param attrName the attribute name
+     * @return the corresponding enum object
+     */
+    public static MetadataNames valueForAttribute(String attrName) {
+        if (attrName == null) {
             throw new IllegalArgumentException("Null MetadataNames enum value!");
         }
         for (MetadataNames v : values()) {
-            if (value.equalsIgnoreCase(v.name)) {
+            if (attrName.equalsIgnoreCase(v.attribute)) {
                 return v;
             }
         }
-        throw new IllegalArgumentException(String.format(
-                "Invalid MetadataNames enum value: %s", value));
+        throw new IllegalArgumentException(String.format("No MetadataNames enum value for %s", attrName));
     }
 }
