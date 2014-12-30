@@ -138,7 +138,7 @@ public class NavigationPanel extends javax.swing.JPanel {
         // put the surface shape into view
         for (SurfShapeLayer ssl : wwp.getAllSurfShapeLayers()) {
             try {
-                ssl.flyToHiglhlightShape(pid);
+                ssl.flyToHiglhlightShape(pid, true);
                 // TODO display also sensing start-stop times
                 taRecDetails.setText(String.format("Record: %d\nId: %s\n", currPidIndex, pid));
                 break;

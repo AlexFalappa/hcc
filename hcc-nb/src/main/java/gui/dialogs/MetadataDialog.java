@@ -16,15 +16,18 @@
 package gui.dialogs;
 
 import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.AdvancedListSelectionModel;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import gui.glazed.MetadataTableFormat;
 import gui.glazed.MetadataTableFormatFactory;
+import java.util.Collections;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import main.data.Metadata;
+import main.data.MetadataNames;
 import net.falappa.swing.table.TableColumnAdjuster;
 
 /**
@@ -72,12 +75,8 @@ public class MetadataDialog extends javax.swing.JDialog {
         selModel.removeListSelectionListener(x);
     }
 
-    public Metadata getSelected() {
-        Metadata ret = null;
-        if (!selModel.isSelectionEmpty()) {
-            return selModel.getSelected().get(0);
-        }
-        return ret;
+    public EventList<Metadata> getSelected() {
+        return selModel.getSelected();
     }
 
     public void updateFinished() {
@@ -85,6 +84,18 @@ public class MetadataDialog extends javax.swing.JDialog {
             final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
             tblModel.setTableFormat(mtf);
             adjuster.adjustColumns();
+        }
+    }
+
+    public void selectRow(String coll, String shpId) {
+        Metadata m = new Metadata();
+        m.put(MetadataNames.PRODUCT_IDENTIFIER, shpId);
+        m.put(MetadataNames.PARENT_IDENTIFIER, coll);
+        int idx = Collections.binarySearch(sortedList, m);
+        if (idx >= 0) {
+            selModel.clearSelection();
+            selModel.getTogglingSelected().add(sortedList.get(idx));
+            // TODO make table scroll to selected row
         }
     }
 

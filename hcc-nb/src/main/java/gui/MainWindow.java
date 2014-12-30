@@ -16,7 +16,9 @@
 package gui;
 
 import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.layers.Layer;
 import gui.dialogs.AboutDialog;
 import gui.dialogs.CatDefinitionDialog;
 import gui.dialogs.MetadataDialog;
@@ -24,6 +26,8 @@ import gui.dialogs.SettingsDialog;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.prefs.BackingStoreException;
@@ -550,30 +554,6 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     void postResults() {
-        // clear previous surface shape layers
-        wwindPane.removeAllSurfShapeLayers();
-        HashMap<String, SurfShapesLayer> layerMap = new HashMap<>();
-        // prepare and categorize the footprints
-        ArrayList<String> prodIds = new ArrayList<>(results.size());
-        for (Metadata md : results) {
-            if (md.containsKey(PRODUCT_IDENTIFIER) && md.containsKey(PARENT_IDENTIFIER) && md.containsKey(FOOTPRINT)) {
-                String pid = md.get(PRODUCT_IDENTIFIER);
-                prodIds.add(pid);
-                // get the collection layer or create one and add id to the wwindPane
-                String collection = md.get(PARENT_IDENTIFIER);
-                SurfShapesLayer ssl = layerMap.get(collection);
-                if (ssl == null) {
-                    ssl = new SurfShapesLayer(collection);
-                    ssl.setColor(LAYER_COLORS[layerMap.size() % LAYER_COLORS.length]);
-                    wwindPane.addSurfShapeLayer(ssl);
-                    layerMap.put(collection, ssl);
-                }
-                // add a polygon to the layer
-                ssl.addSurfPoly(WWindUtils.latLonOrdinates2LatLonList(md.getFootprintAsDoubles()), pid);
-            }
-        }
-        pNavigation.setProductIds(prodIds);
-        wwindPane.redraw();
         // create the grid dialog if needed
         if (gridDialog == null) {
             gridDialog = new MetadataDialog(this);
@@ -588,25 +568,61 @@ public class MainWindow extends javax.swing.JFrame {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {
                     if (!e.getValueIsAdjusting()) {
-                        Metadata selMd = gridDialog.getSelected();
-                        if (selMd != null) {
-                            wwindPane.clearHighlights();
+                        EventList<Metadata> selList = gridDialog.getSelected();
+                        if (!selList.isEmpty()) {
+                            wwindPane.clearHighlights(false);
+                            Metadata selMd = selList.get(0);
                             SurfShapeLayer ssl = wwindPane.getSurfShapeLayer(selMd.get(PARENT_IDENTIFIER));
                             try {
-                                ssl.highlightShape(selMd.get(PRODUCT_IDENTIFIER));
+                                ssl.highlightShape(selMd.get(PRODUCT_IDENTIFIER), false);
                             } catch (NoSuchShapeException ex) {
                                 //ignored should not verify
                             }
+                            wwindPane.redraw();
                         }
                     }
                 }
             });
         }
-        // show the dialog if hidden
+        // remove previous surface shape layers
+        wwindPane.removeAllSurfShapeLayers();
+        HashMap<String, SurfShapesLayer> layerMap = new HashMap<>();
+        // prepare and categorize the footprints
+        ArrayList<String> prodIds = new ArrayList<>(results.size());
+        for (Metadata md : results) {
+            if (md.containsKey(PRODUCT_IDENTIFIER) && md.containsKey(PARENT_IDENTIFIER) && md.containsKey(FOOTPRINT)) {
+                String pid = md.get(PRODUCT_IDENTIFIER);
+                prodIds.add(pid);
+                // get the collection layer or create one and add id to the wwindPane
+                String collection = md.get(PARENT_IDENTIFIER);
+                SurfShapesLayer ssl = layerMap.get(collection);
+                if (ssl == null) {
+                    ssl = new SurfShapesLayer(collection);
+                    // choose next color from LAYER_COLORS palette
+                    ssl.setColor(LAYER_COLORS[layerMap.size() % LAYER_COLORS.length]);
+                    // listen for user clicks on map shapes
+                    ssl.addShapeSelectionListener(new PropertyChangeListener() {
+                        @Override
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            String shpId = (String) evt.getNewValue();
+                            String coll = ((Layer) evt.getSource()).getName();
+                            gridDialog.selectRow(coll, shpId);
+                        }
+                    });
+                    wwindPane.addSurfShapeLayer(ssl);
+                    layerMap.put(collection, ssl);
+                }
+                // add a polygon to the layer
+                ssl.addSurfPoly(WWindUtils.latLonOrdinates2LatLonList(md.getFootprintAsDoubles()), pid);
+            }
+        }
+        pNavigation.setProductIds(prodIds);
+        wwindPane.redraw();
+        // show the grid dialog if hidden
         if (!gridDialog.isVisible()) {
             gridDialog.setVisible(true);
         }
-        // trigger the grid update
+        // trigger the grid adjust
         gridDialog.updateFinished();
     }
 }
