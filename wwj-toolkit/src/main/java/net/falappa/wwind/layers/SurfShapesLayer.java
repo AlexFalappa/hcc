@@ -389,7 +389,7 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
     }
 
     @Override
-    public void clearHighlight() {
+    public void clearHighlight(boolean fireEvent) {
         if (prevPopupShape != null) {
             String shpId = (String) prevPopupShape.getValue(AVKey.HOVER_TEXT);
             // hide annotation and de-highlight
@@ -397,7 +397,9 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
             prevPopupShape.setHighlighted(false);
             // forget previous highlighted shape and fire deselection event
             prevPopupShape = null;
-            firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+            if (fireEvent) {
+                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+            }
         }
     }
 

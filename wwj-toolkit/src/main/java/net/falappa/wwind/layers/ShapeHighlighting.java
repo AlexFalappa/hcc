@@ -96,7 +96,9 @@ public interface ShapeHighlighting {
 
     /**
      * Un-highlights all surface shapes.
+     *
+     * @param fireEvent whether to fire de-selection events or not
      */
-    public void clearHighlight();
+    public void clearHighlight(boolean fireEvent);
 
 }

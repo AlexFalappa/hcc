@@ -1173,7 +1173,7 @@ public class TestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_bEditLocationsActionPerformed
 
     private void bClearHighlgtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearHighlgtActionPerformed
-        wwp.clearHighlights();
+        wwp.clearHighlights(true);
     }//GEN-LAST:event_bClearHighlgtActionPerformed
 
     /**

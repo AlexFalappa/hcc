@@ -1016,10 +1016,12 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Clears highlightd shapes from every registered surface shape layer.
+     *
+     * @param fireEvent whether to fire de-selection events or not
      */
-    public void clearHighlights() {
+    public void clearHighlights(boolean fireEvent) {
         for (SurfShapeLayer sl : shapeLayers.values()) {
-            sl.clearHighlight();
+            sl.clearHighlight(fireEvent);
         }
     }
 

@@ -332,7 +332,7 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
     }
 
     @Override
-    public void clearHighlight() {
+    public void clearHighlight(boolean fireEvent) {
         if (prevPopupMultiPoly != null) {
             String shpId = (String) prevPopupMultiPoly.get(0).getValue(AVKey.HOVER_TEXT);
             // hide annotation and de-highlight
@@ -342,7 +342,9 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
             }
             // forget previous highlighted shape and fire deselection event
             prevPopupMultiPoly = null;
-            firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+            if (fireEvent) {
+                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+            }
         }
     }
 
