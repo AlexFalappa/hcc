@@ -89,9 +89,10 @@ public interface ShapeHighlighting {
      * Highlights the surface shape with the given name.
      *
      * @param id the shape identifier
+     * @param fireEvent whether to fire selection events or not
      * @throws NoSuchShapeException if no shape with the given name exists
      */
-    public void highlightShape(String id) throws NoSuchShapeException;
+    public void highlightShape(String id, boolean fireEvent) throws NoSuchShapeException;
 
     /**
      * Un-highlights all surface shapes.

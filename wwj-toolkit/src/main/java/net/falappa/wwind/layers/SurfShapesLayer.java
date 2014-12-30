@@ -363,13 +363,13 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
     }
 
     @Override
-    public void flyToHiglhlightShape(String id) throws NoSuchShapeException {
+    public void flyToHiglhlightShape(String id, boolean fireEvent) throws NoSuchShapeException {
         if (!shapesById.containsKey(id)) {
             throw new NoSuchShapeException(String.format("No such shape: %s", id));
         }
         final SurfaceShape shape = shapesById.get(id);
         WWindUtils.flyToObjects(wwd, Arrays.asList(shape));
-        internalHighlight(shape, true);
+        internalHighlight(shape, fireEvent, true);
     }
 
     @Override
@@ -381,11 +381,11 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
     }
 
     @Override
-    public void highlightShape(String id) throws NoSuchShapeException {
+    public void highlightShape(String id, boolean fireEvent) throws NoSuchShapeException {
         if (!shapesById.containsKey(id)) {
             throw new NoSuchShapeException(String.format("No such shape: %s", id));
         }
-        internalHighlight(shapesById.get(id), true);
+        internalHighlight(shapesById.get(id), fireEvent, true);
     }
 
     @Override
@@ -434,7 +434,7 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
                 if (layer instanceof SurfShapesLayer) {
                     SurfShapesLayer sl = (SurfShapesLayer) layer;
                     if (sl.getName().equals(getName())) {
-                        internalHighlight(shape, false);
+                        internalHighlight(shape, true, false);
                     }
                     wwd.redraw();
                 }
@@ -476,7 +476,7 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
     }
 
     // manages change of attributes for highlighting, annotation bubble toggle, event firing
-    private void internalHighlight(SurfaceShape shape, boolean noDeselect) {
+    private void internalHighlight(SurfaceShape shape, boolean fireEvent, boolean noDeselect) {
         if (!highlightingEnabled) {
             return;
         }
@@ -489,7 +489,9 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
                 shape.setHighlighted(false);
                 // forget previous highlighted shape and fire deselection event
                 prevPopupShape = null;
-                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+                if (fireEvent) {
+                    firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+                }
             }
         } else {
             if (showAnnotation) {
@@ -506,10 +508,14 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
             if (prevPopupShape != null) {
                 // de-highlight previous shape and fire deselection event
                 prevPopupShape.setHighlighted(false);
-                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, prevPopupShape.getValue(AVKey.HOVER_TEXT), shpId));
+                if (fireEvent) {
+                    firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, prevPopupShape.getValue(AVKey.HOVER_TEXT), shpId));
+                }
             } else {
                 // fire event only
-                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, null, shpId));
+                if (fireEvent) {
+                    firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, null, shpId));
+                }
             }
             // remember shape
             prevPopupShape = shape;

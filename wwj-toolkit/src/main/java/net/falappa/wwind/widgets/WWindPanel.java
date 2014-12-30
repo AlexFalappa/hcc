@@ -1027,11 +1027,12 @@ public class WWindPanel extends javax.swing.JPanel {
      * Highlights the shape with the given id in one of the registered shape layers.
      *
      * @param id the shape identifier
+     * @param fireEvent true to fire selection events
      * @throws NoSuchShapeException
      */
-    public void highlightShape(String id) throws NoSuchShapeException {
+    public void highlightShape(String id, boolean fireEvent) throws NoSuchShapeException {
         for (SurfShapeLayer sl : shapeLayers.values()) {
-            sl.highlightShape(id);
+            sl.highlightShape(id, fireEvent);
         }
     }
 

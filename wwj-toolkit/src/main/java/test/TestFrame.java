@@ -927,7 +927,7 @@ public class TestFrame extends javax.swing.JFrame {
     private void bSelectFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSelectFActionPerformed
         if (!txFtpNum.getText().isEmpty()) {
             try {
-                wwp.getSurfShapeLayer(LAY_FOOTPRINTS).flyToHiglhlightShape(PREFIX_FOOTPRINTS.concat(txFtpNum.getText()));
+                wwp.getSurfShapeLayer(LAY_FOOTPRINTS).flyToHiglhlightShape(PREFIX_FOOTPRINTS.concat(txFtpNum.getText()), true);
             } catch (NoSuchShapeException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
@@ -937,7 +937,7 @@ public class TestFrame extends javax.swing.JFrame {
     private void bSelectRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSelectRActionPerformed
         if (!txRulNum.getText().isEmpty()) {
             try {
-                wwp.getSurfShapeLayer(LAY_RULES).highlightShape(PREFIX_RULES.concat(txRulNum.getText()));
+                wwp.getSurfShapeLayer(LAY_RULES).highlightShape(PREFIX_RULES.concat(txRulNum.getText()), true);
             } catch (NoSuchShapeException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
