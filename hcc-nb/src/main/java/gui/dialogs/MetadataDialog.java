@@ -22,6 +22,7 @@ import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import gui.glazed.MetadataTableFormat;
 import gui.glazed.MetadataTableFormatFactory;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import main.data.Metadata;
 import net.falappa.swing.table.TableColumnAdjuster;
@@ -55,6 +56,7 @@ public class MetadataDialog extends javax.swing.JDialog {
         //TODO filtering trough a search textfield
         // filterList=new FilterList<>(sortedList, null);
         selModel = GlazedListsSwing.eventSelectionModel(sortedList);
+        selModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //TODO higlight selected item on map
         tblMetadata.setSelectionModel(selModel);
         final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
@@ -68,6 +70,14 @@ public class MetadataDialog extends javax.swing.JDialog {
 
     public void removeListSelectionListener(ListSelectionListener x) {
         selModel.removeListSelectionListener(x);
+    }
+
+    public Metadata getSelected() {
+        Metadata ret = null;
+        if (!selModel.isSelectionEmpty()) {
+            return selModel.getSelected().get(0);
+        }
+        return ret;
     }
 
     public void updateFinished() {
@@ -86,21 +96,32 @@ public class MetadataDialog extends javax.swing.JDialog {
 
         scroller = new javax.swing.JScrollPane();
         tblMetadata = new javax.swing.JTable();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
+        filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 4), new java.awt.Dimension(0, 4), new java.awt.Dimension(32767, 4));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Metadata");
+        setTitle("Metadata Attributes");
         setPreferredSize(new java.awt.Dimension(800, 200));
 
         tblMetadata.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tblMetadata.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scroller.setViewportView(tblMetadata);
 
         getContentPane().add(scroller, java.awt.BorderLayout.CENTER);
+        getContentPane().add(filler1, java.awt.BorderLayout.LINE_END);
+        getContentPane().add(filler2, java.awt.BorderLayout.LINE_START);
+        getContentPane().add(filler3, java.awt.BorderLayout.PAGE_END);
+        getContentPane().add(filler4, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler3;
+    private javax.swing.Box.Filler filler4;
     private javax.swing.JScrollPane scroller;
     private javax.swing.JTable tblMetadata;
     // End of variables declaration//GEN-END:variables

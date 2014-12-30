@@ -26,27 +26,29 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.xml.namespace.QName;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import main.App;
 import main.data.CatalogueDefinition;
 import main.data.Metadata;
+import static main.data.MetadataNames.FOOTPRINT;
+import static main.data.MetadataNames.PARENT_IDENTIFIER;
+import static main.data.MetadataNames.PRODUCT_IDENTIFIER;
 import main.hma.HmaGetRecordsBuilder;
+import net.falappa.wwind.layers.NoSuchShapeException;
+import net.falappa.wwind.layers.SurfShapeLayer;
 import net.falappa.wwind.layers.SurfShapesLayer;
 import net.falappa.wwind.utils.WWindUtils;
 import net.opengis.www.cat.csw._2_0_2.GetRecordsDocument;
-import net.opengis.www.cat.csw._2_0_2.GetRecordsResponseDocument;
 import net.opengis.www.cat.wrs._1_0.CatalogueStub;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 /**
@@ -476,60 +478,6 @@ public class MainWindow extends javax.swing.JFrame {
         return request;
     }
 
-    int processResults(GetRecordsResponseDocument resp) {
-        // clear previous surface shape layers
-        wwindPane.removeAllSurfShapeLayers();
-        HashMap<String, SurfShapesLayer> layerMap = new HashMap<>();
-        // extract registry packages
-        XmlObject[] res = resp.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:RegistryPackage");
-        ArrayList<String> prodIds = new ArrayList<>(res.length);
-        for (XmlObject xo : res) {
-            // extract product id
-            XmlCursor xc = xo.newCursor();
-            String pid = xc.getAttributeText(new QName("id"));
-            xc.dispose();
-            prodIds.add(pid);
-            // extract collection
-            String collection = "None";
-            XmlObject[] xpos = xo.selectPath(
-                    "declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:Slot[@name='urn:ogc:def:slot:OGC-CSW-ebRIM-EO::parentIdentifier']");
-            if (xpos.length > 0) {
-                xc = xpos[0].newCursor();
-                xc.toFirstChild();
-                xc.toFirstChild();
-                collection = xc.getTextValue();
-                xc.dispose();
-            }
-            // extract footprint coordinates
-            xpos = xo.selectPath("declare namespace gml='http://www.opengis.net/gml' .//gml:posList");
-            if (xpos.length == 0) {
-                continue;
-            }
-            xc = xpos[0].newCursor();
-            String[] coords = xc.getTextValue().split("\\s+");
-            xc.dispose();
-            List<LatLon> geopoints = new ArrayList<>();
-            for (int i = 0; i < coords.length; i += 2) {
-                double lat = Double.valueOf(coords[i]);
-                double lon = Double.valueOf(coords[i + 1]);
-                geopoints.add(LatLon.fromDegrees(lat, lon));
-            }
-            // get the collection layer or create one and add id to the wwindPane
-            SurfShapesLayer ssl = layerMap.get(collection);
-            if (ssl == null) {
-                ssl = new SurfShapesLayer(collection);
-                ssl.setColor(LAYER_COLORS[layerMap.size() % LAYER_COLORS.length]);
-                wwindPane.addSurfShapeLayer(ssl);
-                layerMap.put(collection, ssl);
-            }
-            // add a polygon to the layer
-            ssl.addSurfPoly(geopoints, pid);
-        }
-        pNavigation.setProductIds(prodIds);
-        wwindPane.redraw();
-        return res.length;
-    }
-
     void enableSearchButtons(boolean enabled) {
         pSearchButons.enableButtons(enabled);
     }
@@ -601,7 +549,31 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
-    void updGridDialog() {
+    void postResults() {
+        // clear previous surface shape layers
+        wwindPane.removeAllSurfShapeLayers();
+        HashMap<String, SurfShapesLayer> layerMap = new HashMap<>();
+        // prepare and categorize the footprints
+        ArrayList<String> prodIds = new ArrayList<>(results.size());
+        for (Metadata md : results) {
+            if (md.containsKey(PRODUCT_IDENTIFIER) && md.containsKey(PARENT_IDENTIFIER) && md.containsKey(FOOTPRINT)) {
+                String pid = md.get(PRODUCT_IDENTIFIER);
+                prodIds.add(pid);
+                // get the collection layer or create one and add id to the wwindPane
+                String collection = md.get(PARENT_IDENTIFIER);
+                SurfShapesLayer ssl = layerMap.get(collection);
+                if (ssl == null) {
+                    ssl = new SurfShapesLayer(collection);
+                    ssl.setColor(LAYER_COLORS[layerMap.size() % LAYER_COLORS.length]);
+                    wwindPane.addSurfShapeLayer(ssl);
+                    layerMap.put(collection, ssl);
+                }
+                // add a polygon to the layer
+                ssl.addSurfPoly(WWindUtils.latLonOrdinates2LatLonList(md.getFootprintAsDoubles()), pid);
+            }
+        }
+        pNavigation.setProductIds(prodIds);
+        wwindPane.redraw();
         // create the grid dialog if needed
         if (gridDialog == null) {
             gridDialog = new MetadataDialog(this);
@@ -612,6 +584,23 @@ public class MainWindow extends javax.swing.JFrame {
             Point pt = this.getLocation();
             pt.translate(dims.width - gwDims.width, dims.height - gwDims.height);
             gridDialog.setLocation(pt);
+            gridDialog.addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    if (!e.getValueIsAdjusting()) {
+                        Metadata selMd = gridDialog.getSelected();
+                        if (selMd != null) {
+                            wwindPane.clearHighlights();
+                            SurfShapeLayer ssl = wwindPane.getSurfShapeLayer(selMd.get(PARENT_IDENTIFIER));
+                            try {
+                                ssl.highlightShape(selMd.get(PRODUCT_IDENTIFIER));
+                            } catch (NoSuchShapeException ex) {
+                                //ignored should not verify
+                            }
+                        }
+                    }
+                }
+            });
         }
         // show the dialog if hidden
         if (!gridDialog.isVisible()) {
