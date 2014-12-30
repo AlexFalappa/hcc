@@ -21,15 +21,24 @@ import main.data.Metadata;
 import main.data.MetadataNames;
 import static main.data.MetadataNames.ACQ_DATE;
 import static main.data.MetadataNames.ACQ_STATION;
+import static main.data.MetadataNames.ACQ_SUBTYPE;
+import static main.data.MetadataNames.ACQ_TYPE;
 import static main.data.MetadataNames.ARCHIVE_PATH;
 import static main.data.MetadataNames.ARCH_CENTER;
 import static main.data.MetadataNames.ARCH_DATE;
 import static main.data.MetadataNames.ARCH_ID;
 import static main.data.MetadataNames.ASC_NODE_LON;
+import static main.data.MetadataNames.CLOUD_COVER;
 import static main.data.MetadataNames.DOPPLER_FREQ;
+import static main.data.MetadataNames.ILLUM_ANGLE_AZIM;
+import static main.data.MetadataNames.ILLUM_ANGLE_ELEV;
+import static main.data.MetadataNames.IMG_DEGRADATION;
 import static main.data.MetadataNames.INCID_ANGLE;
+import static main.data.MetadataNames.INCID_ANGLE_ACROSS;
+import static main.data.MetadataNames.INCID_ANGLE_ALONG;
 import static main.data.MetadataNames.INCID_ANGLE_VAR;
 import static main.data.MetadataNames.INST_NAME;
+import static main.data.MetadataNames.LAST_ORBIT_NUMBER;
 import static main.data.MetadataNames.LOOK_SIDE;
 import static main.data.MetadataNames.MAX_INCID_ANGLE;
 import static main.data.MetadataNames.MIN_INCID_ANGLE;
@@ -48,11 +57,14 @@ import static main.data.MetadataNames.SENS_OP_MODE;
 import static main.data.MetadataNames.SENS_RESOLUTION;
 import static main.data.MetadataNames.SENS_SWATH;
 import static main.data.MetadataNames.SENS_TYPE;
+import static main.data.MetadataNames.SNOW_COVER;
 import static main.data.MetadataNames.START_DOWNLINK;
 import static main.data.MetadataNames.START_SENSING;
 import static main.data.MetadataNames.STATUS;
 import static main.data.MetadataNames.STOP_DOWNLINK;
 import static main.data.MetadataNames.STOP_SENSING;
+import static main.data.MetadataNames.URL_QLOOK;
+import static main.data.MetadataNames.URL_THUMB;
 import static main.data.MetadataNames.WRS_LAT;
 import static main.data.MetadataNames.WRS_LON;
 
@@ -75,6 +87,7 @@ public final class MetadataTableFormatFactory {
         ACQ_STATION,
         ACQ_DATE,
         ORBIT_NUMBER,
+        LAST_ORBIT_NUMBER,
         ORBIT_DIRECTION,
         MISSION_NAME,
         SAT_NAME,
@@ -86,23 +99,34 @@ public final class MetadataTableFormatFactory {
         ARCH_CENTER,
         ARCH_DATE,
         ARCHIVE_PATH,
+        URL_THUMB,
+        URL_QLOOK,
         STATUS,
         START_DOWNLINK,
         STOP_DOWNLINK,
         ARCH_ID,
+        ACQ_TYPE,
+        ACQ_SUBTYPE,
         PROC_LEVEL,
         SENS_SWATH,
         ASC_NODE_LON,
         WRS_LON,
         WRS_LAT,
+        CLOUD_COVER,
+        SNOW_COVER,
         POLARISN_CHANNELS,
         POLARISN_MODE,
         LOOK_SIDE,
         INCID_ANGLE,
+        INCID_ANGLE_ALONG,
+        INCID_ANGLE_ACROSS,
         MIN_INCID_ANGLE,
         MAX_INCID_ANGLE,
         INCID_ANGLE_VAR,
-        DOPPLER_FREQ
+        ILLUM_ANGLE_AZIM,
+        ILLUM_ANGLE_ELEV,
+        DOPPLER_FREQ,
+        IMG_DEGRADATION
     };
 
     /**
@@ -118,12 +142,15 @@ public final class MetadataTableFormatFactory {
         metaNamesLabels.put(STOP_SENSING, "Sens. Stop");
         metaNamesLabels.put(ACQ_STATION, "Acq. Station");
         metaNamesLabels.put(ACQ_DATE, "Acq. Date");
+        metaNamesLabels.put(ACQ_TYPE, "Acq. Type");
+        metaNamesLabels.put(ACQ_SUBTYPE, "Acq. Subtype");
         metaNamesLabels.put(ARCHIVE_PATH, "Arch. Path");
         metaNamesLabels.put(ARCH_CENTER, "Arch. Center");
         metaNamesLabels.put(ARCH_DATE, "Arch. Date");
         metaNamesLabels.put(ARCH_ID, "Arch. Id");
         metaNamesLabels.put(STATUS, "Status");
         metaNamesLabels.put(ORBIT_NUMBER, "Orb. Num.");
+        metaNamesLabels.put(LAST_ORBIT_NUMBER, "Last Orb.");
         metaNamesLabels.put(ORBIT_DIRECTION, "Orb. Dir.");
         metaNamesLabels.put(START_DOWNLINK, "Dlink Start");
         metaNamesLabels.put(STOP_DOWNLINK, "Dlink Stop");
@@ -146,7 +173,15 @@ public final class MetadataTableFormatFactory {
         metaNamesLabels.put(MIN_INCID_ANGLE, "Min Incid. Angle");
         metaNamesLabels.put(MAX_INCID_ANGLE, "Max Incid. Angle");
         metaNamesLabels.put(INCID_ANGLE_VAR, "Incid. Angle Var.");
+        metaNamesLabels.put(INCID_ANGLE_ACROSS, "Acrs.Incid. Angle");
+        metaNamesLabels.put(INCID_ANGLE_ALONG, "Alon.Incid. Angle");
+        metaNamesLabels.put(ILLUM_ANGLE_AZIM, "Illum. Angle Azim.");
+        metaNamesLabels.put(ILLUM_ANGLE_ELEV, "Illum. Angle Elev.");
         metaNamesLabels.put(DOPPLER_FREQ, "Doppler Freq.");
+        metaNamesLabels.put(URL_THUMB, "Thumbnail URL");
+        metaNamesLabels.put(URL_QLOOK, "Quicklook URL");
+        metaNamesLabels.put(CLOUD_COVER, "Cloud Cover");
+        metaNamesLabels.put(SNOW_COVER, "Snow Cover");
     }
 
     /**

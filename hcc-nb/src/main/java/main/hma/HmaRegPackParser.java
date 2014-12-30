@@ -15,11 +15,17 @@
  */
 package main.hma;
 
+import _0._3.rim.xsd.ebxml_regrep.tc.names.oasis.ExtrinsicObjectType;
 import _0._3.rim.xsd.ebxml_regrep.tc.names.oasis.RegistryPackageType;
 import javax.xml.namespace.QName;
 import main.data.Metadata;
 import main.data.MetadataNames;
+import static main.data.MetadataNames.ARCH_CENTER;
 import static main.data.MetadataNames.FOOTPRINT;
+import static main.data.MetadataNames.SAT_NAME;
+import static main.data.MetadataNames.SCENE_CENTER;
+import static main.data.MetadataNames.URL_QLOOK;
+import static main.data.MetadataNames.URL_THUMB;
 import main.data.Slots;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
@@ -54,27 +60,67 @@ public final class HmaRegPackParser {
                 switch (mn) {
                     case FOOTPRINT:
                         // extract footprint coordinates
-                        XmlObject[] xpos = slot.selectPath("declare namespace gml='http://www.opengis.net/gml' .//gml:posList");
-                        if (xpos.length > 0) {
-                            XmlCursor xc2 = xpos[0].newCursor();
+                        XmlObject[] xposlist = slot.selectPath("declare namespace gml='http://www.opengis.net/gml' .//gml:posList");
+                        if (xposlist.length > 0) {
+                            XmlCursor xc2 = xposlist[0].newCursor();
                             m.put(FOOTPRINT, xc2.getTextValue());
                             xc2.dispose();
                         }
                         break;
                     case SCENE_CENTER:
-                        // TODO process scene center differently
+                        // extract center coordinates
+                        XmlObject[] xpos = slot.selectPath("declare namespace gml='http://www.opengis.net/gml' .//gml:pos");
+                        if (xpos.length > 0) {
+                            XmlCursor xc3 = xpos[0].newCursor();
+                            m.put(SCENE_CENTER, xc3.getTextValue());
+                            xc3.dispose();
+                        }
                         break;
                     default:
-                        // single valued slots (containing inner <rim:ValueList><rim:Value> tags)
+                        // all other single valued slots (containing inner <rim:ValueList><rim:Value> tags)
                         xc.toFirstChild();
                         xc.toFirstChild();
                         m.put(mn, xc.getTextValue());
                 }
             } else {
-                System.err.printf("Unknown hma slot &s&n", slotName);
+                System.err.printf("Unknown hma slot %s%n", slotName);
                 // TODO introduce logging at low level or keep a flag and spit only one message at the end
             }
             xc.dispose();
+        }
+        // process name tags
+        XmlObject[] extObjs = regPack.selectPath(
+                "declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:ExtrinsicObject");
+        for (XmlObject extObj : extObjs) {
+            if (extObj instanceof ExtrinsicObjectType) {
+                ExtrinsicObjectType xExtObj = (ExtrinsicObjectType) extObj;
+                if (xExtObj.getObjectType().contains("EOArchivingInformation")) {
+                    // archiving center
+                    String center = xExtObj.getName().getLocalizedStringArray(0).getValue();
+                    m.put(ARCH_CENTER, center);
+                } else if (xExtObj.getObjectType().contains("EOAcquisitionPlatform")) {
+                    // satellite name
+                    String satName = xExtObj.getName().getLocalizedStringArray(0).getValue();
+                    m.put(SAT_NAME, satName);
+                } else if (xExtObj.getObjectType().contains("EOBrowseInformation")) {
+                    // quicklook or thumbnail urls
+                    XmlCursor xc2 = xExtObj.newCursor();
+                    xc2.toChild(new QName("urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0", "Slot"));
+                    xc2.toFirstChild();
+                    xc2.toFirstChild();
+                    String url = xc2.getTextValue();
+                    xc2.dispose();
+                    String brwsType = xExtObj.getName().getLocalizedStringArray(0).getValue();
+                    switch (brwsType) {
+                        case "THUMBNAIL":
+                            m.put(URL_THUMB, url);
+                            break;
+                        case "QUICKLOOK":
+                            m.put(URL_QLOOK, url);
+                            break;
+                    }
+                }
+            }
         }
         // TODO process BrowseInformation extrinsic object for thumbnail
         // TODO process BrowseInformation extrinsic object for quicklook

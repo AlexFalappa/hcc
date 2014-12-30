@@ -81,9 +81,11 @@ public class MetadataDialog extends javax.swing.JDialog {
     }
 
     public void updateFinished() {
-        final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
-        tblModel.setTableFormat(mtf);
-        adjuster.adjustColumns();
+        if (!dataList.isEmpty()) {
+            final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
+            tblModel.setTableFormat(mtf);
+            adjuster.adjustColumns();
+        }
     }
 
     /**

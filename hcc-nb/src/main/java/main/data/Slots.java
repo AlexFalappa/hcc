@@ -54,19 +54,30 @@ public final class Slots {
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::beginPosition", MetadataNames.START_SENSING);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::endPosition", MetadataNames.STOP_SENSING);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::orbitNumber", MetadataNames.ORBIT_NUMBER);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::lastOrbitNumber", MetadataNames.LAST_ORBIT_NUMBER);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::orbitDirection", MetadataNames.ORBIT_DIRECTION);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acquisitionStation", MetadataNames.ACQ_STATION);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::polarisationChannels", MetadataNames.POLARISN_CHANNELS);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::polarisationMode", MetadataNames.POLARISN_MODE);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::incidenceAngle", MetadataNames.INCID_ANGLE);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::alongTrackIncidenceAngle", MetadataNames.INCID_ANGLE_ALONG);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acrossTrackIncidenceAngle", MetadataNames.INCID_ANGLE_ACROSS);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::illuminationAzimuthAngle", MetadataNames.ILLUM_ANGLE_AZIM);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::illuminationElevationAngle", MetadataNames.ILLUM_ANGLE_ELEV);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::minimumIncidenceAngle", MetadataNames.MIN_INCID_ANGLE);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::maximumIncidenceAngle", MetadataNames.MAX_INCID_ANGLE);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::status", MetadataNames.STATUS);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::centerOf", MetadataNames.SCENE_CENTER);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acquisitionDate", MetadataNames.ACQ_DATE);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acquisitionType", MetadataNames.ACQ_TYPE);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acquisitionSubType", MetadataNames.ACQ_SUBTYPE);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::ascendingNodeLongitude", MetadataNames.ASC_NODE_LON);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::wrsLongitudeGrid", MetadataNames.WRS_LON);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::wrsLatitudeGrid", MetadataNames.WRS_LAT);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::antennaLookDirection", MetadataNames.LOOK_SIDE);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::imageQualityDegradation", MetadataNames.IMG_DEGRADATION);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::cloudCoverPercentage", MetadataNames.CLOUD_COVER);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::snowCoverPercentage", MetadataNames.SNOW_COVER);
         setReq(MetadataNames.PARENT_IDENTIFIER,
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::parentIdentifier\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.PRODUCT_TYPE,
@@ -79,6 +90,8 @@ public final class Slots {
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::endPosition\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.ORBIT_NUMBER,
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::orbitNumber\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.LAST_ORBIT_NUMBER,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::lastOrbitNumber\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.ORBIT_DIRECTION,
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::orbitDirection\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.ACQ_STATION,
@@ -87,6 +100,16 @@ public final class Slots {
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::polarisationChannels\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.POLARISN_MODE,
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::polarisationMode\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.INCID_ANGLE,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::incidenceAngle\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.INCID_ANGLE_ALONG,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::alongTrackIncidenceAngle\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.INCID_ANGLE_ACROSS,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acrossTrackIncidenceAngle\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.ILLUM_ANGLE_AZIM,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::illuminationAzimuthAngle\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.ILLUM_ANGLE_ELEV,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::illuminationElevationAngle\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.MIN_INCID_ANGLE,
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::minimumIncidenceAngle\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.MAX_INCID_ANGLE,
@@ -97,6 +120,10 @@ public final class Slots {
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::centerOf\"]/wrs:ValueList/wrs:AnyValue[1]");
         setReq(MetadataNames.ACQ_DATE,
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acquisitionDate\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.ACQ_TYPE,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acquisitionType\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.ACQ_SUBTYPE,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::acquisitionSubType\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.ASC_NODE_LON,
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::ascendingNodeLongitude\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.WRS_LON,
@@ -105,12 +132,19 @@ public final class Slots {
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::wrsLatitudeGrid\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.LOOK_SIDE,
                 "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::antennaLookDirection\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.IMG_DEGRADATION,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::imageQualityDegradation\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.CLOUD_COVER,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::cloudCoverPercentage\"]/rim:ValueList/rim:Value[1]");
+        setReq(MetadataNames.SNOW_COVER,
+                "/rim:ExtrinsicObject/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::snowCoverPercentage\"]/rim:ValueList/rim:Value[1]");
         // EOAcquisitionPlatform extrinsic object slots
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::instrumentShortName", MetadataNames.INST_NAME);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::sensorOperationalMode", MetadataNames.SENS_OP_MODE);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::platformSerialIdentifier", MetadataNames.SAT_SERIAL);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::sensorType", MetadataNames.SENS_TYPE);
         setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::sensorResolution", MetadataNames.SENS_RESOLUTION);
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::swathIdentifier", MetadataNames.SENS_SWATH);
         setReq(MetadataNames.SAT_NAME,
                 "/rim:ExtrinsicObject[@objectType=\"urn:ogc:def:objectType:OGC-CSW-ebRIM-EO::EOAcquisitionPlatform\"]/rim:Name/rim:LocalizedString/@value");
         setReq(MetadataNames.INST_NAME,
@@ -134,8 +168,11 @@ public final class Slots {
                 "/rim:ExtrinsicObject[@objectType=\"urn:ogc:def:objectType:OGC-CSW-ebRIM-EO::EOArchivingInformation\"]/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::archivingIdentifier\"]/rim:ValueList/rim:Value[1]");
         setReq(MetadataNames.ARCH_DATE,
                 "/rim:ExtrinsicObject[@objectType=\"urn:ogc:def:objectType:OGC-CSW-ebRIM-EO::EOArchivingInformation\"]/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::archivingDate\"]/rim:ValueList/rim:Value[1]");
+        // EOBrowseInformation extrinsic object slots (managed differently)
+        setResp("urn:ogc:def:slot:OGC-CSW-ebRIM-EO::fileName", MetadataNames.BRWSE_FILE_NAME);
+        setReq(MetadataNames.BRWSE_FILE_NAME,
+                "/rim:ExtrinsicObject[@objectType=\"urn:ogc:def:objectType:OGC-CSW-ebRIM-EO::EOBrowseInformation\"]/rim:Slot[@name=\"urn:ogc:def:slot:OGC-CSW-ebRIM-EO::fileName\"]/rim:ValueList/rim:Value[1]");
         /*
-         * note that the EOBrowseInformation extrinsic object slots are managed differently
          *
          * note that the following HMA attributes are not in a <Slot> tag (no resp2meta mapping)
          * /rim:ExtrinsicObject[@objectType=\"urn:x-ogc:specification:csw-ebrim:ObjectType:EO:EOAcquisitionPlatform\"]/rim:Name/rim:LocalizedString/@value
