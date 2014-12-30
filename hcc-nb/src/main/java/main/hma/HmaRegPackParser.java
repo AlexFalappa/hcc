@@ -88,7 +88,7 @@ public final class HmaRegPackParser {
             }
             xc.dispose();
         }
-        // process name tags
+        // process <rim:Name> tags
         XmlObject[] extObjs = regPack.selectPath(
                 "declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:ExtrinsicObject");
         for (XmlObject extObj : extObjs) {
@@ -122,12 +122,7 @@ public final class HmaRegPackParser {
                 }
             }
         }
-        // TODO process BrowseInformation extrinsic object for thumbnail
-        // TODO process BrowseInformation extrinsic object for quicklook
-        // TODO process ArchivingInformation extrinsic object for archiving center
-        // TODO process AcquisitionPlatform extrinsic object for platform name
         // TODO process Classification ???
-        System.out.println(m);
         return m;
     }
 }
