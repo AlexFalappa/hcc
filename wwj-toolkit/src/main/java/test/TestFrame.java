@@ -1,11 +1,5 @@
 package test;
 
-import net.falappa.wwind.layers.MultiPolygonShapesLayer;
-import net.falappa.wwind.layers.NoSuchShapeException;
-import net.falappa.wwind.layers.SurfShapeLayer;
-import net.falappa.wwind.layers.SurfShapesLayer;
-import net.falappa.wwind.utils.WWindUtils;
-import net.falappa.wwind.widgets.WWindPanel;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -21,6 +15,12 @@ import java.util.logging.LogManager;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import net.falappa.wwind.layers.MultiPolygonShapesLayer;
+import net.falappa.wwind.layers.NoSuchShapeException;
+import net.falappa.wwind.layers.SurfShapeLayer;
+import net.falappa.wwind.layers.SurfShapesLayer;
+import net.falappa.wwind.utils.WWindUtils;
+import net.falappa.wwind.widgets.WWindPanel;
 
 public class TestFrame extends javax.swing.JFrame {
 
@@ -86,6 +86,7 @@ public class TestFrame extends javax.swing.JFrame {
         spZmFact = new javax.swing.JSpinner();
         jLabel20 = new javax.swing.JLabel();
         bFlyThreeFootprints = new javax.swing.JButton();
+        bClearHighlgt = new javax.swing.JButton();
         pViewSets = new javax.swing.JPanel();
         paneVisAid = new net.falappa.wwind.widgets.VisualAidsVisibilityPanel();
         paneBaseCarto = new net.falappa.wwind.widgets.BaseCartoVisibilityPanel();
@@ -223,6 +224,13 @@ public class TestFrame extends javax.swing.JFrame {
             }
         });
 
+        bClearHighlgt.setText("Clear selection");
+        bClearHighlgt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bClearHighlgtActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pSelMoveLayout = new javax.swing.GroupLayout(pSelMove);
         pSelMove.setLayout(pSelMoveLayout);
         pSelMoveLayout.setHorizontalGroup(
@@ -262,8 +270,9 @@ public class TestFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(spZmFact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(bViewTo)
-                            .addComponent(bFlyThreeFootprints))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(bFlyThreeFootprints)
+                            .addComponent(bClearHighlgt))))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pSelMoveLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bZoomIn, bZoomOut});
@@ -283,7 +292,9 @@ public class TestFrame extends javax.swing.JFrame {
                     .addComponent(txRulNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12)
                     .addComponent(bSelectR))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bClearHighlgt)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bFlyTo)
@@ -636,7 +647,7 @@ public class TestFrame extends javax.swing.JFrame {
                     .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chAnnoSlayer2)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Shapes", pShapes);
@@ -773,7 +784,7 @@ public class TestFrame extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bEditLocations)))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pEditLayout.setVerticalGroup(
             pEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -802,7 +813,7 @@ public class TestFrame extends javax.swing.JFrame {
                 .addGroup(pEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(bEditLocations))
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Editing", pEdit);
@@ -830,7 +841,7 @@ public class TestFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bDelAll)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paneSSVisibility, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                .addComponent(paneSSVisibility, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1161,6 +1172,10 @@ public class TestFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_bEditLocationsActionPerformed
 
+    private void bClearHighlgtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearHighlgtActionPerformed
+        wwp.clearHighlights();
+    }//GEN-LAST:event_bClearHighlgtActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1200,6 +1215,7 @@ public class TestFrame extends javax.swing.JFrame {
     private javax.swing.JButton bAddSlayer2;
     private javax.swing.JButton bAoiInfo;
     private javax.swing.JButton bClear;
+    private javax.swing.JButton bClearHighlgt;
     private javax.swing.JButton bClearSLayer1;
     private javax.swing.JButton bClearSlayer2;
     private javax.swing.JButton bDelAll;

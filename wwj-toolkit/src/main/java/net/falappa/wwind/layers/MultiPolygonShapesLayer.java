@@ -1,6 +1,5 @@
 package net.falappa.wwind.layers;
 
-import net.falappa.wwind.utils.WWindUtils;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.prefs.Preferences;
+import net.falappa.wwind.utils.WWindUtils;
 
 /**
  * A WorldWind layer (<tt>RenderableLayer</tt> implementation) managing a set of multipolygons shapes.
@@ -329,6 +329,21 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
             throw new NoSuchShapeException(String.format("No such shape: %s", id));
         }
         internalHighlight(multiPolysById.get(id), true);
+    }
+
+    @Override
+    public void clearHighlight() {
+        if (prevPopupMultiPoly != null) {
+            String shpId = (String) prevPopupMultiPoly.get(0).getValue(AVKey.HOVER_TEXT);
+            // hide annotation and de-highlight
+            popupAnnotation.getAttributes().setVisible(false);
+            for (SurfacePolygon sp : prevPopupMultiPoly) {
+                sp.setHighlighted(false);
+            }
+            // forget previous highlighted shape and fire deselection event
+            prevPopupMultiPoly = null;
+            firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+        }
     }
 
     @Override

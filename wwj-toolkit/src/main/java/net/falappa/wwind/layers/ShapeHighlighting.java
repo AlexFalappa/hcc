@@ -93,4 +93,9 @@ public interface ShapeHighlighting {
      */
     public void highlightShape(String id) throws NoSuchShapeException;
 
+    /**
+     * Un-highlights all surface shapes.
+     */
+    public void clearHighlight();
+
 }

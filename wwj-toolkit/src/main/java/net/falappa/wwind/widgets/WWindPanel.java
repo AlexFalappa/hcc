@@ -1,14 +1,5 @@
 package net.falappa.wwind.widgets;
 
-import net.falappa.wwind.layers.EditableMarkerLayer;
-import net.falappa.wwind.layers.ShapeSelectionSource;
-import net.falappa.wwind.layers.SingleMarkerLayer;
-import net.falappa.wwind.layers.SingleSurfShapeLayer;
-import net.falappa.wwind.layers.SurfShapeLayer;
-import net.falappa.wwind.layers.SurfShapesLayer;
-import net.falappa.wwind.layers.WMSLayerFactory;
-import net.falappa.wwind.posparser.LatLonParser;
-import net.falappa.wwind.utils.WWindUtils;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.Configuration;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
@@ -67,6 +58,16 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import net.falappa.wwind.layers.EditableMarkerLayer;
+import net.falappa.wwind.layers.NoSuchShapeException;
+import net.falappa.wwind.layers.ShapeSelectionSource;
+import net.falappa.wwind.layers.SingleMarkerLayer;
+import net.falappa.wwind.layers.SingleSurfShapeLayer;
+import net.falappa.wwind.layers.SurfShapeLayer;
+import net.falappa.wwind.layers.SurfShapesLayer;
+import net.falappa.wwind.layers.WMSLayerFactory;
+import net.falappa.wwind.posparser.LatLonParser;
+import net.falappa.wwind.utils.WWindUtils;
 
 /**
  * A base WorldWind panel with a bar containing a {@link FlyToPanel} and a {@link FlatRoundInLinePanel}.
@@ -1011,6 +1012,27 @@ public class WWindPanel extends javax.swing.JPanel {
      */
     public void flyToObjects(Iterable<?> itrs) {
         WWindUtils.flyToObjects(wwCanvas, itrs);
+    }
+
+    /**
+     * Clears highlightd shapes from every registered surface shape layer.
+     */
+    public void clearHighlights() {
+        for (SurfShapeLayer sl : shapeLayers.values()) {
+            sl.clearHighlight();
+        }
+    }
+
+    /**
+     * Highlights the shape with the given id in one of the registered shape layers.
+     *
+     * @param id the shape identifier
+     * @throws NoSuchShapeException
+     */
+    public void highlightShape(String id) throws NoSuchShapeException {
+        for (SurfShapeLayer sl : shapeLayers.values()) {
+            sl.highlightShape(id);
+        }
     }
 
     /**

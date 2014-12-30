@@ -1,6 +1,5 @@
 package net.falappa.wwind.layers;
 
-import net.falappa.wwind.utils.WWindUtils;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -26,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.prefs.Preferences;
+import net.falappa.wwind.utils.WWindUtils;
 
 /**
  * A WorldWind layer (<tt>RenderableLayer</tt> implementation) managing a set of surface shapes (polygons, polylines, circles, sectors and
@@ -389,6 +389,19 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
     }
 
     @Override
+    public void clearHighlight() {
+        if (prevPopupShape != null) {
+            String shpId = (String) prevPopupShape.getValue(AVKey.HOVER_TEXT);
+            // hide annotation and de-highlight
+            popupAnnotation.getAttributes().setVisible(false);
+            prevPopupShape.setHighlighted(false);
+            // forget previous highlighted shape and fire deselection event
+            prevPopupShape = null;
+            firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+        }
+    }
+
+    @Override
     public void removeAllShapes() {
         super.removeAllRenderables();
         shapesById.clear();
@@ -450,7 +463,7 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
      * @param baseNode the root node under which to look for this class own node
      */
     public void loadPrefs(Preferences baseNode) {
-        // TODO caricamento da preferences
+        // TODO loading from preferences
     }
 
     /**
@@ -459,7 +472,7 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
      * @param baseNode the root node under which to store this class own node
      */
     public void storePrefs(Preferences baseNode) {
-        // TODO memorizzazione preferences
+        // TODO storing to preferences
     }
 
     // manages change of attributes for highlighting, annotation bubble toggle, event firing
