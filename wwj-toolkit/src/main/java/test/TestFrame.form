@@ -69,7 +69,7 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="bDelAll" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="paneSSVisibility" pref="293" max="32767" attributes="0"/>
+                      <Component id="paneSSVisibility" pref="247" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -100,7 +100,7 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
@@ -139,10 +139,11 @@
                                           </Group>
                                           <Component id="bViewTo" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="bFlyThreeFootprints" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="bClearHighlgt" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="25" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -163,7 +164,9 @@
                                   <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="bSelectR" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="bClearHighlgt" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="bFlyTo" min="-2" max="-2" attributes="0"/>
@@ -303,6 +306,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bFlyThreeFootprintsActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="bClearHighlgt">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Clear selection"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bClearHighlgtActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
@@ -584,7 +595,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="chAnnoSlayer2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="54" max="32767" attributes="0"/>
+                              <EmptySpace pref="66" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -802,7 +813,7 @@
                                       <Component id="bEditLocations" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="26" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -837,7 +848,7 @@
                                   <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="bEditLocations" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="116" max="32767" attributes="0"/>
+                              <EmptySpace pref="141" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

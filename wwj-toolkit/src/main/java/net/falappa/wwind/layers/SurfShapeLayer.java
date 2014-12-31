@@ -97,9 +97,10 @@ public interface SurfShapeLayer extends Layer, ShapeHighlighting {
      * Animates the map bringing the surface shape with the given name into view and highlights it.
      *
      * @param id the shape identifier
+     * @param fireEvent whether to fire selection events or not
      * @throws NoSuchShapeException if no shape with the given name exists
      */
-    void flyToHiglhlightShape(String id) throws NoSuchShapeException;
+    void flyToHiglhlightShape(String id, boolean fireEvent) throws NoSuchShapeException;
 
     /**
      * Animates the map bringing the surface shape with the given name into view.

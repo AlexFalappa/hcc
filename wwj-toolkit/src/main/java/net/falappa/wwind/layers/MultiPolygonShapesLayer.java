@@ -1,6 +1,5 @@
 package net.falappa.wwind.layers;
 
-import net.falappa.wwind.utils.WWindUtils;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.prefs.Preferences;
+import net.falappa.wwind.utils.WWindUtils;
 
 /**
  * A WorldWind layer (<tt>RenderableLayer</tt> implementation) managing a set of multipolygons shapes.
@@ -306,13 +306,13 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
     }
 
     @Override
-    public void flyToHiglhlightShape(String id) throws NoSuchShapeException {
+    public void flyToHiglhlightShape(String id, boolean fireEvent) throws NoSuchShapeException {
         if (!multiPolysById.containsKey(id)) {
             throw new NoSuchShapeException(String.format("No such shape: %s", id));
         }
         final ArrayList<SurfacePolygon> mp = multiPolysById.get(id);
         internalFlyTo(mp.get(0));// TODO to be perfected with extent visibility support
-        internalHighlight(mp, true);
+        internalHighlight(mp, fireEvent, true);
     }
 
     @Override
@@ -324,11 +324,28 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
     }
 
     @Override
-    public void highlightShape(String id) throws NoSuchShapeException {
+    public void highlightShape(String id, boolean fireEvent) throws NoSuchShapeException {
         if (!multiPolysById.containsKey(id)) {
             throw new NoSuchShapeException(String.format("No such shape: %s", id));
         }
-        internalHighlight(multiPolysById.get(id), true);
+        internalHighlight(multiPolysById.get(id), fireEvent, true);
+    }
+
+    @Override
+    public void clearHighlight(boolean fireEvent) {
+        if (prevPopupMultiPoly != null) {
+            String shpId = (String) prevPopupMultiPoly.get(0).getValue(AVKey.HOVER_TEXT);
+            // hide annotation and de-highlight
+            popupAnnotation.getAttributes().setVisible(false);
+            for (SurfacePolygon sp : prevPopupMultiPoly) {
+                sp.setHighlighted(false);
+            }
+            // forget previous highlighted shape and fire deselection event
+            prevPopupMultiPoly = null;
+            if (fireEvent) {
+                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+            }
+        }
     }
 
     @Override
@@ -365,7 +382,7 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
                     MultiPolygonShapesLayer mpl = (MultiPolygonShapesLayer) layer;
                     if (mpl.getName().equals(getName())) {
                         ArrayList<SurfacePolygon> mp = multiPolysById.get(shape.getValue(AVKey.HOVER_TEXT).toString());
-                        internalHighlight(mp, false);
+                        internalHighlight(mp, true, false);
                     }
                     wwd.redraw();
                 }
@@ -413,7 +430,7 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
     }
 
     // manages change of attributes for highlighting, annotation bubble toggle, event firing
-    private void internalHighlight(ArrayList<SurfacePolygon> mp, boolean noDeselect) {
+    private void internalHighlight(ArrayList<SurfacePolygon> mp, boolean fireEvent, boolean noDeselect) {
         if (!highlightingEnabled) {
             return;
         }
@@ -428,7 +445,9 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
                 }
                 // forget previous highlighted shape and fire deselection event
                 prevPopupMultiPoly = null;
-                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+                if (fireEvent) {
+                    firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, shpId, null));
+                }
             }
         } else {
             if (showAnnotation) {
@@ -445,11 +464,15 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
             if (prevPopupMultiPoly != null) {
                 // de-highlight previous shape and fire deselection event
                 MultiPolygonShapesLayer.this.highlightMultiPoly(prevPopupMultiPoly, false);
-                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, prevPopupMultiPoly.get(0).getValue(AVKey.HOVER_TEXT),
-                        shpId));
+                if (fireEvent) {
+                    firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, prevPopupMultiPoly.get(0)
+                            .getValue(AVKey.HOVER_TEXT), shpId));
+                }
             } else {
                 // fire event only
-                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, null, shpId));
+                if (fireEvent) {
+                    firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, null, shpId));
+                }
             }
             // remember shape
             prevPopupMultiPoly = mp;

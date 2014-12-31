@@ -20,6 +20,8 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import main.data.MetadataNames;
+import main.data.Slots;
 import net.opengis.www.cat.csw._2_0_2.GetRecordsDocument;
 import net.opengis.www.cat.csw._2_0_2.QueryType;
 import net.opengis.www.cat.csw._2_0_2.ResultType;
@@ -55,10 +57,6 @@ public class HmaGetRecordsBuilder {
     private QueryType query;
 
     public HmaGetRecordsBuilder() {
-        internalInit();
-    }
-
-    public void reset() {
         internalInit();
     }
 
@@ -111,7 +109,7 @@ public class HmaGetRecordsBuilder {
         xc.beginElement("PropertyIsGreaterThanOrEqualTo", NS_OGC);
         xc.toEndToken();
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.START_SENSING.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.START_SENSING));
         xc.toNextToken();
         xc.beginElement("Literal", NS_OGC);
         xc.insertChars(df.format(t1));
@@ -120,7 +118,7 @@ public class HmaGetRecordsBuilder {
         xc.beginElement("PropertyIsLessThanOrEqualTo", NS_OGC);
         xc.toEndToken();
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.STOP_SENSING.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.STOP_SENSING));
         xc.toNextToken();
         xc.beginElement("Literal", NS_OGC);
         xc.insertChars(df.format(t2));
@@ -134,7 +132,7 @@ public class HmaGetRecordsBuilder {
         xc.beginElement("PropertyIsGreaterThanOrEqualTo", NS_OGC);
         xc.toEndToken();
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.STOP_SENSING.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.STOP_SENSING));
         xc.toNextToken();
         xc.beginElement("Literal", NS_OGC);
         xc.insertChars(df.format(t1));
@@ -143,7 +141,7 @@ public class HmaGetRecordsBuilder {
         xc.beginElement("PropertyIsLessThanOrEqualTo", NS_OGC);
         xc.toEndToken();
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.START_SENSING.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.START_SENSING));
         xc.toNextToken();
         xc.beginElement("Literal", NS_OGC);
         xc.insertChars(df.format(t2));
@@ -157,7 +155,7 @@ public class HmaGetRecordsBuilder {
         xc.beginElement("PropertyIsGreaterThanOrEqualTo", NS_OGC);
         xc.toEndToken();
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.START_SENSING.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.START_SENSING));
         xc.toNextToken();
         xc.beginElement("Literal", NS_OGC);
         xc.insertChars(df.format(t1));
@@ -171,7 +169,7 @@ public class HmaGetRecordsBuilder {
         xc.beginElement("PropertyIsLessThanOrEqualTo", NS_OGC);
         xc.toEndToken();
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.STOP_SENSING.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.STOP_SENSING));
         xc.toNextToken();
         xc.beginElement("Literal", NS_OGC);
         xc.insertChars(df.format(t1));
@@ -260,7 +258,7 @@ public class HmaGetRecordsBuilder {
         xc.beginElement("PropertyIsEqualTo", NS_OGC);
         xc.toEndToken();
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.PARENT_IDENTIFIER.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.PARENT_IDENTIFIER));
         xc.toNextToken();
         xc.beginElement("Literal", NS_OGC);
         xc.insertChars(parentId);
@@ -270,7 +268,7 @@ public class HmaGetRecordsBuilder {
 
     private void insertPolygonBlock(XmlCursor xc, String coords) {
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT));
         xc.toNextToken();
         xc.beginElement("Polygon", NS_GML);
         xc.insertAttributeWithValue("srsName", "urn:ogc:def:crs:EPSG:6.3:4326");
@@ -289,7 +287,7 @@ public class HmaGetRecordsBuilder {
 
     private void insertLinestringBlock(XmlCursor xc, String coords) {
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT));
         xc.toNextToken();
         xc.beginElement("LineString", NS_GML);
         xc.insertAttributeWithValue("srsName", "urn:ogc:def:crs:EPSG:6.3:4326");
@@ -302,7 +300,7 @@ public class HmaGetRecordsBuilder {
 
     private void insertEnvelopeBlock(XmlCursor xc, double minlat, double minlon, double maxlat, double maxlon) {
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT));
         xc.toNextToken();
         xc.beginElement("Envelope", NS_GML);
         xc.insertAttributeWithValue("srsName", "urn:ogc:def:crs:EPSG:6.3:4326");
@@ -317,7 +315,7 @@ public class HmaGetRecordsBuilder {
 
     private void insertPointBlock(XmlCursor xc, double lat, double lon) {
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT));
         xc.toNextToken();
         xc.beginElement("Point", NS_GML);
         xc.insertAttributeWithValue("srsName", "urn:ogc:def:crs:EPSG:6.3:4326");
@@ -329,7 +327,7 @@ public class HmaGetRecordsBuilder {
 
     private void insertCircleBlock(XmlCursor xc, double centerLat, double centerLon, double radius) {
         xc.beginElement("PropertyName", NS_OGC);
-        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT.toString()));
+        xc.insertChars(Slots.meta2req.get(MetadataNames.FOOTPRINT));
         xc.toNextToken();
         xc.beginElement("CircleByCenterPoint", NS_GML);
         xc.insertAttributeWithValue("numArc", "1");

@@ -74,7 +74,7 @@ public class App {
         }
     }
 
-    public static void dumpReq(XmlObject req, boolean isResults) {
+    public static synchronized void dumpReq(XmlObject req, boolean isResults) {
         if (prefs.getBoolean(PREF_DUMP_REQS_FLAG, false)) {
             try {
                 File dumpFile = new File(genDumpFilePath(true, isResults));
@@ -86,7 +86,7 @@ public class App {
         }
     }
 
-    public static void dumpResp(XmlObject req, boolean isResults) {
+    public static synchronized void dumpResp(XmlObject req, boolean isResults) {
         if (prefs.getBoolean(PREF_DUMP_RESPS_FLAG, false)) {
             try {
                 File dumpFile = new File(genDumpFilePath(false, isResults));
