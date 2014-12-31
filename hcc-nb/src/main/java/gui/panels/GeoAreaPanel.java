@@ -215,7 +215,6 @@ public class GeoAreaPanel extends javax.swing.JPanel {
                 rd.setLocationRelativeTo(this);
                 rd.setVisible(true);
                 if (rd.isOkPressed()) {
-                    System.out.println(rd.getSector());
                     //TODO set AOI instead (currently not available in WWindPane)
 //                    App.frame.wwindPane.setAOIRange(rd.getSector());
 //                    App.frame.wwindPane.flyToAOI();

@@ -60,21 +60,25 @@ public class LimitLinesDocumentListener implements DocumentListener {
         this.maximumLines = maximumLines;
     }
 
-	//  Handle insertion of new text into the Document
+    //  Handle insertion of new text into the Document
+    @Override
     public void insertUpdate(final DocumentEvent e) {
-		//  Changes to the Document can not be done within the listener
+        //  Changes to the Document can not be done within the listener
         //  so we need to add the processing to the end of the EDT
 
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 removeLines(e);
             }
         });
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e) {
     }
 
@@ -82,7 +86,7 @@ public class LimitLinesDocumentListener implements DocumentListener {
      *  Remove lines from the Document when necessary
      */
     private void removeLines(DocumentEvent e) {
-		//  The root Element of the Document will tell us the total number
+        //  The root Element of the Document will tell us the total number
         //  of line in the Document.
 
         Document document = e.getDocument();
@@ -107,7 +111,7 @@ public class LimitLinesDocumentListener implements DocumentListener {
         try {
             document.remove(0, end);
         } catch (BadLocationException ble) {
-            System.out.println(ble);
+            System.err.println(ble);
         }
     }
 
@@ -115,7 +119,7 @@ public class LimitLinesDocumentListener implements DocumentListener {
      *  Remove lines from the end of the Document
      */
     private void removeFromEnd(Document document, Element root) {
-		//  We use start minus 1 to make sure we remove the newline
+        //  We use start minus 1 to make sure we remove the newline
         //  character of the previous line
 
         Element line = root.getElement(root.getElementCount() - 1);
@@ -125,7 +129,7 @@ public class LimitLinesDocumentListener implements DocumentListener {
         try {
             document.remove(start - 1, end - start);
         } catch (BadLocationException ble) {
-            System.out.println(ble);
+            System.err.println(ble);
         }
     }
 }

@@ -345,7 +345,6 @@ public class CircleSelector extends WWObjectImpl implements SelectListener, Mous
             CircularRegionShape dragObject = this.getShape();
 
             if (this.getOperation() == SIZING) {
-                System.out.println("SIZING");
                 Circle newCircle = this.resizeShape(dragObject);
                 if (newCircle != null) {
                     dragObject.setCenter(newCircle.getCenter());
@@ -353,7 +352,6 @@ public class CircleSelector extends WWObjectImpl implements SelectListener, Mous
                 }
                 event.consume();
             } else {
-                System.out.println("NOT SIZING");
                 this.setSide(this.determineAdjustmentSide(dragObject, this.getEdgeFactor()));
                 if (this.getSide() == NONE || this.getOperation() == MOVING) {
 
