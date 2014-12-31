@@ -26,6 +26,8 @@ import gui.dialogs.SettingsDialog;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -568,7 +570,7 @@ public class MainWindow extends javax.swing.JFrame {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {
                     if (!e.getValueIsAdjusting()) {
-                        EventList<Metadata> selList = gridDialog.getSelected();
+                        EventList<Metadata> selList = gridDialog.getListOfSelected();
                         if (!selList.isEmpty()) {
                             wwindPane.clearHighlights(false);
                             Metadata selMd = selList.get(0);
@@ -582,6 +584,24 @@ public class MainWindow extends javax.swing.JFrame {
                         }
                     }
                 }
+            });
+            gridDialog.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() > 1) {
+                        EventList<Metadata> selList = gridDialog.getListOfSelected();
+                        if (!selList.isEmpty()) {
+                            Metadata selMd = selList.get(0);
+                            SurfShapeLayer ssl = wwindPane.getSurfShapeLayer(selMd.get(PARENT_IDENTIFIER));
+                            try {
+                                ssl.flyToShape(selMd.get(PRODUCT_IDENTIFIER));
+                            } catch (NoSuchShapeException ex) {
+                                //ignored should not verify
+                            }
+                        }
+                    }
+                }
+
             });
         }
         // remove previous surface shape layers
