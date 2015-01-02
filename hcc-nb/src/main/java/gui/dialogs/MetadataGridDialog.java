@@ -36,7 +36,7 @@ import net.falappa.swing.table.TableColumnAdjuster;
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */
-public class MetadataDialog extends javax.swing.JDialog {
+public class MetadataGridDialog extends javax.swing.JDialog {
 
     private BasicEventList<Metadata> dataList;
 //    private FilterList<Metadata> filterList;
@@ -45,7 +45,7 @@ public class MetadataDialog extends javax.swing.JDialog {
     private final TableColumnAdjuster adjuster;
     private AdvancedTableModel<Metadata> tblModel;
 
-    public MetadataDialog(java.awt.Frame parent) {
+    public MetadataGridDialog(java.awt.Frame parent) {
         super(parent, false);
         initComponents();
         adjuster = new TableColumnAdjuster(tblMetadata);

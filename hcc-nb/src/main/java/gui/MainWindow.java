@@ -21,7 +21,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.Layer;
 import gui.dialogs.AboutDialog;
 import gui.dialogs.CatDefinitionDialog;
-import gui.dialogs.MetadataDialog;
+import gui.dialogs.MetadataGridDialog;
 import gui.dialogs.SettingsDialog;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -67,7 +67,7 @@ public class MainWindow extends javax.swing.JFrame {
     private final DefaultComboBoxModel<CatalogueDefinition> dcmCatalogues = new DefaultComboBoxModel<>();
     private CatalogueStub stub = null;
     private BasicEventList<Metadata> results = new BasicEventList<>();
-    private MetadataDialog gridDialog;
+    private MetadataGridDialog gridDialog;
     private final static Color[] LAYER_COLORS = new Color[]{
         Color.ORANGE,
         Color.MAGENTA,
@@ -558,7 +558,7 @@ public class MainWindow extends javax.swing.JFrame {
     void postResults() {
         // create the grid dialog if needed
         if (gridDialog == null) {
-            gridDialog = new MetadataDialog(this);
+            gridDialog = new MetadataGridDialog(this);
             gridDialog.setDataList(results);
             // initial position in the bottom right part of the main window
             final Dimension dims = this.getSize();
