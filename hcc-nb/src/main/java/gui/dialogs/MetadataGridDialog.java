@@ -15,7 +15,6 @@
  */
 package gui.dialogs;
 
-import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.swing.AdvancedListSelectionModel;
@@ -32,26 +31,38 @@ import main.data.MetadataNames;
 import net.falappa.swing.table.TableColumnAdjuster;
 
 /**
- * Modeless dialog displaying a tabular view of queryed metadata.
+ * Modeless dialog displaying a tabular view of some of the queryed metadata.
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */
 public class MetadataGridDialog extends javax.swing.JDialog {
 
-    private BasicEventList<Metadata> dataList;
+    private EventList<Metadata> dataList;
 //    private FilterList<Metadata> filterList;
     private SortedList<Metadata> sortedList;
     private AdvancedListSelectionModel<Metadata> selModel;
     private final TableColumnAdjuster adjuster;
     private AdvancedTableModel<Metadata> tblModel;
 
+    /**
+     * Constructor.
+     *
+     * @param parent parent frame
+     */
     public MetadataGridDialog(java.awt.Frame parent) {
         super(parent, false);
         initComponents();
         adjuster = new TableColumnAdjuster(tblMetadata);
     }
 
-    public void setDataList(BasicEventList<Metadata> list) {
+    /**
+     * Set the metadata list to show.
+     * <p>
+     * Can be called several times to update the grid.
+     *
+     * @param list the new {@link EventList} to show
+     */
+    public void setDataList(EventList<Metadata> list) {
         if (list.isEmpty()) {
             return;
         }
@@ -68,18 +79,38 @@ public class MetadataGridDialog extends javax.swing.JDialog {
         tblMetadata.setModel(tblModel);
     }
 
-    public void addListSelectionListener(ListSelectionListener x) {
-        selModel.addListSelectionListener(x);
+    /**
+     * Adds a selection listener to the grid.
+     *
+     * @param selListener the listener
+     */
+    public void addListSelectionListener(ListSelectionListener selListener) {
+        selModel.addListSelectionListener(selListener);
     }
 
-    public void removeListSelectionListener(ListSelectionListener x) {
-        selModel.removeListSelectionListener(x);
+    /**
+     * Removes a selection listener from the grid.
+     *
+     * @param selListener the listener
+     */
+    public void removeListSelectionListener(ListSelectionListener selListener) {
+        selModel.removeListSelectionListener(selListener);
     }
 
+    /**
+     * Getter for the selected objects list.
+     * <p>
+     * Currently selection is limited to one item only.
+     *
+     * @return an {@link EventList} with selected items
+     */
     public EventList<Metadata> getListOfSelected() {
         return selModel.getSelected();
     }
 
+    /**
+     * Triggers grid adapting to a new list and column width re-adjusting.
+     */
     public void updateFinished() {
         if (!dataList.isEmpty()) {
             final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
@@ -98,9 +129,15 @@ public class MetadataGridDialog extends javax.swing.JDialog {
         tblMetadata.removeMouseListener(l);
     }
 
-    public void selectRow(String coll, String shpId) {
+    /**
+     * Finds and select the table row of the product with the given collection and product identifier.
+     *
+     * @param coll the collection
+     * @param prodId the product identifier
+     */
+    public void selectRow(String coll, String prodId) {
         Metadata m = new Metadata();
-        m.put(MetadataNames.PRODUCT_IDENTIFIER, shpId);
+        m.put(MetadataNames.PRODUCT_IDENTIFIER, prodId);
         m.put(MetadataNames.PARENT_IDENTIFIER, coll);
         int idx = Collections.binarySearch(sortedList, m);
         if (idx >= 0) {
