@@ -18,7 +18,7 @@ package gui.glazed;
 import java.util.ArrayList;
 import main.data.Metadata;
 import main.data.MetadataNames;
-import static main.hma.HmaMetadataSeq.gridSequence;
+import static main.hma.HmaMetadataSeq.gridListBrief;
 import static main.hma.HmaMetadataSeq.shortLabels;
 
 /**
@@ -39,7 +39,7 @@ public final class MetadataTableFormatFactory {
     public static MetadataTableFormat createTableFormat(Metadata sample) {
         ArrayList<MetadataNames> columnKeys = new ArrayList<>(sample.size());
         ArrayList<String> columnNames = new ArrayList<>(sample.size());
-        for (MetadataNames mn : gridSequence) {
+        for (MetadataNames mn : gridListBrief) {
             if (sample.containsKey(mn)) {
                 columnKeys.add(mn);
                 columnNames.add(shortLabels.get(mn));

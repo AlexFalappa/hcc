@@ -15,7 +15,11 @@
  */
 package main.hma;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import main.data.MetadataNames;
 import static main.data.MetadataNames.ACQ_DATE;
 import static main.data.MetadataNames.ACQ_STATION;
@@ -82,116 +86,39 @@ public final class HmaMetadataSeq {
     }
 
     /**
-     * Sequence of metadata attributes, roughly by importance, targeted at display of several products in a grid.
+     * Sequence of the most important metadata attributes targeted at display of several products in a grid.
      */
-    public static final MetadataNames[] gridSequence = new MetadataNames[]{
-        PARENT_IDENTIFIER,
-        PRODUCT_IDENTIFIER,
-        PRODUCT_TYPE,
-        START_SENSING,
-        STOP_SENSING,
-        ACQ_STATION,
-        ACQ_DATE,
-        ORBIT_NUMBER,
-        LAST_ORBIT_NUMBER,
-        ORBIT_DIRECTION,
-        MISSION_NAME,
-        SAT_NAME,
-        SAT_SERIAL,
-        INST_NAME,
-        SENS_TYPE,
-        SENS_OP_MODE,
-        SENS_RESOLUTION,
-        ARCH_CENTER,
-        ARCH_DATE,
-        ARCHIVE_PATH,
-        URL_THUMB,
-        URL_QLOOK,
-        STATUS,
-        START_DOWNLINK,
-        STOP_DOWNLINK,
-        ARCH_ID,
-        ACQ_TYPE,
-        ACQ_SUBTYPE,
-        PROC_LEVEL,
-        SENS_SWATH,
-        ASC_NODE_LON,
-        WRS_LON,
-        WRS_LAT,
-        CLOUD_COVER,
-        SNOW_COVER,
-        POLARISN_CHANNELS,
-        POLARISN_MODE,
-        LOOK_SIDE,
-        INCID_ANGLE,
-        INCID_ANGLE_ALONG,
-        INCID_ANGLE_ACROSS,
-        MIN_INCID_ANGLE,
-        MAX_INCID_ANGLE,
-        INCID_ANGLE_VAR,
-        ILLUM_ANGLE_AZIM,
-        ILLUM_ANGLE_ELEV,
-        DOPPLER_FREQ,
-        IMG_DEGRADATION
-    };
+    public static final List<MetadataNames> gridListBrief;
+
+    /**
+     * Sequence of all metadata attributes, roughly ordered by importance, targeted at display of several products in a grid.
+     */
+    public static final List<MetadataNames> gridListFull;
+
     /**
      * Sequence of metadata attributes, grouped by Extrinsic Object, targeted at display of one product in a form.
      */
-    public static final MetadataNames[] formSequence = new MetadataNames[]{
-        //EOProduct extrinsic object
-        PRODUCT_IDENTIFIER,
-        PARENT_IDENTIFIER,
-        PRODUCT_TYPE,
-        STATUS,
-        START_SENSING,
-        STOP_SENSING,
-        START_DOWNLINK,
-        STOP_DOWNLINK,
-        ORBIT_NUMBER,
-        LAST_ORBIT_NUMBER,
-        ORBIT_DIRECTION,
-        ACQ_STATION,
-        ACQ_DATE,
-        ACQ_TYPE,
-        ACQ_SUBTYPE,
-        CLOUD_COVER,
-        SNOW_COVER,
-        POLARISN_CHANNELS,
-        POLARISN_MODE,
-        ILLUM_ANGLE_AZIM,
-        ILLUM_ANGLE_ELEV,
-        INCID_ANGLE,
-        INCID_ANGLE_ALONG,
-        INCID_ANGLE_ACROSS,
-        MIN_INCID_ANGLE,
-        MAX_INCID_ANGLE,
-        INCID_ANGLE_VAR,
-        LOOK_SIDE,
-        IMG_DEGRADATION,
-        PROC_LEVEL,
-        DOPPLER_FREQ,
-        ASC_NODE_LON,
-        WRS_LON,
-        WRS_LAT,
-        FOOTPRINT,
-        SCENE_CENTER,
-        //EOArchivingInformation extrinsic object
-        ARCH_CENTER,
-        ARCH_DATE,
-        ARCHIVE_PATH,
-        ARCH_ID,
-        //EOBrowseInformation extrinsic object
-        URL_THUMB,
-        URL_QLOOK,
-        //EOAcquisitionPlatform extrinsic object
-        SAT_NAME,
-        SAT_SERIAL,
-        INST_NAME,
-        SENS_TYPE,
-        SENS_OP_MODE,
-        SENS_SWATH,
-        SENS_RESOLUTION
-    };
+    public static final List<MetadataNames> formList;
+
+    /**
+     * Sequence of EOProduct extrinsic object metadata attributes.
+     */
+    public static final List<MetadataNames> formListEOProduct;
+
+    /**
+     * Sequence of EOAcquisitionPlatform extrinsic object metadata attributes.
+     */
+    public static final List<MetadataNames> formListEOAcquisitionPlatform;
+
+    /**
+     * Sequence of EOArchivingInformation extrinsic object metadata attributes.
+     */
+    public static final List<MetadataNames> formListEOArchivingInformation;
+
+    /**
+     * Sequence of EOBrowseInformation extrinsic object metadata attributes.
+     */
+    public static final List<MetadataNames> formListEOBrowseInformation;
 
     /**
      * Short label strings for metadata attributes.
@@ -255,6 +182,9 @@ public final class HmaMetadataSeq {
         shortLabels.put(URL_QLOOK, "Quicklook URL");
         shortLabels.put(CLOUD_COVER, "Cloud Cover");
         shortLabels.put(SNOW_COVER, "Snow Cover");
+        shortLabels.put(FOOTPRINT, "Footprint");
+        shortLabels.put(SCENE_CENTER, "Scn. Center");
+        shortLabels.put(MISSION_NAME, "Mission");
         // ----------------------------
         longLabels.put(PARENT_IDENTIFIER, "Parent Identifier");
         longLabels.put(PRODUCT_IDENTIFIER, "Product Identifier");
@@ -303,7 +233,142 @@ public final class HmaMetadataSeq {
         longLabels.put(URL_QLOOK, "Quicklook URL");
         longLabels.put(CLOUD_COVER, "Cloud Coverage %");
         longLabels.put(SNOW_COVER, "Snow Coverage %");
-
+        longLabels.put(FOOTPRINT, "Footprint");
+        longLabels.put(SCENE_CENTER, "Scene Center");
+        longLabels.put(MISSION_NAME, "Mission Name");
+        //--------------------
+        gridListFull = Collections.unmodifiableList(Arrays.asList(new MetadataNames[]{
+            PARENT_IDENTIFIER,
+            PRODUCT_IDENTIFIER,
+            PRODUCT_TYPE,
+            START_SENSING,
+            STOP_SENSING,
+            ACQ_STATION,
+            ACQ_DATE,
+            ORBIT_NUMBER,
+            LAST_ORBIT_NUMBER,
+            ORBIT_DIRECTION,
+            MISSION_NAME,
+            SAT_NAME,
+            SAT_SERIAL,
+            INST_NAME,
+            SENS_TYPE,
+            SENS_OP_MODE,
+            SENS_RESOLUTION,
+            ARCH_CENTER,
+            ARCH_DATE,
+            ARCHIVE_PATH,
+            URL_THUMB,
+            URL_QLOOK,
+            STATUS,
+            START_DOWNLINK,
+            STOP_DOWNLINK,
+            ARCH_ID,
+            ACQ_TYPE,
+            ACQ_SUBTYPE,
+            PROC_LEVEL,
+            SENS_SWATH,
+            ASC_NODE_LON,
+            WRS_LON,
+            WRS_LAT,
+            CLOUD_COVER,
+            SNOW_COVER,
+            POLARISN_CHANNELS,
+            POLARISN_MODE,
+            LOOK_SIDE,
+            INCID_ANGLE,
+            INCID_ANGLE_ALONG,
+            INCID_ANGLE_ACROSS,
+            MIN_INCID_ANGLE,
+            MAX_INCID_ANGLE,
+            INCID_ANGLE_VAR,
+            ILLUM_ANGLE_AZIM,
+            ILLUM_ANGLE_ELEV,
+            DOPPLER_FREQ,
+            IMG_DEGRADATION
+        }));
+        //--------------------
+        gridListBrief = Collections.unmodifiableList(Arrays.asList(new MetadataNames[]{
+            PARENT_IDENTIFIER,
+            PRODUCT_IDENTIFIER,
+            PRODUCT_TYPE,
+            START_SENSING,
+            STOP_SENSING,
+            ACQ_STATION,
+            ACQ_DATE,
+            ORBIT_NUMBER,
+            INST_NAME,
+            SENS_OP_MODE,
+            ARCH_CENTER,
+            STATUS
+        }));
+        //--------------------
+        formListEOProduct = Collections.unmodifiableList(Arrays.asList(new MetadataNames[]{
+            PRODUCT_IDENTIFIER,
+            PARENT_IDENTIFIER,
+            PRODUCT_TYPE,
+            STATUS,
+            START_SENSING,
+            STOP_SENSING,
+            START_DOWNLINK,
+            STOP_DOWNLINK,
+            ORBIT_NUMBER,
+            LAST_ORBIT_NUMBER,
+            ORBIT_DIRECTION,
+            ACQ_STATION,
+            ACQ_DATE,
+            ACQ_TYPE,
+            ACQ_SUBTYPE,
+            CLOUD_COVER,
+            SNOW_COVER,
+            POLARISN_CHANNELS,
+            POLARISN_MODE,
+            ILLUM_ANGLE_AZIM,
+            ILLUM_ANGLE_ELEV,
+            INCID_ANGLE,
+            INCID_ANGLE_ALONG,
+            INCID_ANGLE_ACROSS,
+            MIN_INCID_ANGLE,
+            MAX_INCID_ANGLE,
+            INCID_ANGLE_VAR,
+            LOOK_SIDE,
+            IMG_DEGRADATION,
+            PROC_LEVEL,
+            DOPPLER_FREQ,
+            ASC_NODE_LON,
+            WRS_LON,
+            WRS_LAT,
+            FOOTPRINT,
+            SCENE_CENTER
+        }));
+        //-----------------
+        formListEOAcquisitionPlatform = Collections.unmodifiableList(Arrays.asList(new MetadataNames[]{
+            SAT_NAME,
+            SAT_SERIAL,
+            INST_NAME,
+            SENS_TYPE,
+            SENS_OP_MODE,
+            SENS_SWATH,
+            SENS_RESOLUTION
+        }));
+        formListEOArchivingInformation = Collections.unmodifiableList(Arrays.asList(new MetadataNames[]{
+            //EOArchivingInformation extrinsic object
+            ARCH_CENTER,
+            ARCH_DATE,
+            ARCHIVE_PATH,
+            ARCH_ID
+        }));
+        //-----------------
+        formListEOBrowseInformation = Collections.unmodifiableList(Arrays.asList(new MetadataNames[]{
+            URL_THUMB,
+            URL_QLOOK
+        }));
+        //-----------------
+        ArrayList<MetadataNames> list = new ArrayList<>(formListEOProduct);
+        list.addAll(formListEOAcquisitionPlatform);
+        list.addAll(formListEOBrowseInformation);
+        list.addAll(formListEOArchivingInformation);
+        formList = Collections.unmodifiableList(list);
     }
 
 }
