@@ -213,5 +213,10 @@
             <artifactId>glazedlists_java15</artifactId>
             <version>1.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.l2fprod</groupId>
+            <artifactId>l2fprod-common-tasks</artifactId>
+            <version>7.3</version>
+        </dependency>
     </dependencies>
 </project>
