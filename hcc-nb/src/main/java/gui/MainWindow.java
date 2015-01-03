@@ -21,6 +21,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.Layer;
 import gui.dialogs.AboutDialog;
 import gui.dialogs.CatDefinitionDialog;
+import gui.dialogs.MetadataDetailDialog;
 import gui.dialogs.MetadataGridDialog;
 import gui.dialogs.SettingsDialog;
 import java.awt.Color;
@@ -68,6 +69,7 @@ public class MainWindow extends javax.swing.JFrame {
     private CatalogueStub stub = null;
     private BasicEventList<Metadata> results = new BasicEventList<>();
     private MetadataGridDialog gridDialog;
+    private MetadataDetailDialog detailDialog;
     private final static Color[] LAYER_COLORS = new Color[]{
         Color.ORANGE,
         Color.MAGENTA,
@@ -556,10 +558,11 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     void postResults() {
-        // create the grid dialog if needed
+        // create the grid and detail dialogs if needed
         if (gridDialog == null) {
             gridDialog = new MetadataGridDialog(this);
             gridDialog.setDataList(results);
+            detailDialog = new MetadataDetailDialog(this, gridDialog);
             // initial position in the bottom right part of the main window
             final Dimension dims = this.getSize();
             final Dimension gwDims = gridDialog.getSize();
@@ -644,5 +647,11 @@ public class MainWindow extends javax.swing.JFrame {
         }
         // trigger the grid adjust
         gridDialog.updateFinished();
+        // show the detail dialog if hidden
+        if (!detailDialog.isVisible()) {
+            detailDialog.setVisible(true);
+        }
+        // clear the detail dialog
+        detailDialog.setMetadata(null);
     }
 }
