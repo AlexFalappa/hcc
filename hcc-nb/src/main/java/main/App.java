@@ -23,10 +23,11 @@ import java.util.Date;
 import java.util.prefs.Preferences;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import net.falappa.utils.LogUtils;
 import net.falappa.wwind.widgets.WWindPanel;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Application entry point.
@@ -35,6 +36,7 @@ import org.apache.xmlbeans.XmlOptions;
  */
 public class App {
 
+    private static final Logger logger = LoggerFactory.getLogger(App.class.getName());
     public static final String PREF_ROOT = "alexfalappa.hcc-nb";
     public static final String PREF_LAFCLASS = "LAF-classname";
     public static final String PREF_DUMP_REQS_FLAG = "dump-requests";
@@ -43,7 +45,7 @@ public class App {
     public static final String PREF_DUMP_RESPS_DIR = "dump-responses-dir";
     public static MainWindow frame;
     private static final Preferences prefs = Preferences.userRoot().node(PREF_ROOT);
-    private static final XmlOptions xopts = new XmlOptions().setSavePrettyPrint().setSavePrettyPrintIndent(2).setSaveNamespacesFirst();
+    private static final XmlOptions dumpXopts = new XmlOptions().setSavePrettyPrint().setSavePrettyPrintIndent(2).setSaveNamespacesFirst();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
     /**
@@ -52,7 +54,11 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        LogUtils.silenceJUL();
+        logger.info("HCC started");
+        logger.info("Version {} build {}", Version.NUMBER, Build.NUMBER);
+        logger.debug("Running on {} {} version {}", System.getProperty("java.vm.vendor"), System.getProperty("java.vm.name"), System
+                .getProperty("java.vm.version"));
+        logger.debug("Setting up properties for WorldWind");
         WWindPanel.setupPropsForWWind();
         // Create and display the form
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -68,6 +74,7 @@ public class App {
 
     private static void setPrefLAF() {
         try {
+            logger.debug("Restoring previous look and feel: {}", prefs.get(PREF_LAFCLASS, "None"));
             UIManager.setLookAndFeel(prefs.get(PREF_LAFCLASS, UIManager.getSystemLookAndFeelClassName()));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             //ignored will go with default look and feel
@@ -78,7 +85,9 @@ public class App {
         if (prefs.getBoolean(PREF_DUMP_REQS_FLAG, false)) {
             try {
                 File dumpFile = new File(genDumpFilePath(true, isResults));
-                req.save(dumpFile, xopts);
+                logger.debug("Dumping request to: {}", dumpFile.getAbsolutePath());
+                req.save(dumpFile, dumpXopts);
+                logger.debug("Request dumped");
             } catch (IOException ex) {
                 // TODO log exception to logger
                 System.err.println(ex.getMessage());
@@ -90,7 +99,9 @@ public class App {
         if (prefs.getBoolean(PREF_DUMP_RESPS_FLAG, false)) {
             try {
                 File dumpFile = new File(genDumpFilePath(false, isResults));
-                req.save(dumpFile, xopts);
+                logger.debug("Dumping response to: {}", dumpFile.getAbsolutePath());
+                req.save(dumpFile, dumpXopts);
+                logger.debug("Response dumped");
             } catch (IOException ex) {
                 // TODO log exception to logger
                 System.err.println(ex.getMessage());
