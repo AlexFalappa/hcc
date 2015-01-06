@@ -15,9 +15,6 @@
  */
 package gui.dialogs;
 
-import java.io.IOException;
-import java.util.Properties;
-
 /**
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
@@ -27,14 +24,8 @@ public class AboutDialog extends javax.swing.JDialog {
     public AboutDialog(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
-        try {
-            // try retrieving the automatically generated build number
-            Properties prop = new Properties();
-            prop.load(AboutDialog.class.getResourceAsStream("/buildNumber.properties"));
-            lBuild.setText(String.format("Build %s", prop.getProperty("buildNumber")));
-        } catch (IOException ex) {
-            lBuild.setVisible(false);
-        }
+        lVersion.setText(String.format("Version %s", main.Version.NUMBER));
+        lBuild.setText(String.format("Build %s", main.Build.NUMBER));
     }
 
     /**
@@ -47,11 +38,11 @@ public class AboutDialog extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        bOk = new javax.swing.JButton();
-        lBuild = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        lVersion = new javax.swing.JLabel();
+        lBuild = new javax.swing.JLabel();
+        bOk = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About");
@@ -62,9 +53,11 @@ public class AboutDialog extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
         jLabel2.setText("HMA Catalogue Client");
 
-        jLabel3.setText("Version 0.9");
-
         jLabel4.setText("By Alessandro Falappa");
+
+        lVersion.setText("Version N/A");
+
+        lBuild.setText("Build N/A");
 
         bOk.setText("OK");
         bOk.addActionListener(new java.awt.event.ActionListener() {
@@ -72,8 +65,6 @@ public class AboutDialog extends javax.swing.JDialog {
                 bOkActionPerformed(evt);
             }
         });
-
-        lBuild.setText("Build N/A");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -90,7 +81,7 @@ public class AboutDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel3)
+                            .addComponent(lVersion)
                             .addComponent(jLabel4)
                             .addComponent(lBuild))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -108,7 +99,7 @@ public class AboutDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
+                .addComponent(lVersion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lBuild)
                 .addGap(18, 18, Short.MAX_VALUE)
@@ -127,9 +118,9 @@ public class AboutDialog extends javax.swing.JDialog {
     private javax.swing.JButton bOk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lBuild;
+    private javax.swing.JLabel lVersion;
     // End of variables declaration//GEN-END:variables
 }

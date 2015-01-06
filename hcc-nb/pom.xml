@@ -27,6 +27,11 @@
         </resources>
         <plugins>
             <plugin>
+                <!--Invoke templating plugin configured in parent pom-->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <!--Invoke buildnumber plugin configured in parent pom-->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>

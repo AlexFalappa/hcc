@@ -36,7 +36,7 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lVersion" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                           <Component id="lBuild" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -59,7 +59,7 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+              <Component id="lVersion" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lBuild" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="32767" attributes="0"/>
@@ -86,14 +86,21 @@
         <Property name="text" type="java.lang.String" value="HMA Catalogue Client"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel3">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Version 0.9"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
         <Property name="text" type="java.lang.String" value="By Alessandro Falappa"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSeparator" name="jSeparator1">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lVersion">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Version N/A"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lBuild">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Build N/A"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="bOk">
@@ -103,13 +110,6 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bOkActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lBuild">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Build N/A"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
   </SubComponents>
 </Form>

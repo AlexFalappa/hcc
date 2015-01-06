@@ -32,6 +32,19 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <!--Inject maven props in java source-->
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>templating-maven-plugin</artifactId>
+                    <version>1.0-alpha-3</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>filter-sources</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <!--Generate properties with an incremental buld number, scm revision and build timestamp-->
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>buildnumber-maven-plugin</artifactId>
