@@ -26,26 +26,34 @@
             </resource>
         </resources>
         <plugins>
-            <!--            <plugin>
-                 Skip test execution for this module
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>-->
             <plugin>
-                <!-- Put a main class and a classpath in the jar manifest -->
+                <!--Invoke buildnumber plugin configured in parent pom-->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
                     <archive>
+                        <!-- Put a main class and a classpath in the jar manifest -->
                         <manifest>
                             <mainClass>main.App</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
+                        <!-- Put build infos in the jar manifest -->
+                        <manifestSections>
+                            <manifestSection>
+                                <name>Build Information</name>
+                                <manifestEntries>
+                                    <Build-Num>${buildNumber}</Build-Num>
+                                    <Build-Date>${timestamp}</Build-Date>
+                                    <Build-Scm-Branch>${scmBranch}</Build-Scm-Branch>
+                                </manifestEntries>
+                            </manifestSection>
+                        </manifestSections>
                     </archive>
                 </configuration>
             </plugin>
