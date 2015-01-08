@@ -72,7 +72,6 @@ public class MetadataGridDialog extends javax.swing.JDialog {
         // filterList=new FilterList<>(sortedList, null);
         selModel = GlazedListsSwing.eventSelectionModel(sortedList);
         selModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        //TODO higlight selected item on map
         tblMetadata.setSelectionModel(selModel);
         final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
         tblModel = GlazedListsSwing.eventTableModelWithThreadProxyList(sortedList, mtf);

@@ -29,6 +29,8 @@ import static main.data.MetadataNames.URL_THUMB;
 import main.data.Slots;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Maps registry packages in HMA GetRecords responses to {@link Metadata objects}.
@@ -36,6 +38,8 @@ import org.apache.xmlbeans.XmlObject;
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */
 public final class HmaRegPackParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(HmaRegPackParser.class.getName());
 
     public Metadata parseXmlObj(XmlObject xobj) {
         if (xobj instanceof RegistryPackageType) {
@@ -50,6 +54,7 @@ public final class HmaRegPackParser {
         XmlCursor xc;
         // extract product id
         m.put(MetadataNames.PRODUCT_IDENTIFIER, regPack.getId());
+        logger.trace("Parsing registry package for {}", regPack.getId());
         // process slots
         XmlObject[] slots = regPack.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:Slot");
         for (XmlObject slot : slots) {
@@ -83,8 +88,7 @@ public final class HmaRegPackParser {
                         m.put(mn, xc.getTextValue());
                 }
             } else {
-                System.err.printf("Unknown hma slot %s%n", slotName);
-                // TODO introduce logging at low level or keep a flag and spit only one message at the end
+                logger.trace("Unknown hma slot {}", slotName);
             }
             xc.dispose();
         }

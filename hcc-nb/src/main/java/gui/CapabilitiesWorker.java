@@ -25,6 +25,8 @@ import net.opengis.www.cat.wrs._1_0.CapabilitiesDocument;
 import net.opengis.www.cat.wrs._1_0.CatalogueStub;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SwingWorker to make the HMA GetCapabilities request.
@@ -33,6 +35,7 @@ import org.apache.xmlbeans.XmlObject;
  */
 public class CapabilitiesWorker extends SwingWorker<CapabilitiesDocument, Void> {
 
+    private static final Logger logger = LoggerFactory.getLogger(CapabilitiesWorker.class.getName());
     private static final String NS_RIM = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0";
 
     private final HmaGetCapabilitiesBuilder builder = new HmaGetCapabilitiesBuilder();
@@ -46,6 +49,7 @@ public class CapabilitiesWorker extends SwingWorker<CapabilitiesDocument, Void> 
 
     @Override
     public CapabilitiesDocument doInBackground() throws Exception {
+        logger.info("Retrieving HMA catalogue capabilities");
         CapabilitiesDocument capDoc = stub.getCapabilities(builder.getRequest());
         return capDoc;
     }
@@ -55,6 +59,7 @@ public class CapabilitiesWorker extends SwingWorker<CapabilitiesDocument, Void> 
         try {
             CapabilitiesDocument capDoc = get();
             if (capDoc != null) {
+                logger.debug("Analyzing capabilities document");
                 ArrayList<String> collections = new ArrayList<>();
                 XmlObject[] res = capDoc.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:Slot");
                 if (res.length > 0) {
@@ -71,8 +76,12 @@ public class CapabilitiesWorker extends SwingWorker<CapabilitiesDocument, Void> 
                     xc.dispose();
                 }
                 cpane.setCollections(collections.toArray(new String[]{}));
+                logger.debug("Collections found: {}", collections);
             }
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
+            // ignored, interruption currently not supported
+        } catch (ExecutionException e) {
+            logger.error("Could not retrieve capabilities", e.getCause());
             App.frame.showErrorDialog("Error", "Collection discovery failed!", e);
         }
     }

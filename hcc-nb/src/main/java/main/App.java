@@ -95,8 +95,7 @@ public class App {
                 req.save(dumpFile, dumpXopts);
                 logger.debug("Request dumped");
             } catch (IOException ex) {
-                // TODO log exception to logger
-                System.err.println(ex.getMessage());
+                logger.error("Could not dump request: {}", ex.getMessage());
             }
         }
     }
@@ -109,8 +108,7 @@ public class App {
                 req.save(dumpFile, dumpXopts);
                 logger.debug("Response dumped");
             } catch (IOException ex) {
-                // TODO log exception to logger
-                System.err.println(ex.getMessage());
+                logger.error("Could not dump response: {}", ex.getMessage());
             }
         }
     }

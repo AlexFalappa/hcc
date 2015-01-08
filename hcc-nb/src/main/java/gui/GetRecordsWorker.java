@@ -28,6 +28,8 @@ import net.opengis.www.cat.wrs._1_0.CatalogueStub;
 import net.opengis.www.cat.wrs._1_0.ServiceExceptionReportFault;
 import net.opengis.www.ows.ExceptionType;
 import org.apache.xmlbeans.XmlObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SwingWorker to make the GetRecords request.
@@ -35,6 +37,8 @@ import org.apache.xmlbeans.XmlObject;
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */
 public class GetRecordsWorker extends SwingWorker<Integer, String> {
+
+    private static final Logger logger = LoggerFactory.getLogger(GetRecordsWorker.class.getName());
 
     private final MainWindow mw;
     private final CatalogueStub stub;
@@ -50,6 +54,7 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
 
     @Override
     protected Integer doInBackground() throws Exception {
+        logger.info("Sending GetRecords request");
         publish("Building request...");
         GetRecordsDocument req = mw.buildReq(isResults);
         App.dumpReq(req, isResults);
@@ -64,6 +69,7 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
             recs = processHits(resp);
         }
         publish("Done");
+        logger.debug("Retrieved {} records", recs);
         return recs;
     }
 
@@ -87,14 +93,16 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
                 // decode error from remote service
                 final ServiceExceptionReportFault serf = (ServiceExceptionReportFault) cause;
                 final ExceptionType exc = serf.getFaultMessage().getExceptionReport().getExceptionArray(0);
+                logger.error("Web service error: {}", exc.getExceptionTextArray(0));
                 mw.showErrorDialog("Server error", String.format("Exception Report code %s:\n%s", exc.getExceptionCode(),
                         exc.getExceptionTextArray(0)));
             } else {
                 mw.showErrorDialog("Unexpected error", "Could not perform request!", ex);
+                logger.error("Could not retrieve results", ex);
             }
             mw.lMexs.setText("No record retrieved");
         } catch (InterruptedException iex) {
-            //ignored currently not supported
+            // ignored, interruption currently not supported
         } finally {
             mw.enableSearchButtons(true);
             mw.postResults();
@@ -106,6 +114,7 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
     }
 
     int processResults(GetRecordsResponseDocument resp) {
+        logger.debug("Processing GetRecords RESULTS response");
         // extract registry packages via XPath
         XmlObject[] res = resp.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:RegistryPackage");
         // lock and clear the result list
