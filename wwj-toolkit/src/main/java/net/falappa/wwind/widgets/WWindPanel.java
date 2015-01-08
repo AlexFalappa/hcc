@@ -107,6 +107,8 @@ public class WWindPanel extends javax.swing.JPanel {
     public static final String EVENT_SURF_LAYER_ADDED = "WWindPanel.SurfShapeLayerAdded";
     public static final String EVENT_SURF_LAYER_REMOVED = "WWindPanel.SurfShapeLayerRemoved";
     public static final String WWINDPANEL_BASECARTO_CONFIG_URL = "wwindpanel.basecarto.config.url";
+    // preference node names
+    private static final String PREFN_WWP = "view";
     private static final Logger logger = Logger.getLogger(WWindPanel.class.getName());
     private static final Color COLOR_EDIT = new Color(0, 200, 255, 200);
     private final SingleSurfShapeLayer aoi = new SingleSurfShapeLayer("Area of Interest");
@@ -1045,7 +1047,7 @@ public class WWindPanel extends javax.swing.JPanel {
      */
     public void loadPrefs(Preferences baseNode) {
         // store layer settings
-        Preferences viewPrefs = baseNode.node("view");
+        Preferences viewPrefs = baseNode.node(PREFN_WWP);
         if (layerSettingsDialog != null) {
             layerSettingsDialog.loadPrefs(viewPrefs);
         }
@@ -1059,7 +1061,7 @@ public class WWindPanel extends javax.swing.JPanel {
      */
     public void storePrefs(Preferences baseNode) {
         // store layer settings
-        Preferences viewPrefs = baseNode.node("view");
+        Preferences viewPrefs = baseNode.node(PREFN_WWP);
         if (layerSettingsDialog != null) {
             layerSettingsDialog.storePrefs(viewPrefs);
         }

@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.prefs.Preferences;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import net.falappa.utils.LogUtils;
 import net.falappa.wwind.widgets.WWindPanel;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -37,16 +38,18 @@ import org.slf4j.LoggerFactory;
 public class App {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class.getName());
-    public static final String PREF_ROOT = "alexfalappa.hcc-nb";
-    public static final String PREF_LAFCLASS = "LAF-classname";
-    public static final String PREF_DUMP_REQS_FLAG = "dump-requests";
-    public static final String PREF_DUMP_REQS_DIR = "dump-requests-dir";
-    public static final String PREF_DUMP_RESPS_FLAG = "dump-responses";
-    public static final String PREF_DUMP_RESPS_DIR = "dump-responses-dir";
     public static MainWindow frame;
-    private static final Preferences prefs = Preferences.userRoot().node(PREF_ROOT);
     private static final XmlOptions dumpXopts = new XmlOptions().setSavePrettyPrint().setSavePrettyPrintIndent(2).setSaveNamespacesFirst();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    // preference node names
+    public static final String PREFN_APP = "alexfalappa.hcc-nb";
+    // preference keys
+    public static final String PREFK_LAFCLASS = "LAF-classname";
+    public static final String PREFK_DUMP_REQS_FLAG = "dump-requests";
+    public static final String PREFK_DUMP_REQS_DIR = "dump-requests-dir";
+    public static final String PREFK_DUMP_RESPS_FLAG = "dump-responses";
+    public static final String PREFK_DUMP_RESPS_DIR = "dump-responses-dir";
+    private static final Preferences prefs = Preferences.userRoot().node(PREFN_APP);
 
     /**
      * Main method.
@@ -54,10 +57,14 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        // setup logging and log startup messages
+        LogUtils.silenceJUL();
         logger.info("HCC started");
         logger.info("Version {} build {}", Version.NUMBER, Build.NUMBER);
-        logger.debug("Running on {} {} version {}", System.getProperty("java.vm.vendor"), System.getProperty("java.vm.name"), System
-                .getProperty("java.vm.version"));
+        logger.debug("Running on {} {}", System.getProperty("java.runtime.name"), System.getProperty("java.runtime.version"));
+        logger.debug("Java VM {} {} v. {}", System.getProperty("java.vm.vendor"), System.getProperty("java.vm.name"), System.getProperty(
+                "java.vm.version"));
+        // setup properties for WWind
         logger.debug("Setting up properties for WorldWind");
         WWindPanel.setupPropsForWWind();
         // Create and display the form
@@ -66,7 +73,6 @@ public class App {
             public void run() {
                 setPrefLAF();
                 frame = new MainWindow();
-                frame.setSize(1200, 800);
                 frame.setVisible(true);
             }
         });
@@ -74,15 +80,15 @@ public class App {
 
     private static void setPrefLAF() {
         try {
-            logger.debug("Restoring previous look and feel: {}", prefs.get(PREF_LAFCLASS, "None"));
-            UIManager.setLookAndFeel(prefs.get(PREF_LAFCLASS, UIManager.getSystemLookAndFeelClassName()));
+            logger.debug("Restoring previous look and feel: {}", prefs.get(PREFK_LAFCLASS, "None"));
+            UIManager.setLookAndFeel(prefs.get(PREFK_LAFCLASS, UIManager.getSystemLookAndFeelClassName()));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             //ignored will go with default look and feel
         }
     }
 
     public static synchronized void dumpReq(XmlObject req, boolean isResults) {
-        if (prefs.getBoolean(PREF_DUMP_REQS_FLAG, false)) {
+        if (prefs.getBoolean(PREFK_DUMP_REQS_FLAG, false)) {
             try {
                 File dumpFile = new File(genDumpFilePath(true, isResults));
                 logger.debug("Dumping request to: {}", dumpFile.getAbsolutePath());
@@ -96,7 +102,7 @@ public class App {
     }
 
     public static synchronized void dumpResp(XmlObject req, boolean isResults) {
-        if (prefs.getBoolean(PREF_DUMP_RESPS_FLAG, false)) {
+        if (prefs.getBoolean(PREFK_DUMP_RESPS_FLAG, false)) {
             try {
                 File dumpFile = new File(genDumpFilePath(false, isResults));
                 logger.debug("Dumping response to: {}", dumpFile.getAbsolutePath());
@@ -112,9 +118,9 @@ public class App {
     private static String genDumpFilePath(boolean isReq, boolean isResults) {
         StringBuilder sb = new StringBuilder();
         if (isReq) {
-            sb.append(prefs.get(PREF_DUMP_REQS_DIR, System.getProperty("user.home")));
+            sb.append(prefs.get(PREFK_DUMP_REQS_DIR, System.getProperty("user.home")));
         } else {
-            sb.append(prefs.get(PREF_DUMP_RESPS_DIR, System.getProperty("user.home")));
+            sb.append(prefs.get(PREFK_DUMP_RESPS_DIR, System.getProperty("user.home")));
         }
         sb.append(System.getProperty("file.separator"));
         sb.append(sdf.format(new Date()));

@@ -78,6 +78,19 @@ public class MainWindow extends javax.swing.JFrame {
         Color.GREEN,
         Color.CYAN,
         Color.WHITE,};
+    // preference node names
+    private static final String PREFN_WINDOW = "MainWindow";
+    private static final String PREFN_CATALOGUES = "catalogues";
+    // preference keys
+    private static final String PREFK_WIN_HEIGHT = "winHeight";
+    private static final String PREFK_WIN_LOC_X = "winLocX";
+    private static final String PREFK_WIN_LOC_Y = "winLocY";
+    private static final String PREFK_WIN_WIDTH = "winWidth";
+    private static final String PREFK_WIN_STATE = "winState";
+    private static final String PREFK_CAT_COLLECTIONS = "collections";
+    private static final String PREFK_CAT_TIMEOUT = "timeout";
+    private static final String PREFK_CAT_SOAPV12 = "soapv12";
+    private static final String PREFK_CAT_EDP = "edp";
 
     public MainWindow() {
         initComponents();
@@ -161,6 +174,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("HMA Catalogue Client");
+        setPreferredSize(new java.awt.Dimension(1200, 800));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -510,19 +524,26 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void storePrefs() {
         // get preferences API node
-        Preferences prefs = Preferences.userRoot().node(App.PREF_ROOT);
+        Preferences prefs = Preferences.userRoot().node(App.PREFN_APP);
+        // save window state
+        Preferences winPrefs = prefs.node(PREFN_WINDOW);
+        winPrefs.putInt(PREFK_WIN_LOC_X, this.getX());
+        winPrefs.putInt(PREFK_WIN_LOC_Y, this.getY());
+        winPrefs.putInt(PREFK_WIN_WIDTH, this.getWidth());
+        winPrefs.putInt(PREFK_WIN_HEIGHT, this.getHeight());
+        winPrefs.putInt(PREFK_WIN_STATE, this.getExtendedState());
         // save view settings
         wwindPane.storePrefs(prefs);
         // save catalogue definitions
-        Preferences pCatalogs = prefs.node("catalogues");
+        Preferences pCatalogs = prefs.node(PREFN_CATALOGUES);
         for (int i = 0; i < dcmCatalogues.getSize(); i++) {
             CatalogueDefinition catDef = dcmCatalogues.getElementAt(i);
             // create new pref child node with catalogue name
             Preferences catPref = pCatalogs.node(catDef.getName());
             // store endpoint, timeout and soap flag
-            catPref.put("edp", catDef.getEndpoint());
-            catPref.putBoolean("soapv12", catDef.isSoapV12());
-            catPref.putInt("timeout", catDef.getTimeoutMillis());
+            catPref.put(PREFK_CAT_EDP, catDef.getEndpoint());
+            catPref.putBoolean(PREFK_CAT_SOAPV12, catDef.isSoapV12());
+            catPref.putInt(PREFK_CAT_TIMEOUT, catDef.getTimeoutMillis());
             // store collections as space separated string
             StringBuilder sb = new StringBuilder();
             final int arrLen = catDef.getCollections().length;
@@ -532,24 +553,30 @@ public class MainWindow extends javax.swing.JFrame {
                     sb.append(' ');
                 }
             }
-            catPref.put("collections", sb.toString());
+            catPref.put(PREFK_CAT_COLLECTIONS, sb.toString());
         }
     }
 
     private void loadPrefs() {
         try {
             // get preferences API node
-            Preferences prefs = Preferences.userRoot().node(App.PREF_ROOT);
+            Preferences prefs = Preferences.userRoot().node(App.PREFN_APP);
+            // load window state
+            Preferences winPrefs = prefs.node(PREFN_WINDOW);
+            this.setLocation(winPrefs.getInt(PREFK_WIN_LOC_X, this.getX()), winPrefs.getInt(PREFK_WIN_LOC_Y, this.getY()));
+            this.setSize(winPrefs.getInt(PREFK_WIN_WIDTH, this.getWidth()), winPrefs.getInt(PREFK_WIN_HEIGHT, this.getHeight()));
+            this.setState(winPrefs.getInt(PREFK_WIN_STATE, this.getExtendedState()));
             // load view settings
             wwindPane.loadPrefs(prefs);
             // load catalogue definitions
-            Preferences pCatalogs = prefs.node("catalogues");
+            Preferences pCatalogs = prefs.node(PREFN_CATALOGUES);
             final String[] nodes = pCatalogs.childrenNames();
             for (String nodeName : nodes) {
                 Preferences catPref = pCatalogs.node(nodeName);
-                CatalogueDefinition catDef = new CatalogueDefinition(nodeName, catPref.get("edp", "n/a"), catPref.getBoolean("soapv12",
-                        false), catPref.getInt("timeout", 20000));
-                catDef.setCollections(catPref.get("collections", "").split("\\s"));
+                CatalogueDefinition catDef = new CatalogueDefinition(nodeName, catPref.get(PREFK_CAT_EDP, "n/a"), catPref.getBoolean(
+                        PREFK_CAT_SOAPV12,
+                        false), catPref.getInt(PREFK_CAT_TIMEOUT, 20000));
+                catDef.setCollections(catPref.get(PREFK_CAT_COLLECTIONS, "").split("\\s"));
                 dcmCatalogues.addElement(catDef);
             }
         } catch (BackingStoreException ex) {

@@ -50,11 +50,11 @@ public class SettingsDialog extends javax.swing.JDialog {
         // select the current look and feel
         cbLF.setSelectedItem(lafClassToNames.get(UIManager.getLookAndFeel().getClass().getName()));
         // load dump flags and dirs from prefs
-        Preferences prefs = Preferences.userRoot().node(App.PREF_ROOT);
-        chDumpReqs.setSelected(prefs.getBoolean(App.PREF_DUMP_REQS_FLAG, false));
-        dsfReqsDir.setDir(new File(prefs.get(App.PREF_DUMP_REQS_DIR, System.getProperty("user.home"))));
-        chDumpRsps.setSelected(prefs.getBoolean(App.PREF_DUMP_RESPS_FLAG, false));
-        dsfRspsDir.setDir(new File(prefs.get(App.PREF_DUMP_RESPS_DIR, System.getProperty("user.home"))));
+        Preferences prefs = Preferences.userRoot().node(App.PREFN_APP);
+        chDumpReqs.setSelected(prefs.getBoolean(App.PREFK_DUMP_REQS_FLAG, false));
+        dsfReqsDir.setDir(new File(prefs.get(App.PREFK_DUMP_REQS_DIR, System.getProperty("user.home"))));
+        chDumpRsps.setSelected(prefs.getBoolean(App.PREFK_DUMP_RESPS_FLAG, false));
+        dsfRspsDir.setDir(new File(prefs.get(App.PREFK_DUMP_RESPS_DIR, System.getProperty("user.home"))));
     }
 
     /** This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this
@@ -197,14 +197,14 @@ public class SettingsDialog extends javax.swing.JDialog {
 
     private void bOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOkActionPerformed
         // get preferences API node
-        Preferences prefs = Preferences.userRoot().node(App.PREF_ROOT);
+        Preferences prefs = Preferences.userRoot().node(App.PREFN_APP);
         // store selected LAF class name
-        prefs.put(App.PREF_LAFCLASS, lafClassToNames.inverse().get(cbLF.getSelectedItem().toString()));
+        prefs.put(App.PREFK_LAFCLASS, lafClassToNames.inverse().get(cbLF.getSelectedItem().toString()));
         // store dump flags and dirs
-        prefs.putBoolean(App.PREF_DUMP_REQS_FLAG, chDumpReqs.isSelected());
-        prefs.put(App.PREF_DUMP_REQS_DIR, dsfReqsDir.getDir().getAbsolutePath());
-        prefs.putBoolean(App.PREF_DUMP_RESPS_FLAG, chDumpRsps.isSelected());
-        prefs.put(App.PREF_DUMP_RESPS_DIR, dsfRspsDir.getDir().getAbsolutePath());
+        prefs.putBoolean(App.PREFK_DUMP_REQS_FLAG, chDumpReqs.isSelected());
+        prefs.put(App.PREFK_DUMP_REQS_DIR, dsfReqsDir.getDir().getAbsolutePath());
+        prefs.putBoolean(App.PREFK_DUMP_RESPS_FLAG, chDumpRsps.isSelected());
+        prefs.put(App.PREFK_DUMP_RESPS_DIR, dsfRspsDir.getDir().getAbsolutePath());
         setVisible(false);
     }//GEN-LAST:event_bOkActionPerformed
 
