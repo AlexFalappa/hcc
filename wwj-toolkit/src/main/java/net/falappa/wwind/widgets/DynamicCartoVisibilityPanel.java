@@ -1,17 +1,19 @@
 package net.falappa.wwind.widgets;
 
-import net.falappa.wwind.utils.ToggleVisibilityAction;
 import gov.nasa.worldwind.WorldWindow;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.layers.Earth.BMNGOneImage;
 import gov.nasa.worldwind.layers.Earth.NASAWFSPlaceNameLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.wms.WMSTiledImageLayer;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JCheckBox;
+import net.falappa.wwind.utils.ToggleVisibilityAction;
 
 /**
  * A panel listing and controlling the visibility of {@link BMNGOneImage} and {@link WMSTiledImageLayer} layers in a {@link WWindPanel}.
@@ -22,7 +24,9 @@ import javax.swing.JCheckBox;
  */
 public class DynamicCartoVisibilityPanel extends javax.swing.JPanel {
 
-    private static final String PREFNODE_BASE = "base-carto";
+    private static final String PREFN_BASE = "base-carto";
+    private static final String PREFK_VISIBILITY = "visibility";
+    private WorldWindow wwd;
 
     /**
      * Default constructor.
@@ -37,12 +41,12 @@ public class DynamicCartoVisibilityPanel extends javax.swing.JPanel {
      * @param wwp the WWindPanel to attach to
      */
     public void linkTo(WWindPanel wwp) {
-        final WorldWindowGLCanvas wwCanvas = wwp.getWWCanvas();
-        LayerList layers = wwCanvas.getModel().getLayers();
+        wwd = wwp.getWWCanvas();
+        LayerList layers = wwd.getModel().getLayers();
         for (Layer l : layers) {
             if (l instanceof BMNGOneImage || l instanceof WMSTiledImageLayer || l instanceof NASAWFSPlaceNameLayer) {
                 JCheckBox chkBox = new JCheckBox();
-                link(chkBox, wwCanvas, l);
+                link(chkBox, wwd, l);
                 this.add(chkBox);
             }
         }
@@ -54,9 +58,23 @@ public class DynamicCartoVisibilityPanel extends javax.swing.JPanel {
      * @param prefs a {@link Preferences} node to write under
      */
     public void storePrefs(Preferences prefs) {
-        // create a subnode for view settings
-        Preferences vnode = prefs.node(PREFNODE_BASE);
-        //TODO store layer enablement
+        // create a subnode for vsibility settings
+        Preferences vnode = prefs.node(PREFN_BASE);
+        // store layer enablement as a map
+        StringBuilder sb = new StringBuilder();
+        for (Component cmp : this.getComponents()) {
+            if (cmp instanceof JCheckBox) {
+                JCheckBox chk = (JCheckBox) cmp;
+                if (chk.isSelected()) {
+                    sb.append(chk.getText()).append("=1");
+                } else {
+                    sb.append(chk.getText()).append("=0");
+                }
+                sb.append("##");
+            }
+        }
+        sb.setLength(sb.length() - 2);
+        vnode.put(PREFK_VISIBILITY, sb.toString());
     }
 
     /**
@@ -66,8 +84,31 @@ public class DynamicCartoVisibilityPanel extends javax.swing.JPanel {
      */
     public void loadPrefs(Preferences prefs) {
         // get view settings subnode
-        Preferences vnode = prefs.node(PREFNODE_BASE);
-        //TODO load layer enablement
+        Preferences vnode = prefs.node(PREFN_BASE);
+        // load layer enablement
+        String visibility = vnode.get(PREFK_VISIBILITY, "");
+        if (!visibility.isEmpty()) {
+            // decode visibility map
+            Map<String, Boolean> enableMap = new HashMap<>();
+            for (String kp : visibility.split("##")) {
+                String[] s = kp.split("=");
+                enableMap.put(s[0], s[1].equals("1"));
+            }
+            // alter checkbox and layers
+            for (Component cmp : this.getComponents()) {
+                if (cmp instanceof JCheckBox) {
+                    JCheckBox chk = (JCheckBox) cmp;
+                    if (enableMap.containsKey(chk.getText())) {
+                        chk.setSelected(enableMap.get(chk.getText()));
+                        // force action firing
+                        final Action act = chk.getAction();
+                        if (act != null) {
+                            act.actionPerformed(new ActionEvent(chk, 1, "initial"));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -90,19 +131,6 @@ public class DynamicCartoVisibilityPanel extends javax.swing.JPanel {
             jcb.setAction(new ToggleVisibilityAction(layer, wwd));
         } else {
             jcb.setEnabled(false);
-        }
-    }
-
-    private void putChbInPrefs(JCheckBox chb, Preferences vnode) {
-        vnode.putBoolean(chb.getText(), chb.isSelected());
-    }
-
-    private void getChbFromPrefs(JCheckBox chb, Preferences vnode, boolean flag) {
-        chb.setSelected(vnode.getBoolean(chb.getText(), flag));
-        // force action firing
-        final Action act = chb.getAction();
-        if (act != null) {
-            act.actionPerformed(new ActionEvent(chb, 1, "initial"));
         }
     }
 }
