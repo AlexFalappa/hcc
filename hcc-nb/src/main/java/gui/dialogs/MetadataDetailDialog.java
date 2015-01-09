@@ -27,6 +27,8 @@ import javax.swing.table.TableModel;
 import main.data.Metadata;
 import main.data.MetadataNames;
 import main.hma.HmaMetadataSeq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Modeless dialog for showing metadata detail of one product in a form like layout.
@@ -39,6 +41,7 @@ import main.hma.HmaMetadataSeq;
  */
 public class MetadataDetailDialog extends javax.swing.JDialog {
 
+    private static final Logger logger = LoggerFactory.getLogger(MetadataDetailDialog.class);
     private MetadataGridDialog gridDialog = null;
 
     /**
@@ -155,10 +158,12 @@ public class MetadataDetailDialog extends javax.swing.JDialog {
         for (MetadataNames mn : mnList) {
             if (meta.containsKey(mn)) {
                 if (HmaMetadataSeq.longLabels.get(mn) == null) {
-                    System.out.printf("Null name %s%n", mn.toString());
+                    logger.warn("Null long label for %s%n", mn.toString());
+                    continue;
                 }
                 if (meta.get(mn) == null) {
-                    System.out.printf("Null value %s%n", mn.toString());
+                    logger.warn("Null metadata value for %s%n", mn.toString());
+                    continue;
                 }
                 dtm.addRow(new Object[]{HmaMetadataSeq.longLabels.get(mn), meta.get(mn)});
             }
