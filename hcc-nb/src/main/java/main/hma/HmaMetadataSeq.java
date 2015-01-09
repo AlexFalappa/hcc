@@ -185,6 +185,7 @@ public final class HmaMetadataSeq {
         shortLabels.put(FOOTPRINT, "Footprint");
         shortLabels.put(SCENE_CENTER, "Scn. Center");
         shortLabels.put(MISSION_NAME, "Mission");
+        shortLabels.put(IMG_DEGRADATION, "Img. Degrad.");
         // ----------------------------
         longLabels.put(PARENT_IDENTIFIER, "Parent Identifier");
         longLabels.put(PRODUCT_IDENTIFIER, "Product Identifier");
@@ -236,6 +237,7 @@ public final class HmaMetadataSeq {
         longLabels.put(FOOTPRINT, "Footprint");
         longLabels.put(SCENE_CENTER, "Scene Center");
         longLabels.put(MISSION_NAME, "Mission Name");
+        longLabels.put(IMG_DEGRADATION, "Image Quality Degradation");
         //--------------------
         gridListFull = Collections.unmodifiableList(Arrays.asList(new MetadataNames[]{
             PARENT_IDENTIFIER,
