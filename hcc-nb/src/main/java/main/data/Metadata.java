@@ -24,7 +24,8 @@ import static main.data.MetadataNames.SCENE_CENTER;
 /**
  * A domain object representing HMA metadata of an EO product.
  * <p>
- * It's actually an {@link EnumMap} with {@link MetadataNames} as keys.
+ * It's actually an {@link EnumMap} with {@link MetadataNames} as keys. Maintains footprint and scene center caches converted from strings
+ * to doubles.
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */

@@ -20,6 +20,15 @@ import net.opengis.www.cat.csw._2_0_2.GetCapabilitiesDocument;
 import org.apache.xmlbeans.XmlException;
 
 /**
+ * Builder for HMA GetCapabilities XML requests.
+ * <p>
+ * Uses an internal XML template representing a GetCapabilities request.
+ * <p>
+ * Typical usage is as follows:
+ * <pre>
+ * HmaGetCapabilitiesBuilder builder=new HmaGetCapabilitiesBuilder();
+ * GetCapabilitiesDocument req=builder.getRequest();
+ * </pre>
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */

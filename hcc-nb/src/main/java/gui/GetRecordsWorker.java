@@ -54,7 +54,7 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
 
     @Override
     protected Integer doInBackground() throws Exception {
-        logger.info("Sending GetRecords request");
+        logger.info("Sending GetRecords {} request", isResults ? "RESULTS" : "HITS");
         publish("Building request...");
         GetRecordsDocument req = mw.buildReq(isResults);
         App.dumpReq(req, isResults);
@@ -69,7 +69,7 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
             recs = processHits(resp);
         }
         publish("Done");
-        logger.debug("Retrieved {} records", recs);
+        logger.info("Hits/Results {} records", recs);
         return recs;
     }
 
@@ -109,23 +109,28 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
         }
     }
 
-    int processHits(GetRecordsResponseDocument resp) {
+    private int processHits(GetRecordsResponseDocument resp) {
         return resp.getGetRecordsResponse().getSearchResults().getNumberOfRecordsMatched().intValue();
     }
 
-    int processResults(GetRecordsResponseDocument resp) {
+    private int processResults(GetRecordsResponseDocument resp) {
         logger.debug("Processing GetRecords RESULTS response");
         // extract registry packages via XPath
         XmlObject[] res = resp.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:RegistryPackage");
+        logger.debug("XPath selected {} registry packages");
         // lock and clear the result list
         results.getReadWriteLock().writeLock().lock();
         results.clear();
         // process the registry packages trough a parser
         HmaRegPackParser regPackParser = new HmaRegPackParser();
+        logger.debug("Decoding metadata");
         for (XmlObject xo : res) {
             Metadata m = regPackParser.parseXmlObj(xo);
             if (m != null) {
                 results.add(m);
+                if (logger.isTraceEnabled()) {
+                    logger.trace(m.toString());
+                }
             }
         }
         // release the lock for update

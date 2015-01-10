@@ -27,6 +27,8 @@ import net.opengis.www.cat.csw._2_0_2.QueryType;
 import net.opengis.www.cat.csw._2_0_2.ResultType;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Builder for HMA GetRecords XML requests.
@@ -52,6 +54,8 @@ public class HmaGetRecordsBuilder {
 
     private static final String NS_OGC = "http://www.opengis.net/ogc";
     private static final String NS_GML = "http://www.opengis.net/gml";
+    private static final Logger logger = LoggerFactory.getLogger(HmaGetRecordsBuilder.class.getName());
+
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private GetRecordsDocument reqDoc;
     private QueryType query;
@@ -62,30 +66,37 @@ public class HmaGetRecordsBuilder {
 
     public void setHits() {
         reqDoc.getGetRecords().setResultType(ResultType.HITS);
+        logger.trace("Set request type to HITS");
     }
 
     public void setResults() {
         reqDoc.getGetRecords().setResultType(ResultType.RESULTS);
+        logger.trace("Set request type to RESULTS");
     }
 
     public void setStartPosition(int pos) {
         reqDoc.getGetRecords().setStartPosition(BigInteger.valueOf(pos));
+        logger.trace("Set initial record to {}", pos);
     }
 
     public void setMaxRecords(int max) {
         reqDoc.getGetRecords().setMaxRecords(BigInteger.valueOf(max));
+        logger.trace("Set max records to {}", max);
     }
 
     public void setDetailFull() {
         query.getElementSetName().setStringValue("full");
+        logger.trace("Set requested detail to FULL");
     }
 
     public void setDetailSummary() {
         query.getElementSetName().setStringValue("summary");
+        logger.trace("Set requested detail to SUMMARY");
     }
 
     public void setDetailBrief() {
         query.getElementSetName().setStringValue("brief");
+        logger.trace("Set requested detail to BRIEF");
     }
 
     public void addCollection(String collection) {
@@ -125,6 +136,7 @@ public class HmaGetRecordsBuilder {
         xc.toNextToken();
         xc.toNextToken();
         xc.dispose();
+        logger.trace("Added temporal containement clause between {} and {}", t1, t2);
     }
 
     public void addTemporalOverlaps(Date t1, Date t2) {
@@ -148,6 +160,7 @@ public class HmaGetRecordsBuilder {
         xc.toNextToken();
         xc.toNextToken();
         xc.dispose();
+        logger.trace("Added temporal overlap clause between {} and {}", t1, t2);
     }
 
     public void addTemporalAfter(Date t1) {
@@ -162,6 +175,7 @@ public class HmaGetRecordsBuilder {
         xc.toNextToken();
         xc.toNextToken();
         xc.dispose();
+        logger.trace("Added temporal clause successive to {}", t1);
     }
 
     public void addTemporalBefore(Date t1) {
@@ -176,27 +190,31 @@ public class HmaGetRecordsBuilder {
         xc.toNextToken();
         xc.toNextToken();
         xc.dispose();
+        logger.trace("Added temporal clause preceding {}", t1);
     }
 
     private void insertSpatialOperator(int operator, XmlCursor xc) {
         //    0="Overlaps", 1="Contains", 2="Intersect", 3="Is contained"
+        String op = "-";
         switch (operator) {
             case 0:
-                xc.beginElement("Overlaps", NS_OGC);
+                op = "Overlaps";
                 break;
             case 1:
-                xc.beginElement("Contains", NS_OGC);
+                op = "Contains";
                 break;
             case 2:
-                xc.beginElement("Intersects", NS_OGC);
+                op = "Intersects";
                 break;
             case 3:
-                xc.beginElement("Within", NS_OGC);
+                op = "Within";
                 break;
             default:
                 throw new AssertionError("unknown spatial operator");
         }
+        xc.beginElement(op, NS_OGC);
         xc.toEndToken();
+        logger.trace("Added spatial operator {}", op);
     }
 
     public void addSpatialPoint(int operator, double lat, double lon) {
@@ -204,6 +222,7 @@ public class HmaGetRecordsBuilder {
         insertSpatialOperator(operator, xc);
         insertPointBlock(xc, lat, lon);
         xc.dispose();
+        logger.trace("Added spatial constraint with Point geometry [{};{}]", lat, lon);
     }
 
     public void addSpatialPolygon(int operator, String coords) {
@@ -211,6 +230,7 @@ public class HmaGetRecordsBuilder {
         insertSpatialOperator(operator, xc);
         insertPolygonBlock(xc, coords);
         xc.dispose();
+        logger.trace("Added spatial constraint with Polygon geometry [{}]", coords);
     }
 
     public void addSpatialPolyline(int operator, String coords) {
@@ -218,6 +238,7 @@ public class HmaGetRecordsBuilder {
         insertSpatialOperator(operator, xc);
         insertLinestringBlock(xc, coords);
         xc.dispose();
+        logger.trace("Added spatial constraint with Polyline geometry [{}]", coords);
     }
 
     public void addSpatialRange(int operator, double minlat, double maxlat, double minlon, double maxlon) {
@@ -225,6 +246,7 @@ public class HmaGetRecordsBuilder {
         insertSpatialOperator(operator, xc);
         insertEnvelopeBlock(xc, minlat, minlon, maxlat, maxlon);
         xc.dispose();
+        logger.trace("Added spatial constraint with lat-lon range [{};{}]-[{};{}]", minlat, maxlat, minlon, maxlon);
     }
 
     public void addSpatialCircle(int operator, double lat, double lon, double radius) {
@@ -232,9 +254,11 @@ public class HmaGetRecordsBuilder {
         insertSpatialOperator(operator, xc);
         insertCircleBlock(xc, lat, lon, radius);
         xc.dispose();
+        logger.trace("Added spatial constraint with circle center [{};{}] radius {}", lat, lon, radius);
     }
 
     public GetRecordsDocument getRequest() {
+        logger.trace("Returning built request");
         return reqDoc;
     }
 
@@ -249,6 +273,7 @@ public class HmaGetRecordsBuilder {
         try {
             reqDoc = GetRecordsDocument.Factory.parse(getClass().getResourceAsStream("templates/getrecords-template.xml"));
             query = (QueryType) reqDoc.getGetRecords().getAbstractQuery();
+            logger.trace("HmaGetRecordsBuilder initialized");
         } catch (XmlException | IOException ex) {
             // ignored should always works
         }
@@ -264,6 +289,7 @@ public class HmaGetRecordsBuilder {
         xc.insertChars(parentId);
         xc.toNextToken();
         xc.toNextToken();
+        logger.trace("Added parent identifier clause for {}", parentId);
     }
 
     private void insertPolygonBlock(XmlCursor xc, String coords) {
