@@ -54,7 +54,7 @@ public final class HmaRegPackParser {
         XmlCursor xc;
         // extract product id
         m.put(MetadataNames.PRODUCT_IDENTIFIER, regPack.getId());
-        logger.trace("Parsing registry package for {}", regPack.getId());
+        logger.debug("Parsing registry package for {}", regPack.getId());
         // process slots
         XmlObject[] slots = regPack.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:Slot");
         for (XmlObject slot : slots) {
@@ -127,6 +127,9 @@ public final class HmaRegPackParser {
             }
         }
         // TODO process Classification ???
+        if (logger.isTraceEnabled()) {
+            logger.trace(m.toString());
+        }
         return m;
     }
 }

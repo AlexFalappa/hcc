@@ -117,7 +117,7 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
         logger.debug("Processing GetRecords RESULTS response");
         // extract registry packages via XPath
         XmlObject[] res = resp.selectPath("declare namespace rim='urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0' .//rim:RegistryPackage");
-        logger.debug("XPath selected {} registry packages");
+        logger.debug("XPath selected {} registry packages", res.length);
         // lock and clear the result list
         results.getReadWriteLock().writeLock().lock();
         results.clear();
@@ -128,9 +128,6 @@ public class GetRecordsWorker extends SwingWorker<Integer, String> {
             Metadata m = regPackParser.parseXmlObj(xo);
             if (m != null) {
                 results.add(m);
-                if (logger.isTraceEnabled()) {
-                    logger.trace(m.toString());
-                }
             }
         }
         // release the lock for update
