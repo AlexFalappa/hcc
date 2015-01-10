@@ -29,6 +29,7 @@ import main.data.Metadata;
 import main.data.MetadataNames;
 import main.hma.HmaMetadataSeq;
 import net.falappa.prefs.PrefRestorable;
+import net.falappa.utils.GuiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,7 @@ public class MetadataDetailDialog extends javax.swing.JDialog implements PrefRes
 
     private static final Logger logger = LoggerFactory.getLogger(MetadataDetailDialog.class);
     private MetadataGridDialog gridDialog = null;
+    private static final String PREFN_DETDIALOG = "detailDialog";
 
     /**
      * Base constructor.
@@ -180,11 +182,15 @@ public class MetadataDetailDialog extends javax.swing.JDialog implements PrefRes
 
     @Override
     public void loadPrefs(Preferences baseNode) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // load size and location
+        Preferences prefs = baseNode.node(PREFN_DETDIALOG);
+        GuiUtils.loadPrefsComponent(prefs, this);
     }
 
     @Override
     public void storePrefs(Preferences baseNode) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // store size and location
+        Preferences prefs = baseNode.node(PREFN_DETDIALOG);
+        GuiUtils.storePrefsComponent(prefs, this);
     }
 }

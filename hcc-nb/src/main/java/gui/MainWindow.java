@@ -47,6 +47,7 @@ import static main.data.MetadataNames.PARENT_IDENTIFIER;
 import static main.data.MetadataNames.PRODUCT_IDENTIFIER;
 import main.hma.HmaGetRecordsBuilder;
 import net.falappa.prefs.PrefRestorable;
+import net.falappa.utils.GuiUtils;
 import net.falappa.wwind.layers.NoSuchShapeException;
 import net.falappa.wwind.layers.SurfShapeLayer;
 import net.falappa.wwind.layers.SurfShapesLayer;
@@ -83,11 +84,6 @@ public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
     private static final String PREFN_WINDOW = "MainWindow";
     private static final String PREFN_CATALOGUES = "catalogues";
     // preference keys
-    private static final String PREFK_WIN_HEIGHT = "winHeight";
-    private static final String PREFK_WIN_LOC_X = "winLocX";
-    private static final String PREFK_WIN_LOC_Y = "winLocY";
-    private static final String PREFK_WIN_WIDTH = "winWidth";
-    private static final String PREFK_WIN_STATE = "winState";
     private static final String PREFK_CAT_COLLECTIONS = "collections";
     private static final String PREFK_CAT_TIMEOUT = "timeout";
     private static final String PREFK_CAT_SOAPV12 = "soapv12";
@@ -527,11 +523,7 @@ public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
     public void storePrefs(Preferences baseNode) {
         // save window state
         Preferences winPrefs = baseNode.node(PREFN_WINDOW);
-        winPrefs.putInt(PREFK_WIN_LOC_X, this.getX());
-        winPrefs.putInt(PREFK_WIN_LOC_Y, this.getY());
-        winPrefs.putInt(PREFK_WIN_WIDTH, this.getWidth());
-        winPrefs.putInt(PREFK_WIN_HEIGHT, this.getHeight());
-        winPrefs.putInt(PREFK_WIN_STATE, this.getExtendedState());
+        GuiUtils.storePrefsFrame(winPrefs, this);
         // save view settings
         wwindPane.storePrefs(baseNode);
         // save catalogue definitions
@@ -555,6 +547,13 @@ public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
             }
             catPref.put(PREFK_CAT_COLLECTIONS, sb.toString());
         }
+        // store dialogs size/positions
+        if (gridDialog != null) {
+            gridDialog.storePrefs(baseNode);
+        }
+        if (detailDialog != null) {
+            detailDialog.storePrefs(baseNode);
+        }
     }
 
     @Override
@@ -562,9 +561,7 @@ public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
         try {
             // load window state
             Preferences winPrefs = baseNode.node(PREFN_WINDOW);
-            this.setLocation(winPrefs.getInt(PREFK_WIN_LOC_X, this.getX()), winPrefs.getInt(PREFK_WIN_LOC_Y, this.getY()));
-            this.setSize(winPrefs.getInt(PREFK_WIN_WIDTH, this.getWidth()), winPrefs.getInt(PREFK_WIN_HEIGHT, this.getHeight()));
-            this.setState(winPrefs.getInt(PREFK_WIN_STATE, this.getExtendedState()));
+            GuiUtils.loadPrefsFrame(winPrefs, this);
             // load view settings
             wwindPane.loadPrefs(baseNode);
             // load catalogue definitions
@@ -595,6 +592,10 @@ public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
             Point pt = this.getLocation();
             pt.translate(dims.width - gwDims.width, dims.height - gwDims.height);
             gridDialog.setLocation(pt);
+            // override size/location from prefs
+            gridDialog.loadPrefs(App.getAppPrefs());
+            detailDialog.loadPrefs(App.getAppPrefs());
+            // setup gridDialog listeners
             gridDialog.addListSelectionListener(new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {

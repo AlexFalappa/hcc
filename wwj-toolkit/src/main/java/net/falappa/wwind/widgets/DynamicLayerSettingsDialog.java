@@ -12,6 +12,7 @@ package net.falappa.wwind.widgets;
 
 import java.util.prefs.Preferences;
 import net.falappa.prefs.PrefRestorable;
+import net.falappa.utils.GuiUtils;
 
 /**
  * Modeless dialog grouping a {@link DynamicCartoVisibilityPanel}, a {@link VisualAidsVisibilityPanel} and a
@@ -21,6 +22,8 @@ import net.falappa.prefs.PrefRestorable;
  * @author Alessandro Falappa
  */
 public class DynamicLayerSettingsDialog extends javax.swing.JDialog implements PrefRestorable {
+
+    private static final String PREFN_DYNLAYRSETDIALOG = "dynamicLayerSettingsDialog";
 
     /**
      * Creates a new dialog.
@@ -54,15 +57,23 @@ public class DynamicLayerSettingsDialog extends javax.swing.JDialog implements P
     }
 
     @Override
-    public void loadPrefs(Preferences viewPrefs) {
-        pBaseVmap.loadPrefs(viewPrefs);
-        pVisAids.loadPrefs(viewPrefs);
+    public void loadPrefs(Preferences baseNode) {
+        Preferences prefs = baseNode.node(PREFN_DYNLAYRSETDIALOG);
+        // load size and location
+        GuiUtils.loadPrefsComponent(prefs, this);
+        // delegate to visibility panels
+        pBaseVmap.loadPrefs(prefs);
+        pVisAids.loadPrefs(prefs);
     }
 
     @Override
-    public void storePrefs(Preferences viewPrefs) {
-        pBaseVmap.storePrefs(viewPrefs);
-        pVisAids.storePrefs(viewPrefs);
+    public void storePrefs(Preferences baseNode) {
+        Preferences prefs = baseNode.node(PREFN_DYNLAYRSETDIALOG);
+        // load size and location
+        GuiUtils.storePrefsComponent(prefs, this);
+        // delegate to visibility panels
+        pBaseVmap.storePrefs(prefs);
+        pVisAids.storePrefs(prefs);
     }
 
     /**

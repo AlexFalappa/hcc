@@ -31,6 +31,7 @@ import main.data.Metadata;
 import main.data.MetadataNames;
 import net.falappa.prefs.PrefRestorable;
 import net.falappa.swing.table.TableColumnAdjuster;
+import net.falappa.utils.GuiUtils;
 
 /**
  * Modeless dialog displaying a tabular view of some of the queryed metadata.
@@ -39,6 +40,7 @@ import net.falappa.swing.table.TableColumnAdjuster;
  */
 public class MetadataGridDialog extends javax.swing.JDialog implements PrefRestorable {
 
+    private static final String PREFN_GRIDDIALOG = "gridDialog";
     private EventList<Metadata> dataList;
 //    private FilterList<Metadata> filterList;
     private SortedList<Metadata> sortedList;
@@ -187,11 +189,15 @@ public class MetadataGridDialog extends javax.swing.JDialog implements PrefResto
 
     @Override
     public void loadPrefs(Preferences baseNode) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // load size and location
+        Preferences prefs = baseNode.node(PREFN_GRIDDIALOG);
+        GuiUtils.loadPrefsComponent(prefs, this);
     }
 
     @Override
     public void storePrefs(Preferences baseNode) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // store size and location
+        Preferences prefs = baseNode.node(PREFN_GRIDDIALOG);
+        GuiUtils.storePrefsComponent(prefs, this);
     }
 }
