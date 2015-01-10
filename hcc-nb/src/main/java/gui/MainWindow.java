@@ -33,6 +33,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultComboBoxModel;
@@ -59,6 +60,8 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.xmlbeans.XmlOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * HCC main window.
@@ -67,12 +70,7 @@ import org.apache.xmlbeans.XmlOptions;
  */
 public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
 
-    private final DefaultComboBoxModel<CatalogueDefinition> dcmCatalogues = new DefaultComboBoxModel<>();
-    private CatalogueStub stub = null;
-    private BasicEventList<Metadata> results = new BasicEventList<>();
-    private MetadataGridDialog gridDialog;
-    private MetadataDetailDialog detailDialog;
-    private final static Color[] LAYER_COLORS = new Color[]{
+    private static final Color[] LAYER_COLORS = new Color[]{
         Color.ORANGE,
         Color.MAGENTA,
         Color.RED,
@@ -88,6 +86,12 @@ public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
     private static final String PREFK_CAT_TIMEOUT = "timeout";
     private static final String PREFK_CAT_SOAPV12 = "soapv12";
     private static final String PREFK_CAT_EDP = "edp";
+    private static final Logger logger = LoggerFactory.getLogger(MainWindow.class.getName());
+    private final DefaultComboBoxModel<CatalogueDefinition> dcmCatalogues = new DefaultComboBoxModel<>();
+    private CatalogueStub stub = null;
+    private BasicEventList<Metadata> results = new BasicEventList<>();
+    private MetadataGridDialog gridDialog;
+    private MetadataDetailDialog detailDialog;
 
     public MainWindow() {
         initComponents();
@@ -665,6 +669,9 @@ public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
                 // add a polygon to the layer
                 ssl.addSurfPoly(WWindUtils.latLonOrdinates2LatLonList(md.getFootprintAsDoubles()), pid);
             }
+        }
+        for (Map.Entry<String, SurfShapesLayer> en : layerMap.entrySet()) {
+            logger.info("Collection {} recs {}", en.getKey(), en.getValue().getNumShapes());
         }
         pNavigation.setProductIds(prodIds);
         wwindPane.redraw();
