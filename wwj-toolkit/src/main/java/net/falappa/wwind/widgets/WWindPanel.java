@@ -58,6 +58,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import net.falappa.prefs.PrefRestorable;
 import net.falappa.wwind.layers.EditableMarkerLayer;
 import net.falappa.wwind.layers.NoSuchShapeException;
 import net.falappa.wwind.layers.ShapeSelectionSource;
@@ -87,7 +88,7 @@ import net.falappa.wwind.utils.WWindUtils;
  *
  * @author Alessandro Falappa
  */
-public class WWindPanel extends javax.swing.JPanel {
+public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
 
     /**
      * Types of supported area of interest.
@@ -182,7 +183,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Package accessible getter to the inner <code>WorldWindowGLCanvas</code>.
-     * <p>
+     *
      * @return the inner preconfigured <code>WorldWindowGLCanvas</code>
      */
     WorldWindowGLCanvas getWWCanvas() {
@@ -191,7 +192,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Specifies if the bar should be on the bottom of the panel.
-     * <p>
+     *
      * @param flag true to place the bar on the bottom
      */
     public void setBottomBar(boolean flag) {
@@ -201,7 +202,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Getter for the edit shape color.
-     * <p>
+     *
      * @return the current color
      */
     public Color getEditColor() {
@@ -211,7 +212,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Setter for the edit shape color.
-     * <p>
+     *
      * @param editColor the new color
      */
     public void setEditColor(Color editColor) {
@@ -225,7 +226,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * <p>
      * When enabled the user can click, drag and then release to fix a control point position. Note: when click-and-drag is enabled the
      * first polyline and polygon segment must be drawn clicking and dragging, otherwise two starting point will be created.
-     * <p>
+     *
      * @return true if click-and-drag is currently enabled
      */
     public boolean isEditRubberbanding() {
@@ -235,7 +236,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Sets if during edit shape creation the user can use a click-and-drag gesture.
-     * <p>
+     *
      * @param flag true to enable click-and-drag
      */
     public void setEditRubberbanding(boolean flag) {
@@ -247,7 +248,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Getter for the current edit mode.
      * <p>
      * It is set to {@link EditModes#POLYGON} by default.
-     * <p>
+     *
      * @return one of the EditModes enumerated value
      */
     public EditModes getEditMode() {
@@ -258,7 +259,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Setter for the current edit mode.
      * <p>
      * The new mode takes effect at next start of editing.
-     * <p>
+     *
      * @param mode the new mode as EditModes enumerated value
      */
     public void setEditMode(EditModes mode) {
@@ -299,7 +300,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Tells if editing mode is currently active.
-     * <p>
+     *
      * @return true if editing, false otherwise
      */
     public boolean isEditing() {
@@ -319,7 +320,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Tells if an editing shape has been defined.
-     * <p>
+     *
      * @return true if shape present
      */
     public boolean hasEditShape() {
@@ -464,7 +465,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Adds a listener which gets notified of all editing actions.
-     * <p>
+     *
      * @param listener a PropertyChangeListener object receiving all editing notifications
      */
     public void addEditListener(PropertyChangeListener listener) {
@@ -475,7 +476,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Removes a previously added editing action listener.
-     * <p>
+     *
      * @param listener a PropertyChangeListener object previously added
      */
     public void removeEditListener(PropertyChangeListener listener) {
@@ -486,7 +487,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Adds a listener which gets notified of actions on managed {@link SurfShapesLayer} objects.
-     * <p>
+     *
      * @param listener a PropertyChangeListener object
      */
     public void addSurfShapeListener(PropertyChangeListener listener) {
@@ -495,7 +496,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Removes a previously added {@link SurfShapesLayer} listener.
-     * <p>
+     *
      * @param listener a PropertyChangeListener object previously added
      */
     public void removeSurfShapeListener(PropertyChangeListener listener) {
@@ -504,7 +505,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Tells if editing toolbar is shown.
-     * <p>
+     *
      * @return true if editing functions enabled
      */
     public boolean isEditBarVisible() {
@@ -515,7 +516,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Shows/hides the editing toolbar.
      * <p>
      * Editing toolbar is hidden by default.
-     * <p>
+     *
      * @param flag true to show editing toolbar
      */
     public void setEditBarVisible(boolean flag) {
@@ -534,7 +535,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Shows/hides the layer settings button.
      * <p>
      * Layer settings button is hidden by default.
-     * <p>
+     *
      * @param flag true to show the button
      */
     public void setLayerSettingsButtonVisible(boolean flag) {
@@ -567,7 +568,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Tells if the layer settings button is shown.
-     * <p>
+     *
      * @return true if editing functions enabled
      */
     public boolean isLayerSettingsButtonVisible() {
@@ -578,7 +579,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Adds a generic WorldWind layer to the map.
      * <p>
      * The layer is added on top of the other layers.
-     * <p>
+     *
      * @param layer the layer to add
      */
     public void addLayer(Layer layer) {
@@ -587,7 +588,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Removes a generic WorldWind layer from the map.
-     * <p>
+     *
      * @param layer the layer to remove
      */
     public void removeLayer(Layer layer) {
@@ -598,7 +599,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Adds a SurfShapeLayer to the map and to the map of managed layers.
      * <p>
      * The layer is added if not already present in the map. The layer is linked to the map for event processing (e.g. selection)
-     * <p>
+     *
      * @param slayer the layer to add
      */
     public void addSurfShapeLayer(SurfShapeLayer slayer) {
@@ -616,7 +617,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Checks if a named SurfShapeLayer is present in the managed set.
-     * <p>
+     *
      * @param name the name of the layer
      * @return true if a layer is present, false otherwise
      */
@@ -626,7 +627,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Getter for a named SurfShapeLayer.
-     * <p>
+     *
      * @param name the name of the layer
      * @return the layer object reference or null if not present
      */
@@ -638,7 +639,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Removes the named SurfShapeLayer from the map.
      * <p>
      * The layer content is left untouched. Before removal the layer is correctly detached from the WorldWind map.
-     * <p>
+     *
      * @param name the name of the layer
      */
     public void removeSurfShapeLayer(String name) {
@@ -656,7 +657,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Getter for all the registered SurfShapeLayers.
-     * <p>
+     *
      * @return a reference to the layers map values (as a Collection object) see {@link Map#values()}.
      */
     public Collection<SurfShapeLayer> getAllSurfShapeLayers() {
@@ -680,7 +681,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Toggles the visibility on the map of the given named SurfaceShapeLayer.
      * <p>
      * The layer is still present on the map.
-     * <p>
+     *
      * @param name the layer name
      * @param flag true if visible false otherwise
      */
@@ -692,7 +693,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Tells if an Area Of Interest has been set.
-     * <p>
+     *
      * @return true if an area of interest exists
      */
     public boolean hasAOI() {
@@ -701,7 +702,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Getter for the current Area Of Interest shape type.
-     * <p>
+     *
      * @return an {@link AoiShapes} enumerated value or null if no area of interest
      */
     public AoiShapes getAOIType() {
@@ -724,7 +725,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Accesses the current Area Of Interest coordinates.
      * <p>
      * Can be called when the AOI type is either {@link AoiShapes#POLYGON} or {@link AoiShapes#POLYGON}.
-     * <p>
+     *
      * @return an iterable on the coordinates or null if not applicable
      */
     public Iterable<? extends LatLon> getAOICoordinates() {
@@ -744,7 +745,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Accesses the current Area Of Interest center/position.
      * <p>
      * Can be called when the AOI type is either {@link AoiShapes#CIRCLE} or {@link AoiShapes#POINT}.
-     * <p>
+     *
      * @return the center/positon as a LatLon object or null if not applicable
      */
     public LatLon getAOICenter() {
@@ -764,7 +765,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * Accesses the current Area Of Interest radius.
      * <p>
      * Can be called when the AOI type is {@link AoiShapes#CIRCLE}.
-     * <p>
+     *
      * @return the radius in meters or null if not applicable
      */
     public Double getAOIRadius() {
@@ -786,7 +787,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Defines a circular Area Of Interest.
-     * <p>
+     *
      * @param center circle center as Position object
      * @param radius circle radius in meters
      */
@@ -797,7 +798,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Defines a point Area Of Interest.
-     * <p>
+     *
      * @param pos location as Position object
      */
     public void setAOIPoint(Position pos) {
@@ -807,7 +808,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Defines a geodetic poligonal Area Of Interest.
-     * <p>
+     *
      * @param points polygon points as Iterable of Position objects
      */
     public void setAOIPolygon(Iterable<? extends LatLon> points) {
@@ -821,7 +822,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Defines a geodetic multi segment Area Of Interest.
-     * <p>
+     *
      * @param points polyline points as Iterable of Position objects
      */
     public void setAOIPolyline(Iterable<? extends LatLon> points) {
@@ -835,7 +836,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Setter for Area Of Interest Color.
-     * <p>
+     *
      * @param col the new color
      */
     public void setAOIColor(Color col) {
@@ -845,7 +846,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Getter for Area Of Interest Color.
-     * <p>
+     *
      * @return the current color
      */
     public Color getAOIColor() {
@@ -854,7 +855,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Insert the layer into the layer list just before the placenames.
-     * <p>
+     *
      * @param layer
      */
     public void insertBeforePlacenames(Layer layer) {
@@ -870,7 +871,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Insert the layer into the layer list just before the Lat Lon graticule.
-     * <p>
+     *
      * @param layer
      */
     public void insertBeforeGraticule(Layer layer) {
@@ -886,7 +887,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Insert the layer into the layer list just after the Blue Marble Next Generation Image layer.
-     * <p>
+     *
      * @param layer
      */
     public void insertAfterBMNGImage(Layer layer) {
@@ -909,7 +910,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Instantly moves the point of view of the map as looking to the given lat lon coordinates from the given altitude.
-     * <p>
+     *
      * @param position the coordinates and elevation of the eye
      */
     public void eyeToPoint(Position position) {
@@ -919,7 +920,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Instantly moves the point of view of the map to the given altitude.
-     * <p>
+     *
      * @param altitude the desired altitude in meters
      */
     public void eyeToAltitude(double altitude) {
@@ -938,7 +939,7 @@ public class WWindPanel extends javax.swing.JPanel {
      * <p>
      * Recalculates the current eye altitude according to the formula:
      * <tt>current_altitude + current_altitude * zFact</tt>
-     * <p>
+     *
      * @param zFact the zoom factor, positive values zoom out while negative ones zoom in
      */
     public void eyeZoomAltitude(double zFact) {
@@ -956,7 +957,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Animates the map, in a sort of fligth, to bring the given position into view.
-     * <p>
+     *
      * @param position the coordinates and elevation to fly to
      */
     public void flyToPoint(Position position) {
@@ -965,7 +966,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Animates the map, in a sort of fligth, to bring the given area into view.
-     * <p>
+     *
      * @param sector the lat lon range sector to fly to
      */
     public void flyToSector(Sector sector) {
@@ -1040,11 +1041,7 @@ public class WWindPanel extends javax.swing.JPanel {
         }
     }
 
-    /**
-     * Load WWindPanel preferences from Java Preferences API nodes.
-     * <p>
-     * @param baseNode the root node under which to look for this class own node
-     */
+    @Override
     public void loadPrefs(Preferences baseNode) {
         // store layer settings
         Preferences viewPrefs = baseNode.node(PREFN_WWP);
@@ -1054,11 +1051,7 @@ public class WWindPanel extends javax.swing.JPanel {
         // TODO delegate to layer too??
     }
 
-    /**
-     * Store WWindPanel preferences using Java Preferences API nodes.
-     * <p>
-     * @param baseNode the root node under which to store this class own node
-     */
+    @Override
     public void storePrefs(Preferences baseNode) {
         // store layer settings
         Preferences viewPrefs = baseNode.node(PREFN_WWP);
@@ -1083,7 +1076,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Toggles a crosshair mouse cursor over the map.
-     * <p>
+     *
      * @param flag true if cursor should be changed to crosshair false to revert it back to arrow
      */
     public void setCrosshair(boolean flag) {
@@ -1096,7 +1089,7 @@ public class WWindPanel extends javax.swing.JPanel {
 
     /**
      * Retrieve a screenshot of World Wind current view
-     * <p>
+     *
      * @return Burred image instance containing current view graphic details.
      * @throws java.awt.AWTException if graphical libraries are not properly installed/working as expected.
      */

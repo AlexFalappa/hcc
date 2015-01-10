@@ -1,6 +1,5 @@
 package net.falappa.wwind.layers;
 
-import net.falappa.wwind.utils.WWindUtils;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AbstractLayer;
@@ -15,6 +14,8 @@ import gov.nasa.worldwind.terrain.SectorGeometryList;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
+import net.falappa.prefs.PrefRestorable;
+import net.falappa.wwind.utils.WWindUtils;
 
 /**
  * Layer containing a single spherical marker.
@@ -24,7 +25,7 @@ import java.util.prefs.Preferences;
  *
  * @author Alessandro Falappa
  */
-public class SingleMarkerLayer extends AbstractLayer {
+public class SingleMarkerLayer extends AbstractLayer implements PrefRestorable {
 
     private final MarkerRenderer markerRenderer = new MarkerRenderer();
     private final BasicMarkerAttributes attr = new BasicMarkerAttributes();
@@ -108,20 +109,12 @@ public class SingleMarkerLayer extends AbstractLayer {
         return !mrkrs.isEmpty();
     }
 
-    /**
-     * Load SurfShapesLayer preferences from Java Preferences API nodes.
-     *
-     * @param baseNode the root node under which to look for this class own node
-     */
+    @Override
     public void loadPrefs(Preferences baseNode) {
         // TODO caricamento da preferences
     }
 
-    /**
-     * Store SurfShapesLayer preferences using Java Preferences API nodes.
-     *
-     * @param baseNode the root node under which to store this class own node
-     */
+    @Override
     public void storePrefs(Preferences baseNode) {
         // TODO memorizzazione preferences
     }

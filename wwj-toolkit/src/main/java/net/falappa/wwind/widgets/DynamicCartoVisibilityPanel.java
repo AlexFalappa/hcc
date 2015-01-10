@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JCheckBox;
+import net.falappa.prefs.PrefRestorable;
 import net.falappa.wwind.utils.ToggleVisibilityAction;
 
 /**
@@ -22,7 +23,7 @@ import net.falappa.wwind.utils.ToggleVisibilityAction;
  *
  * @author Alessandro Falappa
  */
-public class DynamicCartoVisibilityPanel extends javax.swing.JPanel {
+public class DynamicCartoVisibilityPanel extends javax.swing.JPanel implements PrefRestorable {
 
     private static final String PREFN_BASE = "base-carto";
     private static final String PREFK_VISIBILITY = "visibility";
@@ -52,11 +53,7 @@ public class DynamicCartoVisibilityPanel extends javax.swing.JPanel {
         }
     }
 
-    /**
-     * Store visibility state under the given preferences node.
-     *
-     * @param prefs a {@link Preferences} node to write under
-     */
+    @Override
     public void storePrefs(Preferences prefs) {
         // create a subnode for vsibility settings
         Preferences vnode = prefs.node(PREFN_BASE);
@@ -77,11 +74,7 @@ public class DynamicCartoVisibilityPanel extends javax.swing.JPanel {
         vnode.put(PREFK_VISIBILITY, sb.toString());
     }
 
-    /**
-     * Loads visibility state from the given preferences node and sets it on the linked WWindPanel.
-     *
-     * @param prefs a {@link Preferences} node to load from under
-     */
+    @Override
     public void loadPrefs(Preferences prefs) {
         // get view settings subnode
         Preferences vnode = prefs.node(PREFN_BASE);

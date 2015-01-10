@@ -46,6 +46,7 @@ import static main.data.MetadataNames.FOOTPRINT;
 import static main.data.MetadataNames.PARENT_IDENTIFIER;
 import static main.data.MetadataNames.PRODUCT_IDENTIFIER;
 import main.hma.HmaGetRecordsBuilder;
+import net.falappa.prefs.PrefRestorable;
 import net.falappa.wwind.layers.NoSuchShapeException;
 import net.falappa.wwind.layers.SurfShapeLayer;
 import net.falappa.wwind.layers.SurfShapesLayer;
@@ -63,7 +64,7 @@ import org.apache.xmlbeans.XmlOptions;
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */
-public class MainWindow extends javax.swing.JFrame {
+public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
 
     private final DefaultComboBoxModel<CatalogueDefinition> dcmCatalogues = new DefaultComboBoxModel<>();
     private CatalogueStub stub = null;
@@ -102,7 +103,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
         wwindPane.setLayerSettingsButtonVisible(true);
         pNavigation.linkTo(wwindPane);
-        loadPrefs();
+        loadPrefs(App.getAppPrefs());
     }
 
     public CatalogueDefinition getCurrentCatalogue() {
@@ -361,7 +362,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_cbCataloguesMouseEntered
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        storePrefs();
+        storePrefs(App.getAppPrefs());
     }//GEN-LAST:event_formWindowClosing
 
     private void cbCataloguesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCataloguesItemStateChanged
@@ -522,20 +523,19 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
-    private void storePrefs() {
-        // get preferences API node
-        Preferences prefs = Preferences.userRoot().node(App.PREFN_APP);
+    @Override
+    public void storePrefs(Preferences baseNode) {
         // save window state
-        Preferences winPrefs = prefs.node(PREFN_WINDOW);
+        Preferences winPrefs = baseNode.node(PREFN_WINDOW);
         winPrefs.putInt(PREFK_WIN_LOC_X, this.getX());
         winPrefs.putInt(PREFK_WIN_LOC_Y, this.getY());
         winPrefs.putInt(PREFK_WIN_WIDTH, this.getWidth());
         winPrefs.putInt(PREFK_WIN_HEIGHT, this.getHeight());
         winPrefs.putInt(PREFK_WIN_STATE, this.getExtendedState());
         // save view settings
-        wwindPane.storePrefs(prefs);
+        wwindPane.storePrefs(baseNode);
         // save catalogue definitions
-        Preferences pCatalogs = prefs.node(PREFN_CATALOGUES);
+        Preferences pCatalogs = baseNode.node(PREFN_CATALOGUES);
         for (int i = 0; i < dcmCatalogues.getSize(); i++) {
             CatalogueDefinition catDef = dcmCatalogues.getElementAt(i);
             // create new pref child node with catalogue name
@@ -557,19 +557,18 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
-    private void loadPrefs() {
+    @Override
+    public void loadPrefs(Preferences baseNode) {
         try {
-            // get preferences API node
-            Preferences prefs = Preferences.userRoot().node(App.PREFN_APP);
             // load window state
-            Preferences winPrefs = prefs.node(PREFN_WINDOW);
+            Preferences winPrefs = baseNode.node(PREFN_WINDOW);
             this.setLocation(winPrefs.getInt(PREFK_WIN_LOC_X, this.getX()), winPrefs.getInt(PREFK_WIN_LOC_Y, this.getY()));
             this.setSize(winPrefs.getInt(PREFK_WIN_WIDTH, this.getWidth()), winPrefs.getInt(PREFK_WIN_HEIGHT, this.getHeight()));
             this.setState(winPrefs.getInt(PREFK_WIN_STATE, this.getExtendedState()));
             // load view settings
-            wwindPane.loadPrefs(prefs);
+            wwindPane.loadPrefs(baseNode);
             // load catalogue definitions
-            Preferences pCatalogs = prefs.node(PREFN_CATALOGUES);
+            Preferences pCatalogs = baseNode.node(PREFN_CATALOGUES);
             final String[] nodes = pCatalogs.childrenNames();
             for (String nodeName : nodes) {
                 Preferences catPref = pCatalogs.node(nodeName);

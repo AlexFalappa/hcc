@@ -11,6 +11,7 @@
 package net.falappa.wwind.widgets;
 
 import java.util.prefs.Preferences;
+import net.falappa.prefs.PrefRestorable;
 
 /**
  * Modeless dialog grouping a {@link BaseCartoVisibilityPanel}, a {@link VisualAidsVisibilityPanel} and a
@@ -19,7 +20,7 @@ import java.util.prefs.Preferences;
  * @author Fabrizio Fabri
  * @author Alessandro Falappa
  */
-public class LayerSettingsDialog extends javax.swing.JDialog {
+public class LayerSettingsDialog extends javax.swing.JDialog implements PrefRestorable {
 
     /**
      * Creates a new dialog.
@@ -52,11 +53,13 @@ public class LayerSettingsDialog extends javax.swing.JDialog {
         pVisAids.linkTo(wwp);
     }
 
+    @Override
     public void loadPrefs(Preferences viewPrefs) {
         pBaseCarto.loadPrefs(viewPrefs);
         pVisAids.loadPrefs(viewPrefs);
     }
 
+    @Override
     public void storePrefs(Preferences viewPrefs) {
         pBaseCarto.storePrefs(viewPrefs);
         pVisAids.storePrefs(viewPrefs);

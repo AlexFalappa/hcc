@@ -1,6 +1,5 @@
 package net.falappa.wwind.layers;
 
-import net.falappa.wwind.helpers.DraggableMarker;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AbstractLayer;
@@ -17,6 +16,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
+import net.falappa.prefs.PrefRestorable;
+import net.falappa.wwind.helpers.DraggableMarker;
 
 /**
  * A layer for editing a single marker placement.
@@ -25,7 +26,7 @@ import java.util.prefs.Preferences;
  *
  * @author Alessandro Falappa
  */
-public class EditableMarkerLayer extends AbstractLayer {
+public class EditableMarkerLayer extends AbstractLayer implements PrefRestorable {
 
     /**
      * Event fired on layer clearing.
@@ -182,20 +183,12 @@ public class EditableMarkerLayer extends AbstractLayer {
         }
     }
 
-    /**
-     * Load SurfShapesLayer preferences from Java Preferences API nodes.
-     *
-     * @param baseNode the root node under which to look for this class own node
-     */
+    @Override
     public void loadPrefs(Preferences baseNode) {
         // TODO caricamento da preferences
     }
 
-    /**
-     * Store SurfShapesLayer preferences using Java Preferences API nodes.
-     *
-     * @param baseNode the root node under which to store this class own node
-     */
+    @Override
     public void storePrefs(Preferences baseNode) {
         // TODO memorizzazione preferences
     }

@@ -78,15 +78,6 @@ public class App {
         });
     }
 
-    private static void setPrefLAF() {
-        try {
-            logger.debug("Restoring previous look and feel: {}", prefs.get(PREFK_LAFCLASS, "None"));
-            UIManager.setLookAndFeel(prefs.get(PREFK_LAFCLASS, UIManager.getSystemLookAndFeelClassName()));
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            //ignored will go with default look and feel
-        }
-    }
-
     public static synchronized void dumpReq(XmlObject req, boolean isResults) {
         if (prefs.getBoolean(PREFK_DUMP_REQS_FLAG, false)) {
             try {
@@ -113,6 +104,10 @@ public class App {
         }
     }
 
+    public static Preferences getAppPrefs() {
+        return prefs;
+    }
+
     private static String genDumpFilePath(boolean isReq, boolean isResults) {
         StringBuilder sb = new StringBuilder();
         if (isReq) {
@@ -135,5 +130,14 @@ public class App {
         }
         sb.append(".xml");
         return sb.toString();
+    }
+
+    private static void setPrefLAF() {
+        try {
+            logger.debug("Restoring previous look and feel: {}", prefs.get(PREFK_LAFCLASS, "None"));
+            UIManager.setLookAndFeel(prefs.get(PREFK_LAFCLASS, UIManager.getSystemLookAndFeelClassName()));
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            //ignored will go with default look and feel
+        }
     }
 }

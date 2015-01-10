@@ -24,10 +24,12 @@ import gui.glazed.MetadataTableFormat;
 import gui.glazed.MetadataTableFormatFactory;
 import java.awt.event.MouseListener;
 import java.util.Collections;
+import java.util.prefs.Preferences;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import main.data.Metadata;
 import main.data.MetadataNames;
+import net.falappa.prefs.PrefRestorable;
 import net.falappa.swing.table.TableColumnAdjuster;
 
 /**
@@ -35,7 +37,7 @@ import net.falappa.swing.table.TableColumnAdjuster;
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */
-public class MetadataGridDialog extends javax.swing.JDialog {
+public class MetadataGridDialog extends javax.swing.JDialog implements PrefRestorable {
 
     private EventList<Metadata> dataList;
 //    private FilterList<Metadata> filterList;
@@ -182,4 +184,14 @@ public class MetadataGridDialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane scroller;
     private javax.swing.JTable tblMetadata;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void loadPrefs(Preferences baseNode) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void storePrefs(Preferences baseNode) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

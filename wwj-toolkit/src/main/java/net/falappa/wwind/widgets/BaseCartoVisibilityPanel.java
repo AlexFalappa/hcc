@@ -1,6 +1,5 @@
 package net.falappa.wwind.widgets;
 
-import net.falappa.wwind.utils.ToggleVisibilityAction;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.layers.Layer;
@@ -9,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JCheckBox;
+import net.falappa.prefs.PrefRestorable;
+import net.falappa.wwind.utils.ToggleVisibilityAction;
 
 /**
  * A panel listing and controlling the visibility of the default base cartoghraphy layers in a {@link WWindPanel} (Place Names, Political
@@ -18,7 +19,7 @@ import javax.swing.JCheckBox;
  *
  * @author Alessandro Falappa
  */
-public class BaseCartoVisibilityPanel extends javax.swing.JPanel {
+public class BaseCartoVisibilityPanel extends javax.swing.JPanel implements PrefRestorable {
 
     private static final String PREFNODE_BASECARTO = "base-carto";
 
@@ -49,11 +50,7 @@ public class BaseCartoVisibilityPanel extends javax.swing.JPanel {
         link(chBing, wwCanvas, layer);
     }
 
-    /**
-     * Store visibility state under the given preferences node.
-     *
-     * @param prefs a {@link Preferences} node to write under
-     */
+    @Override
     public void storePrefs(Preferences prefs) {
         // create a subnode for view settings
         Preferences vnode = prefs.node(PREFNODE_BASECARTO);
@@ -65,11 +62,7 @@ public class BaseCartoVisibilityPanel extends javax.swing.JPanel {
         putChbInPrefs(chPlaceNames, vnode);
     }
 
-    /**
-     * Loads visibility state from the given preferences node and sets it on the linked WWindPanel.
-     *
-     * @param prefs a {@link Preferences} node to load from under
-     */
+    @Override
     public void loadPrefs(Preferences prefs) {
         // get view settings subnode
         Preferences vnode = prefs.node(PREFNODE_BASECARTO);

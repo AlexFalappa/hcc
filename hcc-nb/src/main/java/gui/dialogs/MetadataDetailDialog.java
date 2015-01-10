@@ -19,6 +19,7 @@ import com.l2fprod.common.swing.JTaskPaneGroup;
 import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 import com.l2fprod.common.swing.plaf.aqua.AquaLookAndFeelAddons;
 import java.util.List;
+import java.util.prefs.Preferences;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -27,6 +28,7 @@ import javax.swing.table.TableModel;
 import main.data.Metadata;
 import main.data.MetadataNames;
 import main.hma.HmaMetadataSeq;
+import net.falappa.prefs.PrefRestorable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +41,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */
-public class MetadataDetailDialog extends javax.swing.JDialog {
+public class MetadataDetailDialog extends javax.swing.JDialog implements PrefRestorable {
 
     private static final Logger logger = LoggerFactory.getLogger(MetadataDetailDialog.class);
     private MetadataGridDialog gridDialog = null;
@@ -175,4 +177,14 @@ public class MetadataDetailDialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane scroller;
     private com.l2fprod.common.swing.JTaskPane tpgContainer;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void loadPrefs(Preferences baseNode) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void storePrefs(Preferences baseNode) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
