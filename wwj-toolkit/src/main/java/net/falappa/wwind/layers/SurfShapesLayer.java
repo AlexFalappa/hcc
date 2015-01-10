@@ -329,7 +329,7 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
 
     @Override
     public int getNumShapes() {
-        return getNumRenderables();
+        return getNumRenderables() - 1;
     }
 
     @Override

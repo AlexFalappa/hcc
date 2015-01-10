@@ -265,7 +265,7 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
 
     @Override
     public int getNumShapes() {
-        return getNumRenderables();
+        return getNumRenderables() - 1;
     }
 
     @Override
