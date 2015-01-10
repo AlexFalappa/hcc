@@ -18,6 +18,7 @@ package gui.glazed;
 import java.util.ArrayList;
 import main.data.Metadata;
 import main.data.MetadataNames;
+import static main.data.MetadataNames.PRODUCT_IDENTIFIER;
 import static main.hma.HmaMetadataSeq.gridListBrief;
 import static main.hma.HmaMetadataSeq.shortLabels;
 
@@ -49,5 +50,14 @@ public final class MetadataTableFormatFactory {
         String[] cn = new String[colNums];
         MetadataNames[] ck = new MetadataNames[colNums];
         return new MetadataTableFormat(colNums, columnNames.toArray(cn), columnKeys.toArray(ck));
+    }
+
+    /**
+     * Builds a minimal {@link MetadataTableFormat} with only product identifier column.
+     *
+     * @return a new {@link MetadataTableFormat} object
+     */
+    public static MetadataTableFormat createMinimalTableFormat() {
+        return new MetadataTableFormat(1, new String[]{shortLabels.get(PRODUCT_IDENTIFIER)}, new MetadataNames[]{PRODUCT_IDENTIFIER});
     }
 }

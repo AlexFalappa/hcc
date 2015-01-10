@@ -63,9 +63,6 @@ public class MetadataGridDialog extends javax.swing.JDialog {
      * @param list the new {@link EventList} to show
      */
     public void setDataList(EventList<Metadata> list) {
-        if (list.isEmpty()) {
-            return;
-        }
         dataList = list;
         sortedList = new SortedList<>(dataList);
         //TODO filtering trough a search textfield
@@ -73,7 +70,7 @@ public class MetadataGridDialog extends javax.swing.JDialog {
         selModel = GlazedListsSwing.eventSelectionModel(sortedList);
         selModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tblMetadata.setSelectionModel(selModel);
-        final MetadataTableFormat mtf = MetadataTableFormatFactory.createTableFormat(dataList.get(0));
+        final MetadataTableFormat mtf = MetadataTableFormatFactory.createMinimalTableFormat();
         tblModel = GlazedListsSwing.eventTableModelWithThreadProxyList(sortedList, mtf);
         tblMetadata.setModel(tblModel);
     }
@@ -84,7 +81,9 @@ public class MetadataGridDialog extends javax.swing.JDialog {
      * @param selListener the listener
      */
     public void addListSelectionListener(ListSelectionListener selListener) {
-        selModel.addListSelectionListener(selListener);
+        if (selModel != null) {
+            selModel.addListSelectionListener(selListener);
+        }
     }
 
     /**
