@@ -118,6 +118,7 @@ public class TestFrame extends javax.swing.JFrame {
         bDelSlayer2 = new javax.swing.JButton();
         jLabel22 = new javax.swing.JLabel();
         bFirstEdit = new javax.swing.JButton();
+        bPolyHole = new javax.swing.JButton();
         pEdit = new javax.swing.JPanel();
         tbEditPoint = new javax.swing.JToggleButton();
         tbEditCirc = new javax.swing.JToggleButton();
@@ -545,6 +546,13 @@ public class TestFrame extends javax.swing.JFrame {
             }
         });
 
+        bPolyHole.setText("Create poly with holes");
+        bPolyHole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bPolyHoleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pShapesLayout = new javax.swing.GroupLayout(pShapes);
         pShapes.setLayout(pShapesLayout);
         pShapesLayout.setHorizontalGroup(
@@ -552,9 +560,34 @@ public class TestFrame extends javax.swing.JFrame {
             .addGroup(pShapesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pShapesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pShapesLayout.createSequentialGroup()
-                        .addGap(0, 13, Short.MAX_VALUE)
+                    .addGroup(pShapesLayout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bAddSLayer1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bDelSlayer1))
+                    .addGroup(pShapesLayout.createSequentialGroup()
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bAddSlayer2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bDelSlayer2))
+                    .addGroup(pShapesLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
                         .addGroup(pShapesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pShapesLayout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bFirstShape)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bClearSLayer1))
+                            .addComponent(chAnnoSlayer2)
+                            .addGroup(pShapesLayout.createSequentialGroup()
+                                .addComponent(jLabel22)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bSecondShape)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bClearSlayer2))
                             .addGroup(pShapesLayout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -570,39 +603,9 @@ public class TestFrame extends javax.swing.JFrame {
                                     .addGroup(pShapesLayout.createSequentialGroup()
                                         .addComponent(ccbFirstShape, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(bFirstShapeReset))))))
-                    .addGroup(pShapesLayout.createSequentialGroup()
-                        .addGroup(pShapesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pShapesLayout.createSequentialGroup()
-                                .addComponent(jLabel18)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bAddSLayer1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bDelSlayer1))
-                            .addGroup(pShapesLayout.createSequentialGroup()
-                                .addComponent(jLabel21)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bAddSlayer2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bDelSlayer2))
-                            .addGroup(pShapesLayout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(pShapesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pShapesLayout.createSequentialGroup()
-                                        .addComponent(jLabel17)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(bFirstShape)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(bClearSLayer1))
-                                    .addComponent(chAnnoSlayer2)
-                                    .addGroup(pShapesLayout.createSequentialGroup()
-                                        .addComponent(jLabel22)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(bSecondShape)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(bClearSlayer2)))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                        .addComponent(bFirstShapeReset))))
+                            .addComponent(bPolyHole))))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         pShapesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bAddSlayer2, bDelSlayer2});
@@ -635,6 +638,8 @@ public class TestFrame extends javax.swing.JFrame {
                 .addGroup(pShapesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tgFirstShapeVisibility)
                     .addComponent(bFirstEdit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bPolyHole)
                 .addGap(18, 18, 18)
                 .addGroup(pShapesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
@@ -647,7 +652,7 @@ public class TestFrame extends javax.swing.JFrame {
                     .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chAnnoSlayer2)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Shapes", pShapes);
@@ -1176,6 +1181,32 @@ public class TestFrame extends javax.swing.JFrame {
         wwp.clearHighlights(true);
     }//GEN-LAST:event_bClearHighlgtActionPerformed
 
+    private void bPolyHoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPolyHoleActionPerformed
+        if (wwp.hasSurfShapeLayer(LAY_FOOTPRINTS)) {
+            final SurfShapesLayer shpLayer = (SurfShapesLayer) wwp.getSurfShapeLayer(LAY_FOOTPRINTS);
+            List<List<LatLon>> bnds = new ArrayList<>();
+            List<LatLon> b = new ArrayList<>();
+            b.add(LatLon.fromDegrees(0, 0));
+            b.add(LatLon.fromDegrees(0, 10));
+            b.add(LatLon.fromDegrees(10, 10));
+            b.add(LatLon.fromDegrees(10, 0));
+            bnds.add(b);
+            b = new ArrayList<>();
+            b.add(LatLon.fromDegrees(1, 2));
+            b.add(LatLon.fromDegrees(1, 5));
+            b.add(LatLon.fromDegrees(4, 5));
+            bnds.add(b);
+            b = new ArrayList<>();
+            b.add(LatLon.fromDegrees(6, 6));
+            b.add(LatLon.fromDegrees(6, 9));
+            b.add(LatLon.fromDegrees(9, 9));
+            b.add(LatLon.fromDegrees(9, 6));
+            bnds.add(b);
+            shpLayer.addSurfPoly("pippo", bnds);
+            wwp.redraw();
+        }
+    }//GEN-LAST:event_bPolyHoleActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1231,6 +1262,7 @@ public class TestFrame extends javax.swing.JFrame {
     private javax.swing.JButton bFlyThreeFootprints;
     private javax.swing.JButton bFlyTo;
     private javax.swing.JButton bJump;
+    private javax.swing.JButton bPolyHole;
     private javax.swing.JButton bSecondShape;
     private javax.swing.JButton bSelectF;
     private javax.swing.JButton bSelectR;

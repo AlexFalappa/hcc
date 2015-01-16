@@ -239,11 +239,47 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
         }
         //set this layer as custom property of the shape
         shape.setValue(AVKey.LAYER, this);
+        // put in map removing existing shape with same id if needed
         SurfaceShape old = shapesById.put(id, shape);
         if (old != null) {
             removeRenderable(old);
         }
         addRenderable(shape);
+    }
+
+    /**
+     * Adds or substitutes a named polygonal surface shape with holes.
+     * <p>
+     * Each boundary is a list of LatLon points. Should have at least two boundaries.
+     *
+     * @param boundaries a list of poligon boundaries, first is outer then one or more inner (holes)
+     * @param id the shape identifier
+     */
+    public void addSurfPoly(String id, List<List<LatLon>> boundaries) {
+        if (boundaries.isEmpty()) {
+            return;
+        }
+        if (boundaries.size() == 1) {
+            addSurfPoly(boundaries.get(0), id);
+        } else {
+            SurfacePolygon shape = new SurfacePolygon(boundaries.get(0));
+            for (int i = 1; i < boundaries.size(); i++) {
+                shape.addInnerBoundary(boundaries.get(i));
+            }
+            shape.setAttributes(attr);
+            shape.setHighlightAttributes(attrHigh);
+            if (id != null) {
+                shape.setValue(AVKey.HOVER_TEXT, id);
+            }
+            //set this layer as custom property of the shape
+            shape.setValue(AVKey.LAYER, this);
+            // put in map removing existing shape with same id if needed
+            SurfaceShape old = shapesById.put(id, shape);
+            if (old != null) {
+                removeRenderable(old);
+            }
+            addRenderable(shape);
+        }
     }
 
     /**
