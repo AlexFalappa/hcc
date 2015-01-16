@@ -119,6 +119,7 @@ public class TestFrame extends javax.swing.JFrame {
         jLabel22 = new javax.swing.JLabel();
         bFirstEdit = new javax.swing.JButton();
         bPolyHole = new javax.swing.JButton();
+        bMultipolyHole = new javax.swing.JButton();
         pEdit = new javax.swing.JPanel();
         tbEditPoint = new javax.swing.JToggleButton();
         tbEditCirc = new javax.swing.JToggleButton();
@@ -553,6 +554,13 @@ public class TestFrame extends javax.swing.JFrame {
             }
         });
 
+        bMultipolyHole.setText("Create multipoly with holes");
+        bMultipolyHole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bMultipolyHoleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pShapesLayout = new javax.swing.GroupLayout(pShapes);
         pShapes.setLayout(pShapesLayout);
         pShapesLayout.setHorizontalGroup(
@@ -604,7 +612,8 @@ public class TestFrame extends javax.swing.JFrame {
                                         .addComponent(ccbFirstShape, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(bFirstShapeReset))))
-                            .addComponent(bPolyHole))))
+                            .addComponent(bPolyHole)
+                            .addComponent(bMultipolyHole))))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
@@ -652,7 +661,8 @@ public class TestFrame extends javax.swing.JFrame {
                     .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chAnnoSlayer2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bMultipolyHole))
         );
 
         jTabbedPane1.addTab("Shapes", pShapes);
@@ -1185,27 +1195,73 @@ public class TestFrame extends javax.swing.JFrame {
         if (wwp.hasSurfShapeLayer(LAY_FOOTPRINTS)) {
             final SurfShapesLayer shpLayer = (SurfShapesLayer) wwp.getSurfShapeLayer(LAY_FOOTPRINTS);
             List<List<LatLon>> bnds = new ArrayList<>();
+            // outer boundary
             List<LatLon> b = new ArrayList<>();
             b.add(LatLon.fromDegrees(0, 0));
             b.add(LatLon.fromDegrees(0, 10));
             b.add(LatLon.fromDegrees(10, 10));
             b.add(LatLon.fromDegrees(10, 0));
             bnds.add(b);
+            // first hole
             b = new ArrayList<>();
             b.add(LatLon.fromDegrees(1, 2));
             b.add(LatLon.fromDegrees(1, 5));
             b.add(LatLon.fromDegrees(4, 5));
             bnds.add(b);
+            // second hole
             b = new ArrayList<>();
             b.add(LatLon.fromDegrees(6, 6));
             b.add(LatLon.fromDegrees(6, 9));
             b.add(LatLon.fromDegrees(9, 9));
             b.add(LatLon.fromDegrees(9, 6));
             bnds.add(b);
-            shpLayer.addSurfPoly("pippo", bnds);
+            shpLayer.addSurfPoly("two holes", bnds);
             wwp.redraw();
         }
     }//GEN-LAST:event_bPolyHoleActionPerformed
+
+    private void bMultipolyHoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMultipolyHoleActionPerformed
+        if (wwp.hasSurfShapeLayer(LAY_RULES)) {
+            final MultiPolygonShapesLayer mpLayer = (MultiPolygonShapesLayer) wwp.getSurfShapeLayer(LAY_RULES);
+            List<List<List<LatLon>>> polys = new ArrayList<>();
+            // first poly
+            List<List<LatLon>> bnds = new ArrayList<>();
+            // first poly outer boundary
+            List<LatLon> b = new ArrayList<>();
+            b.add(LatLon.fromDegrees(5, 5));
+            b.add(LatLon.fromDegrees(5, 9.5));
+            b.add(LatLon.fromDegrees(9.5, 9.5));
+            b.add(LatLon.fromDegrees(9.5, 5));
+            bnds.add(b);
+            // first poly hole
+            b = new ArrayList<>();
+            b.add(LatLon.fromDegrees(6, 6));
+            b.add(LatLon.fromDegrees(6, 9));
+            b.add(LatLon.fromDegrees(9, 9));
+            b.add(LatLon.fromDegrees(9, 6));
+            bnds.add(b);
+            polys.add(bnds);
+            // second poly
+            bnds = new ArrayList<>();
+            // second poly outer boundary
+            b = new ArrayList<>();
+            b.add(LatLon.fromDegrees(10.5, 10.5));
+            b.add(LatLon.fromDegrees(10.5, 15));
+            b.add(LatLon.fromDegrees(15, 15));
+            b.add(LatLon.fromDegrees(15, 10.5));
+            bnds.add(b);
+            // second poly hole
+            b = new ArrayList<>();
+            b.add(LatLon.fromDegrees(11, 11));
+            b.add(LatLon.fromDegrees(11, 14));
+            b.add(LatLon.fromDegrees(14, 14));
+            b.add(LatLon.fromDegrees(14, 11));
+            bnds.add(b);
+            polys.add(bnds);
+            mpLayer.addMultiPoly(polys, "two polys one hole each");
+            wwp.redraw();
+        }
+    }//GEN-LAST:event_bMultipolyHoleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1262,6 +1318,7 @@ public class TestFrame extends javax.swing.JFrame {
     private javax.swing.JButton bFlyThreeFootprints;
     private javax.swing.JButton bFlyTo;
     private javax.swing.JButton bJump;
+    private javax.swing.JButton bMultipolyHole;
     private javax.swing.JButton bPolyHole;
     private javax.swing.JButton bSecondShape;
     private javax.swing.JButton bSelectF;

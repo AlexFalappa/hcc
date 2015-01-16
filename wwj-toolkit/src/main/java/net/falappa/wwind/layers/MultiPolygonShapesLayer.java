@@ -201,8 +201,8 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
     /**
      * Adds or substitutes a named surface multi polygon.
      *
-     * @param polys the outer boundaries of the polygons
      * @param id the shape identifier
+     * @param polys the outer boundaries of the polygons
      */
     public void addMultiPoly(String id, List<List<LatLon>> polys) {
         //remove previous polygons if any
@@ -216,6 +216,45 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
         ArrayList<SurfacePolygon> mp = new ArrayList<>();
         for (List<LatLon> poly : polys) {
             SurfacePolygon sp = new SurfacePolygon(poly);
+            sp.setAttributes(attr);
+            sp.setHighlightAttributes(attrHigh);
+            if (id != null) {
+                sp.setValue(AVKey.HOVER_TEXT, id);
+            }
+            //set this layer as custom property of the shape
+            //This is useful to look up the multi polygon from each component
+            sp.setValue(AVKey.LAYER, this);
+            addRenderable(sp);
+            mp.add(sp);
+        }
+        multiPolysById.put(id, mp);
+    }
+
+    /**
+     * Adds or substitutes a named surface multi polygon with holes.
+     *
+     * @param polys the boundaries of the polygons, for each one the first is outer the other are holes
+     * @param id the shape identifier
+     */
+    public void addMultiPoly(List<List<List<LatLon>>> polys, String id) {
+        //remove previous polygons if any
+        if (multiPolysById.containsKey(id)) {
+            for (SurfacePolygon sp : multiPolysById.get(id)) {
+                removeRenderable(sp);
+            }
+            multiPolysById.remove(id);
+        }
+        //build new multipolygon SurfacePolygons
+        ArrayList<SurfacePolygon> mp = new ArrayList<>();
+        for (List<List<LatLon>> boundaries : polys) {
+            // skip if no boundaries
+            if (boundaries.isEmpty()) {
+                continue;
+            }
+            SurfacePolygon sp = new SurfacePolygon(boundaries.get(0));
+            for (int i = 1; i < boundaries.size(); i++) {
+                sp.addInnerBoundary(boundaries.get(i));
+            }
             sp.setAttributes(attr);
             sp.setHighlightAttributes(attrHigh);
             if (id != null) {
