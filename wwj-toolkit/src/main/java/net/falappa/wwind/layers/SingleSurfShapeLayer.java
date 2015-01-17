@@ -17,6 +17,7 @@ import gov.nasa.worldwind.render.SurfaceSector;
 import gov.nasa.worldwind.render.SurfaceShape;
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.List;
 import java.util.prefs.Preferences;
 import net.falappa.prefs.PrefRestorable;
 import net.falappa.wwind.utils.WWindUtils;
@@ -111,6 +112,26 @@ public class SingleSurfShapeLayer extends RenderableLayer implements PrefRestora
     public void setSurfPoly(Iterable<? extends LatLon> coords) {
         removeOldAoI();
         current = new SurfacePolygon(attr, coords);
+        addRenderable(current);
+    }
+
+    /**
+     * Changes the current shape to a geodetic polygon with holes.
+     * <p>
+     * Each boundary is a list of LatLon points. Should have at least two boundaries.
+     *
+     * @param boundaries a list of poligon boundaries, first is outer then one or more inner (holes)
+     */
+    public void setSurfPoly(List<List<LatLon>> boundaries) {
+        if (boundaries.isEmpty()) {
+            return;
+        }
+        removeOldAoI();
+        SurfacePolygon poly = new SurfacePolygon(attr, boundaries.get(0));
+        for (int i = 1; i < boundaries.size(); i++) {
+            poly.addInnerBoundary(boundaries.get(i));
+        }
+        current = poly;
         addRenderable(current);
     }
 
