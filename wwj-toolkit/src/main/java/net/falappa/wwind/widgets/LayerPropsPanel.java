@@ -1,28 +1,70 @@
 package net.falappa.wwind.widgets;
 
+import gov.nasa.worldwind.WorldWindow;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.JSlider;
+import net.falappa.wwind.layers.SingleMarkerLayer;
+import net.falappa.wwind.layers.SingleSurfShapeLayer;
 import net.falappa.wwind.layers.SurfShapeLayer;
 import net.falappa.wwind.utils.ToggleVisibilityAction;
-import gov.nasa.worldwind.WorldWindow;
-import javax.swing.JSlider;
 
 /**
  * Small panel to show a {@link SurfShapeLayer} name and edit its visibility, color and opacity.
+ * <p>
+ * Can also be used to control a pair of {@link SingleSurfShapeLayer} and {@link SingleMarkerLayer} (e.g. WWindPanel AOI).
  *
- * @see LayerSettingsDialog
+ * @see SurfShapeLayersVisibilityPanel
  * @author Alessandro Falappa
  */
 public class LayerPropsPanel extends javax.swing.JPanel {
 
-    WorldWindow wwd;
-    SurfShapeLayer sl;
+    private WorldWindow wwd;
+    private SurfShapeLayer sl;
+    private SingleSurfShapeLayer sssl;
+    private SingleMarkerLayer sml;
 
-    public LayerPropsPanel(WorldWindow wwd, SurfShapeLayer layer) {
+    public LayerPropsPanel(WorldWindow wwnd, SurfShapeLayer layer) {
         initComponents();
         this.sl = layer;
-        this.wwd = wwd;
+        this.wwd = wwnd;
         chLayerName.setSelected(layer.isEnabled());
-        chLayerName.setAction(new ToggleVisibilityAction(layer, wwd));
+        chLayerName.setAction(new ToggleVisibilityAction(layer, wwnd));
         ccbColor.setSelectedColor(layer.getColor());
+        // NOTE: event listener added after selection to prevent loop
+        ccbColor.addItemListener(new java.awt.event.ItemListener() {
+            @Override
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                sl.setColor(ccbColor.getSelectedColor());
+                wwd.redraw();
+            }
+        });
+    }
+
+    public LayerPropsPanel(WorldWindow wwnd, SingleSurfShapeLayer sslayer, SingleMarkerLayer mlayer) {
+        initComponents();
+        this.sssl = sslayer;
+        this.sml = mlayer;
+        this.wwd = wwnd;
+        chLayerName.setSelected(sslayer.isEnabled());
+        chLayerName.setText("AOI");
+        chLayerName.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                sssl.setEnabled(chLayerName.isSelected());
+                sml.setEnabled(chLayerName.isSelected());
+            }
+        });
+        ccbColor.setSelectedColor(sslayer.getColor());
+        // NOTE: event listener added after selection to prevent loop
+        ccbColor.addItemListener(new java.awt.event.ItemListener() {
+            @Override
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                sssl.setColor(ccbColor.getSelectedColor());
+                sml.setColor(ccbColor.getSelectedColor());
+                wwd.redraw();
+            }
+        });
     }
 
     /**
@@ -40,12 +82,6 @@ public class LayerPropsPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 3, 9, 3));
 
         chLayerName.setText("layer name");
-
-        ccbColor.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                ccbColorItemStateChanged(evt);
-            }
-        });
 
         slOpacity.setMinimum(10);
         slOpacity.setValue(100);
@@ -78,15 +114,15 @@ public class LayerPropsPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ccbColorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ccbColorItemStateChanged
-        sl.setColor(ccbColor.getSelectedColor());
-        wwd.redraw();
-    }//GEN-LAST:event_ccbColorItemStateChanged
-
     private void slOpacityStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slOpacityStateChanged
         JSlider source = (JSlider) evt.getSource();
         double val = ((double) source.getValue()) / ((double) source.getMaximum());
-        sl.setOpacity(val);
+        if (sl != null) {
+            sl.setOpacity(val);
+        } else {
+            sssl.setOpacity(val);
+            sml.setOpacity(val);
+        }
         wwd.redraw();
     }//GEN-LAST:event_slOpacityStateChanged
 

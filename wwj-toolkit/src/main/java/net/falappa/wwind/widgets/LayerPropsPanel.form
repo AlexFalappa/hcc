@@ -54,9 +54,6 @@
       </Properties>
     </Component>
     <Component class="net.falappa.swing.combobox.colorbox.ColorComboBox" name="ccbColor">
-      <Events>
-        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="ccbColorItemStateChanged"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JSlider" name="slOpacity">
       <Properties>
