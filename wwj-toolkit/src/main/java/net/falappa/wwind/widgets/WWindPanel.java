@@ -73,18 +73,23 @@ import net.falappa.wwind.utils.WWindUtils;
 /**
  * A base WorldWind panel with a bar containing a {@link FlyToPanel} and a {@link FlatRoundInLinePanel}.
  * <p>
- * Includes a configured {@link WorldWindowGLCanvas} with a base known layer definition (contained in an XML file).
+ * Includes a configured {@link WorldWindowGLCanvas} with a base known layer definition (contained in an XML file). A customizable layer
+ * definition made of WMS layers can be used specifying an external properties file.
  * <p>
- * Manages a Map of {@link SurfShapesLayer} (indexed by name), a {@link SingleSurfShapeLayer} and a {@link SingleMarkerLayer}.
- * <tt>SurfShapesLayer</tt>s can be added (if not already present) and removed, events are fired on addition/removal. The
- * {@link SingleSurfShapeLayer} and the {@link SingleMarkerLayer} are managed together to expose the concept of a single Area Of Interest.
+ * A button in the toolbar can be shown to recal a {@link DynamicLayerSettingsDialog}.
+ * <p>
+ * Manages an Area of Interest using a {@link SingleSurfShapeLayer} (for polyline, polygon and circle) and a {@link SingleMarkerLayer} (for
+ * point).
+ * <p>
+ * Manages a Map of {@link SurfShapesLayer} (indexed by name), <tt>SurfShapesLayer</tt>s can be added (if not already present) and removed,
+ * events are fired on addition/removal.
  * <p>
  * Manages creation and modification of an editing shape (circle, polygon, polyline, point) that can afterwards be converted to an AOI.
  * Another editing shape can be controlled trough an editing toolbar.
  * <p>
- * It's also possible to add other WorldWind layers. An utility method aids the placement before the "PlaceNames" layer.
+ * It's also possible to add other WorldWind layers. Utility methods aids the placement in the layer stack.
  * <p>
- * Offers fly to point and fly to area methods to animate going to a point on the Globe or bringing an area into view.
+ * Offers various fly to and eye positioning methods to animate going to a point or area on the Globe or instantly moving the camera..
  *
  * @author Alessandro Falappa
  */
@@ -112,8 +117,8 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     private static final String PREFN_WWP = "view";
     private static final Logger logger = Logger.getLogger(WWindPanel.class.getName());
     private static final Color COLOR_EDIT = new Color(0, 200, 255, 200);
-    private final SingleSurfShapeLayer aoi = new SingleSurfShapeLayer("Area of Interest");
-    private final SingleMarkerLayer moi = new SingleMarkerLayer("Marker of interest");
+    final SingleSurfShapeLayer aoi = new SingleSurfShapeLayer("Area of Interest");
+    final SingleMarkerLayer moi = new SingleMarkerLayer("Marker of interest");
     private final HashMap<String, SurfShapeLayer> shapeLayers = new HashMap<>();
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private boolean editing = false;
@@ -135,7 +140,7 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
         }
         URL wwCfg = WWindPanel.class.getResource(sb.toString());
         logger.log(Level.CONFIG, "Setting WordlWind app config document to: {0}", wwCfg.toString());
-        //NOTE: do not use WorldWind logger or Configuration class before the following statement as it interferes with the initial bootstrap sequence
+        //NOTE: do not use WorldWind logger or WorldWind Configuration class before the following statement as it interferes with the initial bootstrap sequence
         System.setProperty("gov.nasa.worldwind.app.config.document", wwCfg.toString());
     }
 

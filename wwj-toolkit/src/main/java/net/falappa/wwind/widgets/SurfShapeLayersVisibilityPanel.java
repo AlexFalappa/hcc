@@ -1,11 +1,11 @@
 package net.falappa.wwind.widgets;
 
-import net.falappa.wwind.layers.SurfShapeLayer;
-import net.falappa.wwind.layers.SurfShapesLayer;
 import gov.nasa.worldwind.WorldWindow;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import net.falappa.wwind.layers.SurfShapeLayer;
+import net.falappa.wwind.layers.SurfShapesLayer;
 
 /**
  * A panel listing and controlling the visibility of {@link SurfShapesLayer} objects managed by a {@link WWindPanel}.
@@ -33,6 +33,12 @@ public class SurfShapeLayersVisibilityPanel extends javax.swing.JPanel implement
         for (SurfShapeLayer sl : wwp.getAllSurfShapeLayers()) {
             addSurfShapeLayer(sl, wwp.getWWCanvas());
         }
+        LayerPropsPanel ppAoi = new LayerPropsPanel(wwp.getWWCanvas(), wwp.aoi, wwp.moi);
+        ppAoi.setName("AOI");
+        pLayers.add(ppAoi);
+        // relayout component
+        pLayers.revalidate();
+        scroller.repaint();
         // add a listener for future additions/removal
         wwp.addSurfShapeListener(this);
     }
