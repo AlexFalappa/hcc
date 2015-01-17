@@ -166,12 +166,8 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
     }
 
     @Override
-    public double getOpacity() {
-        return attr.getOutlineOpacity();
-    }
-
-    @Override
     public void setOpacity(double opacity) {
+        super.setOpacity(opacity);
         attr.setOutlineOpacity(opacity);
         attr.setInteriorOpacity(NORM_INSIDE_OPACITY * opacity);
     }

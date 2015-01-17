@@ -67,6 +67,12 @@ public class SingleMarkerLayer extends AbstractLayer implements PrefRestorable {
         attr.setMaterial(new Material(col));
     }
 
+    @Override
+    public void setOpacity(double opacity) {
+        super.setOpacity(opacity);
+        attr.setOpacity(opacity);
+    }
+
     /**
      * Setter for the marker position.
      *

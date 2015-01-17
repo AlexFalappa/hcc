@@ -33,6 +33,7 @@ import net.falappa.wwind.utils.WWindUtils;
  */
 public class SingleSurfShapeLayer extends RenderableLayer implements PrefRestorable {
 
+    private static final float NORM_INSIDE_OPACITY = 0.1f;
     private final BasicShapeAttributes attr = new BasicShapeAttributes();
     private Renderable current;
 
@@ -50,7 +51,7 @@ public class SingleSurfShapeLayer extends RenderableLayer implements PrefRestora
         attr.setOutlineMaterial(Material.RED);
         attr.setOutlineWidth(2);
         attr.setInteriorMaterial(new Material(Color.red.brighter().brighter()));
-        attr.setInteriorOpacity(0.1f);
+        attr.setInteriorOpacity(NORM_INSIDE_OPACITY);
     }
 
     /**
@@ -70,6 +71,13 @@ public class SingleSurfShapeLayer extends RenderableLayer implements PrefRestora
     public void setColor(Color col) {
         attr.setOutlineMaterial(new Material(col));
         attr.setInteriorMaterial(new Material(col.brighter().brighter()));
+    }
+
+    @Override
+    public void setOpacity(double opacity) {
+        super.setOpacity(opacity);
+        attr.setOutlineOpacity(opacity);
+        attr.setInteriorOpacity(NORM_INSIDE_OPACITY * opacity);
     }
 
     /**
