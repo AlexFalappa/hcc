@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.prefs.Preferences;
+import net.falappa.prefs.PrefRestorable;
 import net.falappa.wwind.utils.WWindUtils;
 
 /**
@@ -41,7 +42,7 @@ import net.falappa.wwind.utils.WWindUtils;
  *
  * @author Alessandro Falappa
  */
-public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSource, SurfShapeLayer {
+public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSource, SurfShapeLayer, PrefRestorable {
 
     private static final float HIGHL_INSIDE_OPACITY = 0.7f;
     private static final float NORM_INSIDE_OPACITY = 0.4f;
@@ -491,20 +492,12 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
         return getChangeSupport().getPropertyChangeListeners(PROPERTY_SELECTION);
     }
 
-    /**
-     * Load SurfShapesLayer preferences from Java Preferences API nodes.
-     *
-     * @param baseNode the root node under which to look for this class own node
-     */
+    @Override
     public void loadPrefs(Preferences baseNode) {
         // TODO loading from preferences
     }
 
-    /**
-     * Store SurfShapesLayer preferences using Java Preferences API nodes.
-     *
-     * @param baseNode the root node under which to store this class own node
-     */
+    @Override
     public void storePrefs(Preferences baseNode) {
         // TODO storing to preferences
     }
