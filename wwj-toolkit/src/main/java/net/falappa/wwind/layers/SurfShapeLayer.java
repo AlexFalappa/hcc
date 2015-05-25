@@ -82,7 +82,7 @@ public interface SurfShapeLayer extends Layer, ShapeHighlighting {
     /**
      * Reset the color and opacity of all surface shapes to those of the layer.
      */
-    public void resetAllSurfShapeColors();
+    void resetAllSurfShapeColors();
 
     /**
      * Toggles the visibility of the surface shape with the given name.

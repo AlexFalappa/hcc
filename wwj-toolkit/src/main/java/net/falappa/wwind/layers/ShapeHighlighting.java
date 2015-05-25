@@ -16,7 +16,7 @@ public interface ShapeHighlighting {
      * @see #setHighlightEvent(java.lang.String)
      * @return true if enabled
      */
-    public boolean isHighlightingEnabled();
+    boolean isHighlightingEnabled();
 
     /**
      * Toggles shape highlighting on the configured mouse event.
@@ -24,14 +24,14 @@ public interface ShapeHighlighting {
      * @see #setHighlightEvent(java.lang.String)
      * @param highlightingEnabled true to enable, false otherwise
      */
-    public void setHighlightingEnabled(boolean highlightingEnabled);
+    void setHighlightingEnabled(boolean highlightingEnabled);
 
     /**
      * Tells if an annotation is shown on the higlighted shape.
      *
      * @return true if annotation shown
      */
-    public boolean isShowAnnotation();
+    boolean isShowAnnotation();
 
     /**
      * Asks for showing an annotation when highlighting.
@@ -40,14 +40,14 @@ public interface ShapeHighlighting {
      *
      * @param showAnnotation true if annotation should be shown
      */
-    public void setShowAnnotation(boolean showAnnotation);
+    void setShowAnnotation(boolean showAnnotation);
 
     /**
      * Getter for the current highlighting mouse event.
      *
      * @return one of the {@link SelectEvent} mouse clicking constants
      */
-    public String getHighlightEvent();
+    String getHighlightEvent();
 
     /**
      * Setter for the current highlighting mouse click event.
@@ -55,35 +55,35 @@ public interface ShapeHighlighting {
      * @param highlightEvent one of {@link SelectEvent#LEFT_CLICK},{@link SelectEvent#LEFT_DOUBLE_CLICK} or {@link SelectEvent#RIGHT_CLICK}
      * constants
      */
-    public void setHighlightEvent(String highlightEvent);
+    void setHighlightEvent(String highlightEvent);
 
     /**
      * Returns the current highlighting color.
      *
      * @return the current color
      */
-    public Color getHighlightColor();
+    Color getHighlightColor();
 
     /**
      * Set the current highlighting color.
      *
      * @param col the new color
      */
-    public void setHighlightColor(Color col);
+    void setHighlightColor(Color col);
 
     /**
      * Returns the current highlighting opacity.
      *
      * @return the current opacity
      */
-    public double getHighlightOpacity();
+    double getHighlightOpacity();
 
     /**
      * Set the current highlighting opacity.
      *
      * @param opacity the new opacity
      */
-    public void setHighlightOpacity(double opacity);
+    void setHighlightOpacity(double opacity);
 
     /**
      * Highlights the surface shape with the given name.
@@ -92,13 +92,13 @@ public interface ShapeHighlighting {
      * @param fireEvent whether to fire selection events or not
      * @throws NoSuchShapeException if no shape with the given name exists
      */
-    public void highlightShape(String id, boolean fireEvent) throws NoSuchShapeException;
+    void highlightShape(String id, boolean fireEvent) throws NoSuchShapeException;
 
     /**
      * Un-highlights all surface shapes.
      *
      * @param fireEvent whether to fire de-selection events or not
      */
-    public void clearHighlight(boolean fireEvent);
+    void clearHighlight(boolean fireEvent);
 
 }

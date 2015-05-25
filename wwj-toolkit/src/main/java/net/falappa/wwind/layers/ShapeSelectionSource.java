@@ -19,11 +19,11 @@ public interface ShapeSelectionSource extends SelectListener {
     /**
      * Event fired on shapes selection.
      */
-    public static final String EVT_SELECT_SHAPES = "selectShapes";
+    static final String EVT_SELECT_SHAPES = "selectShapes";
     /**
      * Event fired on shapes deselection.
      */
-    public static final String EVT_DESELECT_SHAPES = "deselectShapes";
+    static final String EVT_DESELECT_SHAPES = "deselectShapes";
 
     /**
      * Links the layer to a given WorldWindow for receiving selection events.
