@@ -22,10 +22,13 @@ import java.util.GregorianCalendar;
 import javax.swing.JSpinner;
 
 /**
+ * Panel to choose the temporal query constraint.
  *
  * @author Alessandro Falappa <alex.falappa@gmail.com>
  */
 public class TimeWindowPanel extends javax.swing.JPanel {
+
+    public static final String PROP_DAYNIGHT = "daynight";
 
     public TimeWindowPanel() {
         initComponents();
@@ -47,6 +50,7 @@ public class TimeWindowPanel extends javax.swing.JPanel {
         jdcT2 = new com.toedter.calendar.JDateChooser(new Date());
         spT1Time = new javax.swing.JSpinner();
         spT2Time = new javax.swing.JSpinner();
+        chDayNight = new javax.swing.JCheckBox();
 
         chTimeEnabled.setText("Time constraints");
         chTimeEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -93,6 +97,14 @@ public class TimeWindowPanel extends javax.swing.JPanel {
         JSpinner.DateEditor timeEditor2 = new JSpinner.DateEditor(spT2Time, "HH:mm:ss");
         spT2Time.setEditor(timeEditor2);
 
+        chDayNight.setText("Show day/night on t1");
+        chDayNight.setEnabled(false);
+        chDayNight.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chDayNightItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -113,6 +125,9 @@ public class TimeWindowPanel extends javax.swing.JPanel {
                                     .addComponent(lT1))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(chDayNight)
+                                        .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jdcT1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -135,7 +150,9 @@ public class TimeWindowPanel extends javax.swing.JPanel {
                     .addComponent(jdcT1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lT1)
                     .addComponent(spT1Time, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chDayNight)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lT2)
                     .addComponent(jdcT2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -161,14 +178,21 @@ public class TimeWindowPanel extends javax.swing.JPanel {
         lT1.setEnabled(flag);
         jdcT1.setEnabled(flag);
         spT1Time.setEnabled(flag);
+        chDayNight.setEnabled(flag);
     }
 
     private void cbOperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOperActionPerformed
         enableT2(cbOper.getSelectedIndex() < 2);
     }//GEN-LAST:event_cbOperActionPerformed
 
+    private void chDayNightItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chDayNightItemStateChanged
+        boolean newState = chDayNight.isSelected();
+        firePropertyChange(PROP_DAYNIGHT, !newState, newState);
+    }//GEN-LAST:event_chDayNightItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cbOper;
+    private javax.swing.JCheckBox chDayNight;
     private javax.swing.JCheckBox chTimeEnabled;
     private com.toedter.calendar.JDateChooser jdcT1;
     private com.toedter.calendar.JDateChooser jdcT2;
