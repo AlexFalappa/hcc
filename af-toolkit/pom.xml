@@ -10,5 +10,6 @@
     <artifactId>af-toolkit</artifactId>
     <packaging>jar</packaging>
 
+    <name>af-toolkit</name>
     <description>Useful classes made by me and harvested from the internet.</description>
 </project>

@@ -9,6 +9,7 @@
     <artifactId>hcc-nb</artifactId>
     <packaging>jar</packaging>
 
+    <name>hcc-nb</name>
     <description>The main module of HCC containing the UI made with NetBeans IDE.</description>
 
     <build>

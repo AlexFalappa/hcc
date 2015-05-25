@@ -9,6 +9,7 @@
     <artifactId>wwj-toolkit</artifactId>
     <packaging>jar</packaging>
 
+    <name>wwj-toolkit</name>
     <description>Widgets and classes for developing applications based on the NASA WorldWind Java SDK.</description>
 
     <build>
