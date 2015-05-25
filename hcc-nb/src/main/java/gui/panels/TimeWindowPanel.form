@@ -167,9 +167,6 @@
         <Property name="text" type="java.lang.String" value="Show day/night on t1"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
-      <Events>
-        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chDayNightItemStateChanged"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

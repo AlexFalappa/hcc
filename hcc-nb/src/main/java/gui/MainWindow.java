@@ -32,6 +32,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.BackingStoreException;
@@ -49,6 +50,7 @@ import static main.data.MetadataNames.PRODUCT_IDENTIFIER;
 import main.hma.HmaGetRecordsBuilder;
 import net.falappa.prefs.PrefRestorable;
 import net.falappa.utils.GuiUtils;
+import net.falappa.wwind.layers.NightDayLayer;
 import net.falappa.wwind.layers.NoSuchShapeException;
 import net.falappa.wwind.layers.SurfShapeLayer;
 import net.falappa.wwind.layers.SurfShapesLayer;
@@ -104,6 +106,11 @@ public class MainWindow extends javax.swing.JFrame implements PrefRestorable {
         wwindPane.setLayerSettingsButtonVisible(true);
         pNavigation.linkTo(wwindPane);
         loadPrefs(App.getAppPrefs());
+        final NightDayLayer ndl = new NightDayLayer();
+        ndl.setTime(new Date());
+        ndl.setEnabled(false);
+        wwindPane.addLayer(ndl);
+        pTime.setNightDayLayer(ndl, wwindPane.getWWCanvas());
     }
 
     public CatalogueDefinition getCurrentCatalogue() {

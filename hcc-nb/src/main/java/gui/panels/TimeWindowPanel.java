@@ -16,10 +16,17 @@
 package gui.panels;
 
 import com.toedter.calendar.JTextFieldDateEditor;
+import gov.nasa.worldwind.WorldWindow;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.JSpinner;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import net.falappa.wwind.layers.NightDayLayer;
+import net.falappa.wwind.utils.ToggleVisibilityAction;
 
 /**
  * Panel to choose the temporal query constraint.
@@ -29,10 +36,40 @@ import javax.swing.JSpinner;
 public class TimeWindowPanel extends javax.swing.JPanel {
 
     public static final String PROP_DAYNIGHT = "daynight";
+    private NightDayLayer nightDayLayer;
+    private WorldWindow wwd;
+    private final PropertyChangeListener ndlUpd = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            TimeWindowPanel.this.nightDayLayer.setTime(getT1());
+            TimeWindowPanel.this.wwd.redraw();
+        }
+    };
+    private final ChangeListener ndlUpd2 = new ChangeListener() {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            TimeWindowPanel.this.nightDayLayer.setTime(getT1());
+            TimeWindowPanel.this.wwd.redraw();
+        }
+    };
 
     public TimeWindowPanel() {
         initComponents();
     }
+
+    public void setNightDayLayer(NightDayLayer nightDayLayer, WorldWindow wwd) {
+        this.nightDayLayer = nightDayLayer;
+        this.wwd = wwd;
+        if (nightDayLayer != null) {
+            chDayNight.setSelected(nightDayLayer.isEnabled());
+            ndlVisibility = new ToggleVisibilityAction(chDayNight.getText(), nightDayLayer, wwd);
+            ndlVisibility.setEnabled(false);
+            chDayNight.setAction(ndlVisibility);
+            jdcT1.addPropertyChangeListener("date", ndlUpd);
+            spT1Time.addChangeListener(ndlUpd2);
+        }
+    }
+    private ToggleVisibilityAction ndlVisibility;
 
     /**
      * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this
@@ -99,11 +136,6 @@ public class TimeWindowPanel extends javax.swing.JPanel {
 
         chDayNight.setText("Show day/night on t1");
         chDayNight.setEnabled(false);
-        chDayNight.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chDayNightItemStateChanged(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -178,17 +210,12 @@ public class TimeWindowPanel extends javax.swing.JPanel {
         lT1.setEnabled(flag);
         jdcT1.setEnabled(flag);
         spT1Time.setEnabled(flag);
-        chDayNight.setEnabled(flag);
+        chDayNight.setEnabled(flag && nightDayLayer != null);
     }
 
     private void cbOperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOperActionPerformed
         enableT2(cbOper.getSelectedIndex() < 2);
     }//GEN-LAST:event_cbOperActionPerformed
-
-    private void chDayNightItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chDayNightItemStateChanged
-        boolean newState = chDayNight.isSelected();
-        firePropertyChange(PROP_DAYNIGHT, !newState, newState);
-    }//GEN-LAST:event_chDayNightItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cbOper;

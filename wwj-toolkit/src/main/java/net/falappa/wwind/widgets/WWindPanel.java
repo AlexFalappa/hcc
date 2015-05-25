@@ -187,11 +187,11 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     }
 
     /**
-     * Package accessible getter to the inner <code>WorldWindowGLCanvas</code>.
+     * Getter to the inner <code>WorldWindowGLCanvas</code>.
      *
      * @return the inner preconfigured <code>WorldWindowGLCanvas</code>
      */
-    WorldWindowGLCanvas getWWCanvas() {
+    public WorldWindowGLCanvas getWWCanvas() {
         return wwCanvas;
     }
 
