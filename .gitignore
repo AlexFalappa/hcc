@@ -2,6 +2,7 @@
 /wwj-toolkit/target/
 /af-toolkit/target/
 /hcc-nb/target/
+/target/
 
 # maven release plugin intermediate files
 pom.xml.tag
