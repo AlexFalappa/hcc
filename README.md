@@ -8,7 +8,7 @@ Within this project a series of data models and protocols have been designed to 
 
 **hcc** deals with catalogue browsing of earth observation product and offers a visual graphic interface for issuing catalogue queries.
 
-![hcc screenshot](hcc-0.9.png) **TODO screenshot**
+![hcc screenshot](hcc-0.9.png)
 
 --------
 
@@ -31,11 +31,14 @@ Within this project a series of data models and protocols have been designed to 
 
 ## Changelog
 
-### V0.9 ??/??/2015
+### V0.9 25/06/2015
 
 * Switched from NetBeans Ant based build to Maven build
-* ...
-* ...
+* Added a day and night layer linked to the temporal range start instant
+* New grid and detail view of results metadata records
+* Dumping of requests/response to file (governed by new preferences settings)
+* Windows position and state is remembered between sessions
+* Some activity logging to console
 
 --------
 
@@ -52,7 +55,6 @@ Within this project a series of data models and protocols have been designed to 
 
 ### Notes
 
-* It's recommended to choose the JDK 7 as default Java Platform for NetBeans, as the projects do not explicitly require a Java 7 platform.
-If you have NetBeans running on JDK 8 assign a Java Platform explicitly.
-* One binary dependency was included, for developer convenience, by using the _in project maven repository_ technique, where a small maven repository has been embedded in the source tree to let maven fetch the dependency from the file system the first time.
+* It's recommended to choose the JDK 7 as default Java Platform for NetBeans, as the projects do not explicitly require a Java 7 platform. If you have NetBeans running on JDK 8 assign a Java Platform explicitly.
+* Some binary dependency were included, for developer convenience, by using the _in project maven repository_ technique, where a small maven repository has been embedded in the source tree to let maven fetch the dependencies from the file system the first time.
 * The UI makes broad use of swing `GroupLayout` and was built using NetBeans visual designer hence the fenced code blocks and _\*.form_ files scattered here and there. Keep this in mind if editing UI related classes with another IDE.
