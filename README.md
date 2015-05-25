@@ -20,12 +20,14 @@ Within this project a series of data models and protocols have been designed to 
     * Time constraints (contained or overlapping a time range, before or after an instant)
     * Spatial constraints (lat/lon range, polyline, polygon, point or cirle areas of interest)
 * Visual representation of query product footprints on a 3D globe or 2D map in four projections (uses the [World Wind Java SDK](http://goworldwind.org) )
+* Tabular representation of product metadata
 * Base cartography from widely known map providers (e.g. _NASA Blue Marble_ and _Microsoft Bing_)
 * Geographic names and lat/lon graticule overlays
 * Results navigation and highlight
 * Fly to Lat Lon point with flown-to locations history
 * Persistence of catalogue definitions and view settings between invocations
 * Several Look & Feels available
+* Dumping of requests/responses to file
 
 --------
 
