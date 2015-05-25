@@ -5,7 +5,7 @@ import gov.nasa.worldwind.layers.Layer;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JCheckBox;
+import javax.swing.JToggleButton;
 
 /**
  * A Swing {@link Action} to toggle WorldWind layers visibility.
@@ -20,6 +20,19 @@ public class ToggleVisibilityAction extends AbstractAction {
     /**
      * Initializing constructor.
      *
+     * @param name the action name (usually widgets text)
+     * @param layer the WorldWind layer to hide/show
+     * @param wwd the WorldWindow to redraw
+     */
+    public ToggleVisibilityAction(String name, Layer layer, WorldWindow wwd) {
+        super(name);
+        this.wwd = wwd;
+        this.layer = layer;
+    }
+
+    /**
+     * Initializing constructor taking the layer name as action name.
+     *
      * @param layer the WorldWind layer to hide/show
      * @param wwd the WorldWindow to redraw
      */
@@ -31,7 +44,7 @@ public class ToggleVisibilityAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        boolean toggle = ((JCheckBox) actionEvent.getSource()).isSelected();
+        boolean toggle = ((JToggleButton) actionEvent.getSource()).isSelected();
         this.layer.setEnabled(toggle);
         wwd.redraw();
     }
