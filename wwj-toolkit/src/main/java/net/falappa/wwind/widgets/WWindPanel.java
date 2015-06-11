@@ -353,7 +353,7 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
      * <p>
      * Sets polygon edit mode but does not start editing. Clears previous editing shapes and implicitly stops previous editing.
      *
-     * @param locations the locations (that will get copied)
+     * @param locations the locations (that will get copied and closed by duplicating the first as last).
      */
     public void editShapeFromPoly(Iterable<? extends LatLon> locations) {
         mtInit();
@@ -791,6 +791,25 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     }
 
     /**
+     * Hides/shows the current Area Of Interest.
+     *
+     * @param flag true to show, false to hide
+     */
+    public void setAOIVisible(boolean flag) {
+        aoi.setEnabled(flag);
+        moi.setEnabled(flag);
+    }
+
+    /**
+     * Tells if the current Area Of Interest is visible.
+     *
+     * @return true if visible
+     */
+    public boolean isAOIVisible() {
+        return aoi.isEnabled();
+    }
+
+    /**
      * Defines a circular Area Of Interest.
      *
      * @param center circle center as Position object
@@ -856,6 +875,43 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
      */
     public Color getAOIColor() {
         return aoi.getColor();
+    }
+
+    /**
+     * Setter for Area Of Interest outline color (border).
+     *
+     * @param col the new color
+     */
+    public void setAOIOutlineColor(Color col) {
+        aoi.setColorExterior(col);
+        moi.setColor(col);
+    }
+
+    /**
+     * Getter for Area Of Interest outline color.
+     *
+     * @return the current color
+     */
+    public Color getAOIOutlineColor() {
+        return aoi.getColorExterior();
+    }
+
+    /**
+     * Setter for Area Of Interest fill color (inner).
+     *
+     * @param col the new color
+     */
+    public void setAOIFillColor(Color col) {
+        aoi.setColorInterior(col);
+    }
+
+    /**
+     * Getter for Area Of Interest outline color.
+     *
+     * @return the current color
+     */
+    public Color getAOIFillColor() {
+        return aoi.getColorInterior();
     }
 
     /**
