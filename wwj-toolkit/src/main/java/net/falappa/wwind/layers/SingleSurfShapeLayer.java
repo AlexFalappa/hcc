@@ -56,7 +56,7 @@ public class SingleSurfShapeLayer extends RenderableLayer implements PrefRestora
     }
 
     /**
-     * Getter for the shape color
+     * Getter for the shape color.
      *
      * @return the current color
      */
@@ -66,12 +66,50 @@ public class SingleSurfShapeLayer extends RenderableLayer implements PrefRestora
 
     /**
      * Setter for the shape color.
+     * <p>
+     * Both the outline and fill colors are set. The fill color is a brighter version of the given color.
      *
      * @param col the new color
      */
     public void setColor(Color col) {
         attr.setOutlineMaterial(new Material(col));
         attr.setInteriorMaterial(new Material(col.brighter().brighter()));
+    }
+
+    /**
+     * Getter for the shape fill color
+     *
+     * @return the current color
+     */
+    public Color getColorInterior() {
+        return attr.getInteriorMaterial().getDiffuse();
+    }
+
+    /**
+     * Setter for the shape fill color.
+     *
+     * @param col the new color
+     */
+    public void setColorInterior(Color col) {
+        attr.setInteriorMaterial(new Material(col));
+    }
+
+    /**
+     * Getter for the shape outline color
+     *
+     * @return the current color
+     */
+    public Color getColorExterior() {
+        return attr.getOutlineMaterial().getDiffuse();
+    }
+
+    /**
+     * Setter for the shape outline color.
+     *
+     * @param col the new color
+     */
+    public void setColorExterior(Color col) {
+        attr.setOutlineMaterial(new Material(col));
     }
 
     @Override
