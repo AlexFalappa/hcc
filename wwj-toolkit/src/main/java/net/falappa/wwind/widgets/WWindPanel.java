@@ -1,30 +1,5 @@
 package net.falappa.wwind.widgets;
 
-import gov.nasa.worldwind.BasicModel;
-import gov.nasa.worldwind.Configuration;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.event.RenderingExceptionListener;
-import gov.nasa.worldwind.exception.WWAbsentRequirementException;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.geom.Sector;
-import gov.nasa.worldwind.layers.Earth.BMNGOneImage;
-import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
-import gov.nasa.worldwind.layers.Layer;
-import gov.nasa.worldwind.layers.LayerList;
-import gov.nasa.worldwind.layers.ViewControlsLayer;
-import gov.nasa.worldwind.layers.ViewControlsSelectListener;
-import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
-import gov.nasa.worldwind.render.Path;
-import gov.nasa.worldwind.render.Renderable;
-import gov.nasa.worldwind.render.SurfaceCircle;
-import gov.nasa.worldwind.render.SurfacePolygon;
-import gov.nasa.worldwind.util.measure.MeasureTool;
-import gov.nasa.worldwind.util.measure.MeasureToolController;
-import gov.nasa.worldwind.view.orbit.BasicOrbitView;
-import gov.nasa.worldwind.view.orbit.FlatOrbitView;
-import gov.nasa.worldwind.wms.WMSTiledImageLayer;
-import gov.nasa.worldwindx.examples.util.StatusLayer;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
@@ -53,11 +28,38 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
+import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.Configuration;
+import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.event.RenderingExceptionListener;
+import gov.nasa.worldwind.exception.WWAbsentRequirementException;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.geom.Sector;
+import gov.nasa.worldwind.layers.Earth.BMNGOneImage;
+import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
+import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.layers.LayerList;
+import gov.nasa.worldwind.layers.ViewControlsLayer;
+import gov.nasa.worldwind.layers.ViewControlsSelectListener;
+import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
+import gov.nasa.worldwind.render.Path;
+import gov.nasa.worldwind.render.Renderable;
+import gov.nasa.worldwind.render.SurfaceCircle;
+import gov.nasa.worldwind.render.SurfacePolygon;
+import gov.nasa.worldwind.util.measure.MeasureTool;
+import gov.nasa.worldwind.util.measure.MeasureToolController;
+import gov.nasa.worldwind.view.orbit.BasicOrbitView;
+import gov.nasa.worldwind.view.orbit.FlatOrbitView;
+import gov.nasa.worldwind.wms.WMSTiledImageLayer;
+import gov.nasa.worldwindx.examples.util.StatusLayer;
 import net.falappa.prefs.PrefRestorable;
 import net.falappa.wwind.layers.EditableMarkerLayer;
 import net.falappa.wwind.layers.NoSuchShapeException;
@@ -268,7 +270,9 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
      * @param mode the new mode as EditModes enumerated value
      */
     public void setEditMode(EditModes mode) {
-        editMode = mode;
+        if (mode != null) {
+            editMode = mode;
+        }
     }
 
     /**
@@ -329,12 +333,13 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
      * @return true if shape present
      */
     public boolean hasEditShape() {
-        if (editMode == EditModes.POINT) {
-            return eml.isPositionSet();
-        } else if (editMode == EditModes.CIRCLE) {
-            return mt != null && !mt.getPositions().isEmpty();
-        } else {
-            return mt != null && !mt.isArmed() && !mt.getPositions().isEmpty();
+        switch (editMode) {
+            case POINT:
+                return eml.isPositionSet();
+            case CIRCLE:
+                return mt != null && !mt.getPositions().isEmpty();
+            default:
+                return mt != null && !mt.isArmed() && !mt.getPositions().isEmpty();
         }
     }
 
@@ -831,6 +836,17 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     }
 
     /**
+     * Defines a labeled point Area Of Interest.
+     *
+     * @param pos location as Position object
+     * @param text the label text
+     */
+    public void setAOIPoint(Position pos, String text) {
+        moi.setPosition(pos, text);
+        aoi.clear();
+    }
+
+    /**
      * Defines a geodetic poligonal Area Of Interest.
      *
      * @param points polygon points as Iterable of Position objects
@@ -1042,7 +1058,7 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     public void flyToAOI() {
         if (hasAOI()) {
             if (getAOIType() == AoiShapes.POINT) {
-                moi.flyToMOI(wwCanvas);
+                moi.flyToCurrPos(wwCanvas);
             } else {
                 aoi.flyToAOI(wwCanvas);
             }
@@ -1056,13 +1072,17 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
      */
     public void flyToEditShape() {
         if (hasEditShape()) {
-            if (editMode == EditModes.POLYLINE) {
-                WWindUtils.flyToObjects(wwCanvas, Arrays.asList(mt.getLine()));
-            } else if (editMode == EditModes.POINT) {
-                Position pos = new Position(eml.getPosition(), 1_000_000);
-                WWindUtils.flyToPoint(wwCanvas, pos);
-            } else {
-                WWindUtils.flyToObjects(wwCanvas, Arrays.asList(mt.getSurfaceShape()));
+            switch (editMode) {
+                case POLYLINE:
+                    WWindUtils.flyToObjects(wwCanvas, Arrays.asList(mt.getLine()));
+                    break;
+                case POINT:
+                    Position pos = new Position(eml.getPosition(), 1_000_000);
+                    WWindUtils.flyToPoint(wwCanvas, pos);
+                    break;
+                default:
+                    WWindUtils.flyToObjects(wwCanvas, Arrays.asList(mt.getSurfaceShape()));
+                    break;
             }
         }
     }

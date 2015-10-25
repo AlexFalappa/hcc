@@ -1,10 +1,5 @@
 package test;
 
-import gov.nasa.worldwind.geom.Angle;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.util.Logging;
-import gov.nasa.worldwind.util.measure.MeasureTool;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -12,9 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.LogManager;
+
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+
+import gov.nasa.worldwind.geom.Angle;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.util.measure.MeasureTool;
 import net.falappa.wwind.layers.MultiPolygonShapesLayer;
 import net.falappa.wwind.layers.NoSuchShapeException;
 import net.falappa.wwind.layers.SurfShapeLayer;
@@ -873,7 +875,7 @@ public class TestFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bAOIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAOIActionPerformed
-        wwp.setAOICircle(Position.fromDegrees(42, 12), 100000);
+        wwp.setAOIPoint(Position.fromDegrees(42, 12), "Multiline\nvery long\nlabel");
         wwp.redraw();
     }//GEN-LAST:event_bAOIActionPerformed
 
