@@ -14,6 +14,7 @@
         <module>af-toolkit</module>
         <module>wwj-toolkit</module>
         <module>hcc-nb</module>
+        <module>wwj-gazetteer</module>
     </modules>
 
     <properties>

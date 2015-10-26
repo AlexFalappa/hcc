@@ -1,0 +1,283 @@
+A	ADM1	first-order administrative division
+A	ADM2	second-order administrative division
+A	ADM3	third-order administrative division
+A	PCLI	independent political entity
+P	PPLC	capital of a political entity
+P	PPLA	seat of a first-order administrative division
+P	PPLA2	seat of a second-order administrative division
+P	PPLA3	seat of a third-order administrative division
+P	PPLG	seat of government of a political entity
+P	PPL	populated place
+P	PPLS	populated places
+P	PPLX	section of populated place
+L	LCTY	locality
+T	ISL	island
+T	ISLS	islands
+T	VAL	valley
+T	PLN	plain(s)
+T	MT	mountain
+T	MTS	mountains
+T	PK	peak
+T	PKS	peaks
+T	PASS	pass
+T	HLL	hill
+T	HLLS	hills
+T	PEN	peninsula
+T	PROM	promontory(-ies)
+T	BCH	beach
+T	BCHS	beaches
+H	STRT	strait
+H	STM	stream
+H	STMS	streams
+H	LK	lake
+H	LKS	lakes
+V	FRST	forest(s)
+L	RGN	region
+L	RGNE	economic region
+R	ST	street
+R	RD	road
+S	BDG	bridge
+S	DAM	dam
+R	RDJCT	road junction
+R	TNL	tunnel
+R	RR	railroad
+R	RJCT	railroad junction
+R	TNLRR	railroad tunnel
+L	PRT	port
+S	AIRP	airport
+S	AIRB	airbase
+S	AIRH	heliport
+S	AIRF	airfield
+L	NVB	naval base
+S	HSP	hospital
+S	RSTN	railroad station
+S	MTRO	metro station
+S	BUSTN	bus station
+L	PRK	park
+S	HSPC	clinic
+S	MALL	mall
+S	STDM	stadium
+P	PPLF	farm village
+P	PPLH	historical populated place
+P	PPLL	populated locality
+P	PPLQ	abandoned populated place
+P	PPLR	religious populated place
+P	PPLW	destroyed populated place
+A	ADM1H	historical first-order administrative division
+A	ADM3H	historical third-order administrative division
+A	ADMDH	historical administrative division 
+A	PCLH	historical political entity
+H	STMC	canalized stream
+H	STMI	intermittent stream
+H	STMM	stream mouth(s)
+H	STMX	section of stream
+H	ESTY	estuary
+H	GULF	gulf
+H	HBR	harbor(s)
+H	HBRX	section of harbor
+H	INLT	inlet
+H	LGN	lagoon
+H	MRSH	marsh(es)
+H	FLLS	waterfall(s)
+H	WTRC	watercourse
+H	ANCH	anchorage
+H	BAY	bay
+H	BNK	bank(s)
+H	CHN	channel
+H	CHNM	marine channel
+H	CHNN	navigation channel
+H	CNL	canal
+H	CNLD	drainage canal
+H	CNLI	irrigation canal
+H	CNLN	navigation canal(s)
+H	COVE	cove(s)
+H	DCK	dock(s)
+H	DCKB	docking basin
+H	DTCH	ditch
+H	DTCHD	drainage ditch
+H	FISH	fishing area
+H	FJD	fjord
+H	GLCR	glacier(s)
+H	MFGN	salt evaporation ponds
+H	MRSHN	salt marsh
+H	PND	pond
+H	PNDN	salt pond
+H	RDST	roadstead
+H	RSV	reservoir(s)
+H	RSVT	water tank
+H	RVN	ravine(s)
+H	SHOL	shoal(s)
+H	SPNG	spring(s)
+H	SWMP	swamp
+H	WLL	well
+T	BAR	bar
+T	CAPE	cape
+T	CLF	cliff(s)
+T	CNYN	canyon
+T	CRQ	cirque
+T	DLTA	delta
+T	DPR	depression(s)
+T	GAP	gap
+T	GRGE	gorge(s)
+T	HDLD	headland
+T	ISLET	islet
+T	KRST	karst area
+T	LAVA	lava area
+T	PLAT	plateau
+T	PT	point
+T	RDGE	ridge(s)
+T	RK	rock
+T	RKS	rocks
+T	SDL	saddle
+T	SLP	slope(s)
+T	SPIT	spit
+T	SPUR	spur(s)
+T	UPLD	upland
+T	VLC	volcano
+L	AGRC	agricultural colony
+L	AMUS	amusement park
+L	AREA	area
+L	BTL	battlefield
+L	CMN	common
+L	CST	coast
+L	FLD	field(s)
+L	GRAZ	grazing area
+L	GVL	gravel area
+L	INDS	industrial area
+L	RESF	forest reserve
+L	RESN	nature reserve
+L	RESW	wildlife reserve
+L	RNGA	artillery range
+L	SALT	salt area
+R	PRMN	promenade
+R	RYD	railroad yard
+R	RDA	ancient road
+S	ADMF	administrative facility
+S	AGRF	agricultural facility
+S	AIRQ	abandoned airfield
+S	AMTH	amphitheater
+S	ANS	archaeological/prehistoric site
+S	ARCH	arch
+S	ASTR	astronomical station
+S	ATHF	athletic field
+S	BLDG	building(s)
+S	BLDO	office building
+S	BRKW	breakwater
+S	BUR	burial cave(s)
+S	BUSTP	bus stop
+S	CAVE	cave(s)
+S	CH	church
+S	CMP	camp(s)
+S	CMPQ	abandoned camp
+S	CMTY	cemetery
+S	COMC	communication center
+S	CSNO	casino
+S	CSTL	castle
+S	CSTM	customs house
+S	CTHSE	courthouse
+S	CTRCM	community center
+S	CTRM	medical center
+S	CTRR	religious center
+S	CVNT	convent
+S	DAMQ	ruined dam
+S	DCKY	dockyard
+S	DIKE	dike
+S	DIP	diplomatic facility
+S	EST	estate(s)
+S	FCL	facility
+S	FRM	farm
+S	FRMQ	abandoned farm
+S	FRMT	farmstead
+S	FT	fort
+S	FY	ferry
+S	GATE	gate
+S	GDN	garden(s)
+S	GHSE	guest house
+S	GOVL	local government office
+S	GRVE	grave
+S	HSE	house(s)
+S	HSEC	country house
+S	HSTS	historical site
+S	HTL	hotel
+S	HUT	hut
+S	HUTS	huts
+S	INSM	military installation
+S	ITTR	research institute
+S	LDNG	landing
+S	LIBR	library
+S	LNDF	landfill
+S	LTHSE	lighthouse
+S	MAR	marina
+S	MFG	factory
+S	MFGM	munitions plant
+S	MKT	market
+S	ML	mill(s)
+S	MLWTR	water mill
+S	MN	mine(s)
+S	MNCR	chrome mine(s)
+S	MNMT	monument
+S	MNQR	quarry(-ies)
+S	MOLE	mole
+S	MSQE	mosque
+S	MSSN	mission
+S	MSTY	monastery
+S	MUS	museum
+S	NSY	nursery(-ies)
+S	OBPT	observation point
+S	OBS	observatory
+S	OILT	tank farm
+S	OPRA	opera house
+S	PAL	palace
+S	PIER	pier
+S	PKLT	parking lot
+S	PMPW	water pumping station
+S	PO	post office
+S	PP	police post
+S	PRKGT	park gate
+S	PRN	prison
+S	PS	power station
+S	QUAY	quay
+S	RECG	golf course
+S	RECR	racetrack
+S	REST	restaurant
+S	RET	store
+S	RHSE	resthouse
+S	RLG	religious site
+S	RSD	railroad siding
+S	RSGNL	railroad signal
+S	RSRT	resort
+S	RSTNQ	abandoned railroad station
+S	RSTP	railroad stop
+S	RSTPQ	abandoned railroad stop
+S	RUIN	ruin(s)
+S	SCH	school
+S	SCHM	military school
+S	SHRN	shrine
+S	SHSE	storehouse
+S	SPA	spa
+S	SQR	square
+S	STBL	stable
+S	STNB	scientific research base
+S	STNF	forest station
+S	STNM	meteorological station
+S	STNR	radio station
+S	SWT	sewage treatment plant
+S	THTR	theater
+S	TMB	tomb(s)
+S	TMPL	temple(s)
+S	TNKD	cattle dipping tank
+S	TOWR	tower
+S	TRIG	triangulation station
+S	TWO	temp work office
+S	UNIV	university
+S	WALL	wall
+S	WALLA	ancient wall
+S	WHRF	wharf(-ves)
+S	ZOO	zoo
+U	PKSU	peaks
+U	SHLU	shoal
+V	GRVO	olive grove
+V	MDW	meadow
+V	SCRB	scrubland
+V	TREE	tree(s)
+V	VIN	vineyard
