@@ -1,28 +1,37 @@
 package net.falappa.wwind.widgets;
 
-import gov.nasa.worldwind.geom.Position;
 import java.awt.Color;
-import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import net.falappa.swing.TextPrompt;
+import javax.swing.Timer;
+import javax.swing.ToolTipManager;
+import net.falappa.wwind.helpers.LabeledPosition;
+import net.falappa.wwind.layers.SingleMarkerLayer;
 import net.falappa.wwind.posparser.PositionParser;
 
 /**
  * A panel allowing to enter a location and moving the view to the entered location.
  * <p>
- * The component also allows to go to the previous, next locations. The component enables after setting the controlled {@link WWindPanel}..
+ * The component also allows to go to the previous, next locations. The component enables itself after setting the controlled
+ * {@link WWindPanel}.
  *
  * @author Alessandro Falappa
  */
 public class FlyToPanel extends javax.swing.JPanel {
 
     private WWindPanel wp;
-    private Position curLoc = null;
-    private final LinkedList<Position> prevLocs = new LinkedList<>();
-    private final LinkedList<Position> nextLocs = new LinkedList<>();
+    private final SingleMarkerLayer flyPosLayer = new SingleMarkerLayer("FlyToMarker");
+    private int showDelay = 0;
+    private int hideDelay = 0;
+    private Timer showTimer;
+    private Timer hideTimer;
+    private LabeledPosition curLoc = null;
+    private final LinkedList<LabeledPosition> prevLocs = new LinkedList<>();
+    private final LinkedList<LabeledPosition> nextLocs = new LinkedList<>();
     private final ArrayList<PositionParser> parsers = new ArrayList<>();
-    private TextPrompt hint;
+    private final StringBuilder sbTooltip = new StringBuilder();
 
     /**
      * Default constructor.
@@ -31,9 +40,30 @@ public class FlyToPanel extends javax.swing.JPanel {
      */
     public FlyToPanel() {
         initComponents();
-        hint = new TextPrompt("Lat Lon", txLocation, TextPrompt.Show.FOCUS_LOST);
-        hint.setForeground(Color.GRAY);
-        hint.changeStyle(Font.ITALIC);
+        initTooltipMessage();
+    }
+
+    private void initTimers() {
+        if (showDelay > 0) {
+            showTimer = new Timer(showDelay, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    flyPosLayer.setPosition(curLoc, curLoc.getLabel());
+                    wp.redraw();
+                }
+            });
+            showTimer.setRepeats(false);
+        }
+        if (hideDelay > 0) {
+            hideTimer = new Timer(hideDelay, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    flyPosLayer.clear();
+                    wp.redraw();
+                }
+            });
+            hideTimer.setRepeats(false);
+        }
     }
 
     /**
@@ -42,7 +72,9 @@ public class FlyToPanel extends javax.swing.JPanel {
      * @param wp the WWindPanel to link to
      */
     public FlyToPanel(WWindPanel wp) {
-        this.wp = wp;
+        initComponents();
+        initTooltipMessage();
+        setWWindPanel(wp);
     }
 
     /**
@@ -59,15 +91,48 @@ public class FlyToPanel extends javax.swing.JPanel {
      *
      * @param wp the new WWindPanel
      */
-    public void setWWindPanel(WWindPanel wp) {
+    public final void setWWindPanel(WWindPanel wp) {
         if (wp == null) {
             throw new NullPointerException("Null WWindPanel");
         }
         this.wp = wp;
+        // set up marker layer
+        flyPosLayer.setColor(Color.orange);
+        flyPosLayer.setOpacity(0.5);
+        wp.addLayer(flyPosLayer);
         // enable widgets
         jLabel1.setEnabled(true);
         txLocation.setEnabled(true);
         bGo.setEnabled(true);
+        // make tooltips heavyweight by default
+        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+    }
+
+    /**
+     * Set the position marker visual attributes.
+     *
+     * @param col marker color
+     * @param opacity marker opacity
+     */
+    public void setMarkerLayerAttributes(Color col, double opacity) {
+        flyPosLayer.setColor(col);
+        flyPosLayer.setOpacity(opacity);
+    }
+
+    /**
+     * Activates a delayed showing/hiding of the position marker.
+     *
+     * @param showMillis the showing delay in milliseconds, zero or negative to disable delayed showing.
+     * @param hideMillis the hiding delay in milliseconds, must be greater than showMillis if both specified, zero or negative to disable
+     * delayed hiding.
+     */
+    public void setDelays(int showMillis, int hideMillis) {
+        if (hideMillis > 0 && hideMillis < showMillis) {
+            throw new IllegalArgumentException("hide delay must be greater than show delay");
+        }
+        showDelay = showMillis;
+        hideDelay = hideMillis;
+        initTimers();
     }
 
     /**
@@ -76,7 +141,11 @@ public class FlyToPanel extends javax.swing.JPanel {
      * @param parser an object implementing the {@link PositionParser} interface
      */
     public void addParser(PositionParser parser) {
+        if (parser != null) {
         parsers.add(parser);
+            sbTooltip.append("<li>").append(parser.getFormatDescription());
+            txLocation.setToolTipText(sbTooltip.toString());
+        }
     }
 
     /**
@@ -84,6 +153,7 @@ public class FlyToPanel extends javax.swing.JPanel {
      */
     public void removeAllParsers() {
         parsers.clear();
+        initTooltipMessage();
     }
 
     /**
@@ -167,15 +237,20 @@ public class FlyToPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void initTooltipMessage() {
+        txLocation.setToolTipText(null);
+        sbTooltip.setLength(0);
+        sbTooltip.append("<html><p>").append("Supported formats").append(":<ul>");
+    }
     private void enablePrevNextButtons() {
         bPrevLoc.setEnabled(!prevLocs.isEmpty());
         bNextLoc.setEnabled(!nextLocs.isEmpty());
     }
 
-    private Position parseLocation(String text) {
+    private LabeledPosition parseLocation(String text) {
         // try all the parsers, return the position parsed by the first found
         for (PositionParser pars : parsers) {
-            Position pos = pars.parseString(text);
+            LabeledPosition pos = pars.parseString(text);
             if (pos != null) {
                 return pos;
             }
@@ -183,37 +258,50 @@ public class FlyToPanel extends javax.swing.JPanel {
         return null;
     }
 
+    private void goToPos(LabeledPosition pos) {
+        // store position
+        curLoc = pos;
+        // (delayed) show of marker
+        if (showDelay > 0) {
+            showTimer.start();
+        } else {
+            flyPosLayer.setPosition(pos, pos.getLabel());
+        }
+        // delayed hiding of marker
+        if (hideDelay > 0) {
+            hideTimer.start();
+        }
+        // pan to position
+        wp.flyToPoint(pos);
+    }
+
     private void bGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGoActionPerformed
-        Position pos = parseLocation(txLocation.getText());
+        LabeledPosition pos = parseLocation(txLocation.getText());
         if (pos != null) {
-            // pan to position
-            wp.flyToPoint(pos);
             // store position in previous locations
             if (curLoc != null) {
                 prevLocs.addFirst(curLoc);
             }
-            curLoc = pos;
+            goToPos(pos);
             enablePrevNextButtons();
         }
     }//GEN-LAST:event_bGoActionPerformed
 
     private void bPrevLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPrevLocActionPerformed
         // current to next and previous location to current
-        final Position prevPos = prevLocs.removeFirst();
+        final LabeledPosition prevPos = prevLocs.removeFirst();
         nextLocs.addFirst(curLoc);
-        curLoc = prevPos;
-        // fly to position
-        wp.flyToPoint(curLoc);
+        goToPos(prevPos);
+        txLocation.setText(prevPos.getLabel());
         enablePrevNextButtons();
     }//GEN-LAST:event_bPrevLocActionPerformed
 
     private void bNextLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNextLocActionPerformed
         // current to prev and next location to current
-        final Position nextLoc = nextLocs.removeFirst();
+        final LabeledPosition nextLoc = nextLocs.removeFirst();
         prevLocs.addFirst(curLoc);
-        curLoc = nextLoc;
-        // fly to position
-        wp.flyToPoint(curLoc);
+        goToPos(nextLoc);
+        txLocation.setText(nextLoc.getLabel());
         enablePrevNextButtons();
     }//GEN-LAST:event_bNextLocActionPerformed
 

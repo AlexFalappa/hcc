@@ -1,5 +1,6 @@
 package net.falappa.wwind.widgets;
 
+import com.telespazio.wwind.layers.StatusLayerExt;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
@@ -40,6 +41,7 @@ import gov.nasa.worldwind.Configuration;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.event.RenderingExceptionListener;
 import gov.nasa.worldwind.exception.WWAbsentRequirementException;
+import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Sector;
@@ -59,7 +61,6 @@ import gov.nasa.worldwind.util.measure.MeasureToolController;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 import gov.nasa.worldwind.wms.WMSTiledImageLayer;
-import gov.nasa.worldwindx.examples.util.StatusLayer;
 import net.falappa.prefs.PrefRestorable;
 import net.falappa.wwind.layers.EditableMarkerLayer;
 import net.falappa.wwind.layers.NoSuchShapeException;
@@ -69,7 +70,9 @@ import net.falappa.wwind.layers.SingleSurfShapeLayer;
 import net.falappa.wwind.layers.SurfShapeLayer;
 import net.falappa.wwind.layers.SurfShapesLayer;
 import net.falappa.wwind.layers.WMSLayerFactory;
+import net.falappa.wwind.posparser.LatLonDMSParser;
 import net.falappa.wwind.posparser.LatLonParser;
+import net.falappa.wwind.posparser.PositionParser;
 import net.falappa.wwind.utils.WWindUtils;
 
 /**
@@ -119,8 +122,10 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     private static final String PREFN_WWP = "view";
     private static final Logger logger = Logger.getLogger(WWindPanel.class.getName());
     private static final Color COLOR_EDIT = new Color(0, 200, 255, 200);
-    final SingleSurfShapeLayer aoi = new SingleSurfShapeLayer("Area of Interest");
-    final SingleMarkerLayer moi = new SingleMarkerLayer("Marker of interest");
+    private final LatLonGraticuleLayer lGraticule = new LatLonGraticuleLayer();
+    private final StatusLayerExt lStatus = new StatusLayerExt();
+    protected final SingleSurfShapeLayer aoi = new SingleSurfShapeLayer("Area of Interest");
+    protected final SingleMarkerLayer moi = new SingleMarkerLayer("Marker of interest");
     private final HashMap<String, SurfShapeLayer> shapeLayers = new HashMap<>();
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private boolean editing = false;
@@ -184,16 +189,18 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
         initComponents();
         setupWorldWind();
         flyToPanel.setWWindPanel(this);
+        flyToPanel.setDelays(1500, 15000);
+        flyToPanel.addParser(new LatLonDMSParser());
         flyToPanel.addParser(new LatLonParser());
         globeSwitcher.setWorldWindow(wwCanvas);
     }
 
     /**
-     * Getter to the inner <code>WorldWindowGLCanvas</code>.
+     * Package accessible getter to the inner <code>WorldWindowGLCanvas</code>.
      *
      * @return the inner preconfigured <code>WorldWindowGLCanvas</code>
      */
-    public WorldWindowGLCanvas getWWCanvas() {
+    WorldWindowGLCanvas getWWCanvas() {
         return wwCanvas;
     }
 
@@ -205,6 +212,25 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     public void setBottomBar(boolean flag) {
         remove(pTop);
         add(pTop, java.awt.BorderLayout.PAGE_END);
+    }
+
+    /**
+     * Getter for the current angle format used in the status bar and graticule.
+     *
+     * @return one of {@link Angle#ANGLE_FORMAT_DD},{@link Angle#ANGLE_FORMAT_DM} or {@link Angle#ANGLE_FORMAT_DMS} constants
+     */
+    public String getAngleFormat() {
+        return lStatus.getAngleFormat();
+    }
+
+    /**
+     * Setter for the angle format used in the status bar and graticule.
+     *
+     * @param angleFormat one of {@link Angle#ANGLE_FORMAT_DD},{@link Angle#ANGLE_FORMAT_DM} or {@link Angle#ANGLE_FORMAT_DMS} constants
+     */
+    public void setAngleFormat(String angleFormat) {
+        lStatus.setAngleFormat(angleFormat);
+        lGraticule.setAngleFormat(angleFormat);
     }
 
     /**
@@ -354,18 +380,18 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     }
 
     /**
-     * Shows a polygon editing shape from the given coordinates.
+     * Starts editing in {@code POLYGON} mode from a polygon shape.
      * <p>
-     * Sets polygon edit mode but does not start editing. Clears previous editing shapes and implicitly stops previous editing.
+     * Clears previous editing shapes.
      *
      * @param locations the locations (that will get copied and closed by duplicating the first as last).
      */
-    public void editShapeFromPoly(Iterable<? extends LatLon> locations) {
+    public void startEditingFromPoly(Iterable<? extends LatLon> locations) {
         mtInit();
         mt.clear();
         editMode = EditModes.POLYGON;
         eml.setEditing(false);
-        editing = false;
+        editing = true;
         // create a copy of the given locations duplicating the first point at the end
         ArrayList<LatLon> coords = new ArrayList<>();
         for (LatLon location : locations) {
@@ -379,19 +405,19 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
     }
 
     /**
-     * Shows a circle editing shape from the given center and radius.
+     * Starts editing in {@code CIRCLE} mode from the given center and radius.
      * <p>
-     * Sets circle edit mode but does not start editing. Clears previous editing shapes and implicitly stops previous editing.
+     * Clears previous editing shapes.
      *
      * @param center the circle center
      * @param radius the circle radius in meters
      */
-    public void editShapeFromCenterRadius(LatLon center, double radius) {
+    public void startEditingFromCircle(LatLon center, double radius) {
         mtInit();
         mt.clear();
         editMode = EditModes.CIRCLE;
         eml.setEditing(false);
-        editing = false;
+        editing = true;
         // create a copy of the given surface polygon duplicating the first point at the end
         mt.setMeasureShape(new SurfaceCircle(center, radius));
         mt.setFillColor(new Color(255, 255, 255, 63));
@@ -511,6 +537,38 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
      */
     public void removeSurfShapeListener(PropertyChangeListener listener) {
         changeSupport.removePropertyChangeListener(listener);
+    }
+
+    /**
+     * Tells if the FlyToPanel is shown.
+     *
+     * @return true if fly to functions are enabled
+     */
+    public boolean isFlyToVisible() {
+        return flyToPanel != null && flyToPanel.isVisible();
+    }
+
+    /**
+     * Shows/hides the FlyToPanel.
+     * <p>
+     * FlyToPanel is shown by default.
+     *
+     * @param flag true to show the FlyToPanel
+     */
+    public void setFlyToVisible(boolean flag) {
+        flyToPanel.setVisible(flag);
+        pTop.revalidate();
+    }
+
+    /**
+     * Adds a {@link PositionParser} to the FlyToPanel.
+     * <p>
+     * By default the FlyToPanel has a {@link LatLonParser} and a {@link LatLonDMSParser}.
+     *
+     * @param parser a {@link PositionParser} object
+     */
+    public void addFlyToPositionParser(PositionParser parser) {
+        flyToPanel.addParser(parser);
     }
 
     /**
@@ -1129,6 +1187,8 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
         if (layerSettingsDialog != null) {
             layerSettingsDialog.loadPrefs(viewPrefs);
         }
+        // TODO load projection
+        // TODO delegate to FlyToPanel
         // TODO delegate to layer too??
     }
 
@@ -1139,6 +1199,8 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
         if (layerSettingsDialog != null) {
             layerSettingsDialog.storePrefs(viewPrefs);
         }
+        // TODO store projection
+        // TODO delegate to FlyToPanel
         // TODO delegate to layer too??
     }
 
@@ -1248,15 +1310,19 @@ public class WWindPanel extends javax.swing.JPanel implements PrefRestorable {
         LayerList layers = model.getLayers();
         // (optionally) setup the base cartography WMS layer stack
         setupBaseCarto();
+        // add the graticule layer (not visible)
+        lGraticule.setAngleFormat(Angle.ANGLE_FORMAT_DD);
+        lGraticule.setEnabled(false);
+        layers.add(lGraticule);
         // add the area of interest layer
         layers.add(aoi);
         // add the marker of interest layer
         layers.add(moi);
-        // add a StatusLayer
-        StatusLayer slayer = new StatusLayer();
-        slayer.setEventSource(wwCanvas);
-        slayer.setDefaultFont(UIManager.getFont("Label.font"));
-        layers.add(slayer);
+        // add the StatusLayer
+        lStatus.setEventSource(wwCanvas);
+        lStatus.setDefaultFont(UIManager.getFont("Label.font"));
+        lStatus.setAngleFormat(Angle.ANGLE_FORMAT_DD);
+        layers.add(lStatus);
         // add a view controls layer and register a controller for it.
         ViewControlsLayer viewControlsLayer = new ViewControlsLayer();
         layers.add(viewControlsLayer);

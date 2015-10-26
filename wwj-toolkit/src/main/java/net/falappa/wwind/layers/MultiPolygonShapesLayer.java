@@ -55,6 +55,8 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
 
     /**
      * Initializing constructor.
+     * <p>
+     * Default color orange outline and translucent orange fill, black outline and translucent white highlight color.
      *
      * @param name the name of this layer
      */
@@ -181,6 +183,42 @@ public class MultiPolygonShapesLayer extends RenderableLayer implements SurfShap
     public void setHighlightColor(Color col) {
         attrHigh.setOutlineMaterial(new Material(col));
         attrHigh.setInteriorMaterial(new Material(col.brighter().brighter()));
+    }
+
+    /**
+     * Returns the current outline highlighting color.
+     *
+     * @return the current color
+     */
+    public Color getHighlightOutlineColor() {
+        return attrHigh.getOutlineMaterial().getDiffuse();
+    }
+
+    /**
+     * Set the current outline highlighting color.
+     *
+     * @param col the new color
+     */
+    public void setHighlightOutlineColor(Color col) {
+        attrHigh.setOutlineMaterial(new Material(col));
+    }
+
+    /**
+     * Returns the current fill highlighting color.
+     *
+     * @return the current color
+     */
+    public Color getHighlightFillColor() {
+        return attrHigh.getInteriorMaterial().getDiffuse();
+    }
+
+    /**
+     * Set the current fill highlighting color.
+     *
+     * @param col the new color
+     */
+    public void setHighlightFillColor(Color col) {
+        attrHigh.setInteriorMaterial(new Material(col));
     }
 
     @Override

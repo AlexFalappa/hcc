@@ -1156,18 +1156,18 @@ public class TestFrame extends javax.swing.JFrame {
         coords.add(LatLon.fromDegrees(10, 10));
         coords.add(LatLon.fromDegrees(20, 10));
         coords.add(LatLon.fromDegrees(15, 15));
-        wwp.editShapeFromPoly(coords);
+        wwp.startEditingFromPoly(coords);
     }//GEN-LAST:event_bEditPolyActionPerformed
 
     private void bEditCircleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditCircleActionPerformed
-        wwp.editShapeFromCenterRadius(LatLon.fromDegrees(42, 12), 1000000);
+        wwp.startEditingFromCircle(LatLon.fromDegrees(42, 12), 1000000);
     }//GEN-LAST:event_bEditCircleActionPerformed
 
     private void bFirstEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bFirstEditActionPerformed
         if (wwp.hasSurfShapeLayer(LAY_FOOTPRINTS)) {
             try {
                 final SurfShapesLayer shpLayer = (SurfShapesLayer) wwp.getSurfShapeLayer(LAY_FOOTPRINTS);
-                wwp.editShapeFromPoly(shpLayer.getSurfPoly("Footprint 1").getLocations());
+                wwp.startEditingFromPoly(shpLayer.getSurfPoly("Footprint 1").getLocations());
             } catch (NoSuchShapeException ex) {
             }
         }

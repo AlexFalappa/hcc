@@ -60,6 +60,8 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
 
     /**
      * Initializing constructor.
+     * <p>
+     * Default color orange outline and translucent orange fill, black outline and translucent white highlight color.
      *
      * @param name the name of this layer
      */
@@ -140,7 +142,9 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
         this.showAnnotation = showAnnotation;
         if (!showAnnotation) {
             popupAnnotation.getAttributes().setVisible(false);
-            wwd.redraw();
+            if (wwd != null) {
+                wwd.redraw();
+            }
         }
     }
 
@@ -186,6 +190,42 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
     public void setHighlightColor(Color col) {
         attrHigh.setOutlineMaterial(new Material(col));
         attrHigh.setInteriorMaterial(new Material(col.brighter().brighter()));
+    }
+
+    /**
+     * Returns the current outline highlighting color.
+     *
+     * @return the current color
+     */
+    public Color getHighlightOutlineColor() {
+        return attrHigh.getOutlineMaterial().getDiffuse();
+    }
+
+    /**
+     * Set the current outline highlighting color.
+     *
+     * @param col the new color
+     */
+    public void setHighlightOutlineColor(Color col) {
+        attrHigh.setOutlineMaterial(new Material(col));
+    }
+
+    /**
+     * Returns the current fill highlighting color.
+     *
+     * @return the current color
+     */
+    public Color getHighlightFillColor() {
+        return attrHigh.getInteriorMaterial().getDiffuse();
+    }
+
+    /**
+     * Set the current fill highlighting color.
+     *
+     * @param col the new color
+     */
+    public void setHighlightFillColor(Color col) {
+        attrHigh.setInteriorMaterial(new Material(col));
     }
 
     @Override
@@ -538,11 +578,9 @@ public class SurfShapesLayer extends RenderableLayer implements ShapeSelectionSo
                 if (fireEvent) {
                     firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, prevPopupShape.getValue(AVKey.HOVER_TEXT), shpId));
                 }
-            } else {
+            } else if (fireEvent) {
                 // fire event only
-                if (fireEvent) {
-                    firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, null, shpId));
-                }
+                firePropertyChange(new PropertyChangeEvent(this, PROPERTY_SELECTION, null, shpId));
             }
             // remember shape
             prevPopupShape = shape;

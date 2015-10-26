@@ -1,5 +1,6 @@
 package net.falappa.wwind.layers;
 
+import gov.nasa.worldwind.WorldWind;
 import java.awt.Color;
 import java.awt.Insets;
 import java.awt.Point;
@@ -211,8 +212,10 @@ public class SingleMarkerLayer extends AbstractLayer implements PrefRestorable {
             annots.clear();
         } else if (annots.size() == 1) {
             annots.get(0).setText(label);
+            ((GlobeAnnotation) annots.get(0)).setPosition(currPos);
         } else {
-            Annotation ann = new GlobeAnnotation(label, currPos, annotAttr);
+            GlobeAnnotation ann = new GlobeAnnotation(label, currPos, annotAttr);
+            ann.setAltitudeMode(WorldWind.CLAMP_TO_GROUND);
             annots.add(ann);
         }
     }
